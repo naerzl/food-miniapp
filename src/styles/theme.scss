@@ -1,0 +1,82 @@
+// 小清新主题色变量
+// 小程序设计规范基于 750rpx 屏幕宽度
+
+// 主色调
+$primary: #6BBF99; // 薄荷绿 - 主色
+$primary-light: #8ED1AC; // 浅薄荷 - 次色
+$primary-dark: #52A882; // 深薄荷 - 深色
+
+// 功能色
+$success: #52C41A; // 成功色
+$warning: #FFB800; // 警告色
+$error: #FF6B6B; // 错误色
+$info: #1890FF; // 信息色
+
+// 背景色
+$bg-color: #F8F9FA; // 页面背景 - 浅灰白
+$bg-color-light: #FFFFFF; // 卡片背景 - 纯白
+$bg-color-dark: #F0F2F5; // 深色背景
+
+// 文字色
+$text-primary: #333333; // 主要文字
+$text-secondary: #666666; // 次要文字
+$text-muted: #999999; // 辅助文字
+$text-placeholder: #CCCCCC; // 占位文字
+$text-inverse: #FFFFFF; // 反色文字
+
+// 边框色
+$border-color: #E8E8E8; // 边框色
+$border-color-light: #F0F0F0; // 浅边框
+$border-color-dark: #DDDDDD; // 深边框
+
+// 阴影色
+$shadow-color: rgba(0, 0, 0, 0.06);
+$shadow-color-medium: rgba(0, 0, 0, 0.08);
+$shadow-color-large: rgba(0, 0, 0, 0.12);
+
+// 间距规范 (基于 750rpx)
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 24rpx;
+$spacing-lg: 32rpx;
+$spacing-xl: 48rpx;
+
+// 圆角规范
+$radius-sm: 8rpx; // 小圆角
+$radius-md: 16rpx; // 中圆角
+$radius-lg: 24rpx; // 大圆角
+$radius-card: 20rpx; // 卡片圆角
+$radius-full: 999rpx; // 全圆角
+
+// 阴影规范
+$shadow-sm: 0 2rpx 8rpx $shadow-color;
+$shadow-md: 0 4rpx 16rpx $shadow-color-medium;
+$shadow-lg: 0 8rpx 32rpx $shadow-color-large;
+
+// 字体大小规范
+$font-size-xs: 20rpx;
+$font-size-sm: 24rpx;
+$font-size-md: 28rpx;
+$font-size-lg: 32rpx;
+$font-size-xl: 36rpx;
+$font-size-xxl: 40rpx;
+
+// 行高规范
+$line-height-tight: 1.2;
+$line-height-normal: 1.5;
+$line-height-loose: 1.8;
+
+// 动画时长
+$transition-fast: 0.15s;
+$transition-normal: 0.25s;
+$transition-slow: 0.4s;
+
+// z-index 层级
+$z-index-dropdown: 100;
+$z-index-sticky: 200;
+$z-index-fixed: 300;
+$z-index-modal-backdrop: 400;
+$z-index-modal: 500;
+$z-index-popover: 600;
+$z-index-tooltip: 700;
+$z-index-toast: 800;
