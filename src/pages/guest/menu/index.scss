@@ -1,51 +1,236 @@
+@import '../../../styles/theme.scss';
+
 .menu-page {
-  background: #f5f5f5;
   min-height: 100vh;
-  
-  .category-tabs {
-    background: #fff;
-    padding: 16rpx 0;
-    border-bottom: 1rpx solid #e8e8e8;
-    
-    .category-tab {
-      padding: 8rpx 24rpx;
-      margin: 0 8rpx;
-      border-radius: 16rpx;
-      background: #f0f0f0;
-      
+  background-color: $bg-color;
+  display: flex;
+  flex-direction: column;
+}
+
+// 加载状态
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+
+  .loading-text {
+    margin-top: 24rpx;
+    font-size: $font-size-md;
+    color: $text-secondary;
+  }
+}
+
+// 分类区域
+.category-section {
+  background-color: $bg-color-light;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid $border-color;
+
+  .category-scroll {
+    white-space: nowrap;
+    padding: 0 16rpx;
+
+    .category-item {
+      display: inline-block;
+      padding: 12rpx 28rpx;
+      margin-right: 16rpx;
+      background-color: $bg-color;
+      border-radius: $radius-full;
+      transition: all $transition-fast;
+
       &.active {
-        background: #13C2C2;
-        
-        text {
-          color: #fff;
+        background-color: $primary;
+
+        .category-text {
+          color: $text-inverse;
+          font-weight: 600;
         }
       }
-      
-      text {
-        font-size: 14px;
-        color: #333;
+
+      &:active {
+        opacity: 0.8;
+      }
+
+      .category-text {
+        font-size: $font-size-md;
+        color: $text-primary;
       }
     }
   }
-  
-  .dish-list {
-    padding: 16rpx;
-    min-height: calc(100vh - 120rpx);
-  }
-  
-  .loading-container {
+}
+
+// 菜品列表
+.dish-list {
+  flex: 1;
+  padding: 16rpx;
+
+  .dish-grid {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 100rpx 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &::after {
+      content: '';
+      flex: 0 0 48%;
+    }
   }
-  
-  .empty-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 100rpx 0;
-    color: #999;
+
+  .dish-card {
+    width: 48%;
+    background-color: $bg-color-light;
+    border-radius: $radius-card;
+    overflow: hidden;
+    margin-bottom: 24rpx;
+    box-shadow: $shadow-card;
+
+    .dish-image {
+      width: 100%;
+      height: 220rpx;
+      background-color: $bg-color-dark;
+    }
+
+    .dish-content {
+      padding: 20rpx;
+
+      .dish-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12rpx;
+
+        .dish-name {
+          font-size: $font-size-lg;
+          font-weight: 600;
+          color: $text-primary;
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .dish-category {
+          font-size: $font-size-xs;
+          color: $primary;
+          background-color: $primary-bg;
+          padding: 4rpx 12rpx;
+          border-radius: $radius-sm;
+          margin-left: 12rpx;
+        }
+      }
+
+      .dish-desc {
+        font-size: $font-size-sm;
+        color: $text-muted;
+        line-height: $line-height-normal;
+        margin-bottom: 16rpx;
+        height: 72rpx;
+        overflow: hidden;
+      }
+
+      .dish-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .dish-price {
+          font-size: $font-size-xl;
+          font-weight: 700;
+          color: $primary;
+
+          .price-symbol {
+            font-size: $font-size-sm;
+            font-weight: 400;
+          }
+        }
+
+        .add-btn {
+          width: 56rpx;
+          height: 56rpx;
+          background-color: $primary;
+          border-radius: $radius-full;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:active {
+            background-color: $primary-dark;
+            transform: scale(0.95);
+          }
+
+          &.disabled {
+            background-color: $text-placeholder;
+          }
+
+          .add-icon {
+            font-size: $font-size-lg;
+            color: $text-inverse;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 空状态
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+
+  .empty-icon {
+    font-size: 100rpx;
+    margin-bottom: 24rpx;
+  }
+
+  .empty-text {
+    font-size: $font-size-lg;
+    color: $text-primary;
+    font-weight: 500;
+    margin-bottom: 12rpx;
+  }
+
+  .empty-subtext {
+    font-size: $font-size-md;
+    color: $text-muted;
+    text-align: center;
+  }
+}
+
+// 购物车悬浮按钮
+.cart-float {
+  position: fixed;
+  right: 32rpx;
+  bottom: 160rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: $z-index-fixed;
+
+  .cart-icon-wrapper {
+    .cart-icon {
+      width: 100rpx;
+      height: 100rpx;
+      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      border-radius: $radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48rpx;
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  .cart-hint {
+    margin-top: 12rpx;
+    font-size: $font-size-sm;
+    color: $text-inverse;
+    background-color: $primary;
+    padding: 6rpx 16rpx;
+    border-radius: $radius-sm;
   }
 }

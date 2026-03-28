@@ -1,0 +1,163 @@
+@import '../../../styles/theme.scss';
+
+.profile-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+  padding-bottom: 48rpx;
+}
+
+// 登录区域
+.login-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 48rpx;
+  background-color: $bg-color-light;
+  min-height: 60vh;
+
+  .login-icon {
+    font-size: 120rpx;
+    margin-bottom: 32rpx;
+  }
+
+  .login-title {
+    font-size: $font-size-xl;
+    color: $text-primary;
+    font-weight: 600;
+    margin-bottom: 16rpx;
+  }
+
+  .login-desc {
+    font-size: $font-size-md;
+    color: $text-muted;
+    margin-bottom: 48rpx;
+  }
+
+  .wechat-login-btn {
+    width: 400rpx;
+    height: 88rpx;
+    line-height: 88rpx;
+    background-color: $primary !important;
+    border-color: $primary !important;
+    border-radius: $radius-full !important;
+    font-size: $font-size-lg !important;
+  }
+}
+
+// 用户信息卡片
+.user-card {
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  padding: 48rpx 32rpx;
+  display: flex;
+  align-items: center;
+
+  .user-avatar {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: $radius-full;
+    border: 4rpx solid rgba(255, 255, 255, 0.3);
+    background-color: $bg-color-light;
+  }
+
+  .user-info {
+    margin-left: 24rpx;
+
+    .user-name {
+      font-size: $font-size-xl;
+      color: $text-inverse;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8rpx;
+    }
+
+    .user-role {
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+// 统计区域
+.stats-section {
+  display: flex;
+  justify-content: space-around;
+  background-color: $bg-color-light;
+  padding: 32rpx 0;
+  margin-bottom: 16rpx;
+
+  .stat-card {
+    flex: 1;
+    text-align: center;
+    border-right: 1rpx solid $border-color-light;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    .stat-value {
+      font-size: $font-size-xxl;
+      color: $primary;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 8rpx;
+    }
+
+    .stat-label {
+      font-size: $font-size-sm;
+      color: $text-muted;
+    }
+  }
+}
+
+// 加载指示器
+.loading-indicator {
+  padding: 16rpx;
+  text-align: center;
+  background-color: $bg-color-light;
+}
+
+// 菜单区域
+.menu-section {
+  margin-bottom: 16rpx;
+
+  .at-list {
+    background-color: $bg-color-light;
+  }
+
+  .at-list__item {
+    padding: 28rpx 32rpx;
+
+    .item-content__info-title {
+      font-size: $font-size-md;
+      color: $text-primary;
+    }
+  }
+}
+
+// 退出登录
+.logout-section {
+  padding: 32rpx;
+
+  .logout-btn {
+    background-color: $bg-color-light !important;
+    border-color: $error !important;
+    color: $error !important;
+    border-radius: $radius-md !important;
+  }
+}
+
+// 私厨入口
+.chef-entry {
+  text-align: center;
+  padding: 32rpx;
+
+  .chef-text {
+    font-size: $font-size-sm;
+    color: $primary;
+
+    &:active {
+      opacity: 0.7;
+    }
+  }
+}

@@ -1,0 +1,120 @@
+@import '../../../../styles/theme.scss';
+
+.dish-edit-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+
+  .loading {
+    text-align: center;
+    padding: 200rpx 0;
+    font-size: $font-size-md;
+    color: $text-muted;
+  }
+}
+
+.form-section {
+  background-color: $bg-color-light;
+  padding: 0 24rpx;
+
+  .form-item {
+    padding: 24rpx 0;
+    border-bottom: 1rpx solid $border-color-light;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.required {
+      .label::before {
+        content: '*';
+        color: $error;
+        margin-right: 8rpx;
+      }
+    }
+
+    &.switch-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .label {
+      font-size: $font-size-md;
+      color: $text-primary;
+      display: block;
+      margin-bottom: 16rpx;
+    }
+
+    .input {
+      width: 100%;
+      height: 80rpx;
+      background-color: $bg-color;
+      border-radius: $radius-md;
+      padding: 0 24rpx;
+      font-size: $font-size-md;
+      color: $text-primary;
+      box-sizing: border-box;
+    }
+
+    .picker {
+      width: 100%;
+      height: 80rpx;
+      background-color: $bg-color;
+      border-radius: $radius-md;
+      padding: 0 24rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+
+      .value {
+        font-size: $font-size-md;
+        color: $text-primary;
+      }
+
+      .placeholder {
+        font-size: $font-size-md;
+        color: $text-placeholder;
+      }
+
+      .arrow {
+        font-size: $font-size-lg;
+        color: $text-muted;
+        transform: rotate(90deg);
+      }
+    }
+
+    .textarea {
+      width: 100%;
+      min-height: 200rpx;
+      background-color: $bg-color;
+      border-radius: $radius-md;
+      padding: 20rpx;
+      font-size: $font-size-md;
+      color: $text-primary;
+      box-sizing: border-box;
+    }
+
+    .count {
+      display: block;
+      text-align: right;
+      font-size: $font-size-sm;
+      color: $text-muted;
+      margin-top: 12rpx;
+    }
+  }
+}
+
+.action-section {
+  padding: 48rpx 24rpx;
+
+  .save-btn {
+    width: 100%;
+    height: 88rpx;
+    line-height: 88rpx;
+    background-color: $primary !important;
+    border-color: $primary !important;
+    border-radius: $radius-md !important;
+    font-size: $font-size-lg !important;
+  }
+}

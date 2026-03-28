@@ -1,0 +1,158 @@
+@import '../../../styles/theme.scss';
+
+.orders-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+  display: flex;
+  flex-direction: column;
+
+  .order-tabs {
+    background-color: $bg-color-light;
+    border-bottom: 1rpx solid $border-color;
+
+    .at-tabs__header {
+      background-color: $bg-color-light;
+    }
+
+    .at-tabs__item {
+      font-size: $font-size-md;
+      color: $text-secondary;
+
+      &--active {
+        color: $primary;
+        font-weight: 500;
+      }
+    }
+
+    .at-tabs__item-underline {
+      background-color: $primary;
+    }
+  }
+
+  .orders-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+}
+
+// 加载状态
+.loading-container {
+  padding: 100rpx 0;
+}
+
+// 空状态
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 40rpx;
+
+  .empty-icon {
+    font-size: 100rpx;
+    margin-bottom: 24rpx;
+  }
+
+  .empty-text {
+    font-size: $font-size-lg;
+    color: $text-primary;
+    font-weight: 500;
+    margin-bottom: 12rpx;
+  }
+
+  .empty-subtext {
+    font-size: $font-size-md;
+    color: $text-muted;
+  }
+}
+
+// 订单列表
+.orders-list {
+  padding: 16rpx;
+
+  .order-card {
+    background-color: $bg-color-light;
+    border-radius: $radius-card;
+    padding: 24rpx;
+    margin-bottom: 16rpx;
+
+    &:active {
+      opacity: 0.9;
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16rpx;
+
+      .order-no {
+        font-size: $font-size-sm;
+        color: $text-muted;
+      }
+
+      .order-status {
+        font-size: $font-size-md;
+        font-weight: 500;
+      }
+    }
+
+    .order-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16rpx 0;
+      border-top: 1rpx solid $border-color-light;
+      border-bottom: 1rpx solid $border-color-light;
+
+      .item-count {
+        font-size: $font-size-md;
+        color: $text-secondary;
+      }
+
+      .order-amount {
+        font-size: $font-size-lg;
+        color: $text-primary;
+        font-weight: 600;
+      }
+    }
+
+    .order-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16rpx;
+
+      .order-time {
+        font-size: $font-size-sm;
+        color: $text-muted;
+      }
+
+      .order-actions {
+        .action-btn {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          padding: 8rpx 20rpx;
+          border: 1rpx solid $border-color;
+          border-radius: $radius-sm;
+
+          &.primary {
+            color: $primary;
+            border-color: $primary;
+            background-color: $primary-bg;
+          }
+        }
+      }
+    }
+  }
+
+  .load-more {
+    text-align: center;
+    padding: 24rpx;
+
+    .load-text {
+      font-size: $font-size-sm;
+      color: $text-muted;
+    }
+  }
+}

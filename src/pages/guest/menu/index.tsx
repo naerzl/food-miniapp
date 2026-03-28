@@ -1,118 +1,208 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, RefreshControl } from '@tarojs/components';
-import { AtTabBar, AtActivityIndicator } from 'taro-ui';
-import DishCard from '../../../components/DishCard';
-import { api } from '../../../services/api';
+import React, { useState, useEffect, useCallback } from 'react';
+import Taro, { useDidShow } from '@tarojs/taro';
+import { View, Text, ScrollView, RefreshControl, Image } from '@tarojs/components';
+import { AtActivityIndicator, AtBadge } from 'taro-ui';
+import { dishApi, categoryApi } from '../../../services/api';
 import { Dish, Category } from '../../../../types/api';
+import { useCart } from '../../../store';
 import './index.scss';
 
 const MenuPage: React.FC = () => {
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [activeCategory, setActiveCategory] = useState<number>(0);
+  const [activeCategory, setActiveCategory] = useState<string>('all');
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  useEffect(() => {
-    loadDishes();
-  }, []);
+  const { items: cartItems, totalCount, addToCart } = useCart();
 
-  const loadDishes = async () => {
+  // 加载数据
+  const loadData = useCallback(async (showLoading = true) => {
     try {
-      setLoading(true);
-      // 模拟API调用
-      // const response = await api.getDishes();
-      // const data = response.data.data;
-      // setDishes(data.dishes);
-      // setCategories(data.categories);
-      
-      // 模拟数据
-      const mockCategories: Category[] = [
-        { id: 0, name: '全部', sortOrder: 0 },
-        { id: 1, name: '凉菜', sortOrder: 1 },
-        { id: 2, name: '热菜', sortOrder: 2 },
-        { id: 3, name: '主食', sortOrder: 3 },
-        { id: 4, name: '饮料', sortOrder: 4 }
-      ];
-      
-      const mockDishes: Dish[] = [
-        { id: 1, name: '宫保鸡丁', price: 28, image: 'https://via.placeholder.com/300', description: '经典川菜，麻辣鲜香', available: true, todaySupply: true, categoryId: 2, categoryName: '热菜' },
-        { id: 2, name: '凉拌黄瓜', price: 12, image: 'https://via.placeholder.com/300', description: '清爽开胃，夏季必备', available: true, todaySupply: true, categoryId: 1, categoryName: '凉菜' },
-        { id: 3, name: '米饭', price: 2, image: 'https://via.placeholder.com/300', description: '精选大米', available: true, todaySupply: true, categoryId: 3, categoryName: '主食' },
-        { id: 4, name: '可乐', price: 5, image: 'https://via.placeholder.com/300', description: '冰镇可乐', available: true, todaySupply: true, categoryId: 4, categoryName: '饮料' }
-      ];
-      
-      setCategories(mockCategories);
-      setDishes(mockDishes);
+      if (showLoading) setLoading(true);
+
+      // 并行加载分类和菜品
+      const [categoriesRes, dishesRes] = await Promise.all([
+        categoryApi.getCategories(),
+        dishApi.getTodayDishes(), // 只获取今日供应的菜品
+      ]);
+
+      setCategories(categoriesRes || []);
+      // 只显示今日供应且未售罄的菜品
+      const availableDishes = (dishesRes || []).filter(
+        (dish: Dish) => dish.todaySupply && !dish.soldOut && dish.available
+      );
+      setDishes(availableDishes);
     } catch (error) {
-      console.error('加载菜品失败:', error);
+      console.error('加载数据失败:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useDidShow(() => {
+    // 页面显示时刷新数据
+    loadData(false);
+  });
 
   const handleRefresh = () => {
     setRefreshing(true);
-    loadDishes();
+    loadData(false);
   };
 
-  const handleAddToCart = (dishId: number) => {
-    // 加入购物车逻辑
-    console.log('加入购物车:', dishId);
+  const handleAddToCart = (dish: Dish) => {
+    if (dish.soldOut || !dish.todaySupply) {
+      Taro.showToast({ title: '该菜品暂时无法购买', icon: 'none' });
+      return;
+    }
+
+    addToCart({
+      dishId: dish.id,
+      dishName: dish.name,
+      price: dish.price,
+      quantity: 1,
+      image: dish.image,
+    });
+
+    Taro.showToast({
+      title: '已加入购物车',
+      icon: 'success',
+      duration: 1000,
+    });
   };
 
-  const filteredDishes = activeCategory === 0 
-    ? dishes 
+  const handleGoToCart = () => {
+    Taro.switchTab({ url: '/pages/guest/cart/index' });
+  };
+
+  const filteredDishes = activeCategory === 'all'
+    ? dishes
     : dishes.filter(dish => dish.categoryId === activeCategory);
+
+  const getCategoryName = (categoryId: string) => {
+    const category = categories.find(c => c.id === categoryId);
+    return category?.name || '';
+  };
+
+  if (loading) {
+    return (
+      <View className="menu-page">
+        <View className="loading-container">
+          <AtActivityIndicator size="large" mode="center" />
+          <Text className="loading-text">加载中...</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View className="menu-page">
       {/* 分类标签 */}
-      <View className="category-tabs">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <View className="category-section">
+        <ScrollView
+          className="category-scroll"
+          scrollX
+          showScrollbar={false}
+        >
+          <View
+            className={`category-item ${activeCategory === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveCategory('all')}
+          >
+            <Text className="category-text">全部</Text>
+          </View>
           {categories.map(category => (
-            <View 
-              key={category.id} 
-              className={`category-tab ${activeCategory === category.id ? 'active' : ''}`}
+            <View
+              key={category.id}
+              className={`category-item ${activeCategory === category.id ? 'active' : ''}`}
               onClick={() => setActiveCategory(category.id)}
             >
-              <Text>{category.name}</Text>
+              <Text className="category-text">{category.name}</Text>
             </View>
           ))}
         </ScrollView>
       </View>
 
       {/* 菜品列表 */}
-      <ScrollView 
-        className="dish-list" 
+      <ScrollView
+        className="dish-list"
+        scrollY
         refreshControl={
-          <RefreshControl 
-            refreshing={refreshing} 
-            onRefresh={handleRefresh} 
-            color="#13C2C2" 
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            color="#FF7A45"
           />
         }
       >
-        {loading ? (
-          <View className="loading-container">
-            <AtActivityIndicator size="large" />
-            <Text style={{ marginTop: 16 }}>加载中...</Text>
-          </View>
-        ) : filteredDishes.length === 0 ? (
+        {filteredDishes.length === 0 ? (
           <View className="empty-container">
-            <Text>暂无菜品</Text>
+            <View className="empty-icon">🍽️</View>
+            <Text className="empty-text">暂无菜品</Text>
+            <Text className="empty-subtext">厨师正在准备美味佳肴，请稍后再来</Text>
           </View>
         ) : (
-          filteredDishes.map(dish => (
-            <DishCard 
-              key={dish.id} 
-              dish={dish} 
-              onAddToCart={handleAddToCart} 
-            />
-          ))
+          <View className="dish-grid">
+            {filteredDishes.map(dish => (
+              <View key={dish.id} className="dish-card">
+                <Image
+                  className="dish-image"
+                  src={dish.image || 'https://via.placeholder.com/300x200?text=No+Image'}
+                  mode="aspectFill"
+                />
+                <View className="dish-content">
+                  <View className="dish-header">
+                    <Text className="dish-name">{dish.name}</Text>
+                    {getCategoryName(dish.categoryId) && (
+                      <Text className="dish-category">{getCategoryName(dish.categoryId)}</Text>
+                    )}
+                  </View>
+                  {dish.description && (
+                    <Text className="dish-desc" numberOfLines={2}>
+                      {dish.description}
+                    </Text>
+                  )}
+                  <View className="dish-footer">
+                    <Text className="dish-price">
+                      <Text className="price-symbol">¥</Text>
+                      {dish.price.toFixed(2)}
+                    </Text>
+                    <View
+                      className={`add-btn ${dish.soldOut ? 'disabled' : ''}`}
+                      onClick={() => handleAddToCart(dish)}
+                    >
+                      <Text className="add-icon">+</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </View>
         )}
+
+        {/* 底部留白 */}
+        <View style={{ height: '120rpx' }} />
       </ScrollView>
+
+      {/* 购物车悬浮按钮 */}
+      <View className="cart-float" onClick={handleGoToCart}>
+        <View className="cart-icon-wrapper">
+          {totalCount > 0 ? (
+            <AtBadge value={totalCount > 99 ? '99+' : totalCount} maxValue={99}>
+              <View className="cart-icon">🛒</View>
+            </AtBadge>
+          ) : (
+            <View className="cart-icon">🛒</View>
+          )}
+        </View>
+        {totalCount > 0 && (
+          <Text className="cart-hint">去结算</Text>
+        )}
+      </View>
     </View>
   );
 };

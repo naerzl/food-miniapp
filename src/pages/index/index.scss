@@ -1,0 +1,97 @@
+@import '../../styles/theme.scss';
+
+.index-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, $primary-bg 0%, $bg-color 50%, $bg-color-light 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+// 顶部区域
+.hero-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48rpx;
+
+  .logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .logo-icon {
+      font-size: 160rpx;
+      margin-bottom: 32rpx;
+    }
+
+    .app-name {
+      font-size: $font-size-title;
+      color: $text-primary;
+      font-weight: 700;
+      margin-bottom: 16rpx;
+    }
+
+    .app-slogan {
+      font-size: $font-size-md;
+      color: $text-secondary;
+    }
+  }
+}
+
+// 操作区域
+.action-section {
+  padding: 48rpx;
+
+  .guest-btn {
+    width: 100%;
+    height: 96rpx;
+    line-height: 96rpx;
+    background-color: $primary !important;
+    border-color: $primary !important;
+    border-radius: $radius-md !important;
+    font-size: $font-size-lg !important;
+    margin-bottom: 32rpx;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32rpx;
+
+    .line {
+      flex: 1;
+      height: 1rpx;
+      background-color: $border-color;
+    }
+
+    .text {
+      font-size: $font-size-sm;
+      color: $text-muted;
+      margin: 0 24rpx;
+    }
+  }
+
+  .chef-btn {
+    width: 100%;
+    height: 96rpx;
+    line-height: 96rpx;
+    background-color: $bg-color-light !important;
+    border-color: $primary !important;
+    color: $primary !important;
+    border-radius: $radius-md !important;
+    font-size: $font-size-lg !important;
+  }
+}
+
+// 底部区域
+.footer-section {
+  padding: 32rpx 48rpx 64rpx;
+  text-align: center;
+
+  .footer-text {
+    font-size: $font-size-sm;
+    color: $text-muted;
+  }
+}

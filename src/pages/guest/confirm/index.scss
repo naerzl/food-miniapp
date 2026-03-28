@@ -1,0 +1,234 @@
+@import '../../../styles/theme.scss';
+
+.confirm-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+  padding-bottom: 140rpx;
+}
+
+// 空状态
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 40rpx;
+
+  .empty-icon {
+    font-size: 120rpx;
+    margin-bottom: 32rpx;
+  }
+
+  .empty-text {
+    font-size: $font-size-xl;
+    color: $text-primary;
+    font-weight: 500;
+    margin-bottom: 16rpx;
+  }
+
+  .empty-subtext {
+    font-size: $font-size-md;
+    color: $text-muted;
+    margin-bottom: 48rpx;
+  }
+
+  .go-shopping-btn {
+    width: 240rpx;
+    background-color: $primary !important;
+    border-color: $primary !important;
+    border-radius: $radius-full !important;
+  }
+}
+
+// 通用区块
+.section {
+  background-color: $bg-color-light;
+  margin-bottom: 16rpx;
+  padding: 24rpx;
+
+  .section-title {
+    font-size: $font-size-lg;
+    color: $text-primary;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 20rpx;
+
+    .item-count {
+      font-size: $font-size-sm;
+      color: $text-muted;
+      font-weight: 400;
+      margin-left: 8rpx;
+    }
+  }
+}
+
+// 用户信息
+.user-section {
+  .user-info {
+    display: flex;
+    align-items: center;
+
+    .user-name {
+      font-size: $font-size-md;
+      color: $text-primary;
+    }
+  }
+}
+
+// 商品列表
+.items-section {
+  .items-list {
+    .item-row {
+      display: flex;
+      align-items: center;
+      padding: 16rpx 0;
+      border-bottom: 1rpx solid $border-color;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .item-image {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: $radius-sm;
+        background-color: $bg-color-dark;
+        flex-shrink: 0;
+      }
+
+      .item-detail {
+        flex: 1;
+        margin-left: 16rpx;
+        min-width: 0;
+
+        .item-name {
+          font-size: $font-size-md;
+          color: $text-primary;
+          display: block;
+          margin-bottom: 8rpx;
+        }
+
+        .item-price {
+          font-size: $font-size-sm;
+          color: $text-muted;
+        }
+      }
+
+      .item-subtotal {
+        font-size: $font-size-lg;
+        color: $text-primary;
+        font-weight: 500;
+
+        .price-symbol {
+          font-size: $font-size-xs;
+        }
+      }
+    }
+  }
+}
+
+// 备注
+.remark-section {
+  .remark-input {
+    width: 100%;
+    min-height: 160rpx;
+    background-color: $bg-color;
+    border-radius: $radius-md;
+    padding: 20rpx;
+    font-size: $font-size-md;
+    color: $text-primary;
+    box-sizing: border-box;
+  }
+
+  .remark-count {
+    display: block;
+    text-align: right;
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin-top: 12rpx;
+  }
+}
+
+// 金额汇总
+total-section {
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16rpx 0;
+
+    &:last-child {
+      border-top: 2rpx dashed $border-color;
+      margin-top: 16rpx;
+      padding-top: 24rpx;
+    }
+
+    .label {
+      font-size: $font-size-md;
+      color: $text-secondary;
+    }
+
+    .value {
+      font-size: $font-size-md;
+      color: $text-primary;
+
+      &.highlight {
+        font-size: $font-size-xl;
+        color: $primary;
+        font-weight: 700;
+
+        .price-symbol {
+          font-size: $font-size-sm;
+        }
+      }
+    }
+  }
+}
+
+// 底部提交栏
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120rpx;
+  background-color: $bg-color-light;
+  border-top: 1rpx solid $border-color;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
+  .price-section {
+    display: flex;
+    align-items: baseline;
+
+    .total-label {
+      font-size: $font-size-lg;
+      color: $text-primary;
+    }
+
+    .total-price {
+      font-size: $font-size-xxl;
+      color: $primary;
+      font-weight: 700;
+
+      .price-symbol {
+        font-size: $font-size-md;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .submit-btn {
+    width: 240rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    background-color: $primary !important;
+    border-color: $primary !important;
+    border-radius: $radius-full !important;
+    font-size: $font-size-lg !important;
+  }
+}

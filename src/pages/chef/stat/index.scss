@@ -1,0 +1,231 @@
+@import '../../../styles/theme.scss';
+
+.stat-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+  display: flex;
+  flex-direction: column;
+
+  .stat-tabs {
+    background-color: $bg-color-light;
+
+    .at-tabs__header {
+      background-color: $bg-color-light;
+    }
+
+    .at-tabs__item {
+      font-size: $font-size-md;
+      color: $text-secondary;
+
+      &--active {
+        color: $primary;
+        font-weight: 500;
+      }
+    }
+
+    .at-tabs__item-underline {
+      background-color: $primary;
+    }
+  }
+
+  .stat-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+}
+
+// 加载状态
+.loading-container {
+  padding: 200rpx 0;
+}
+
+// 概览
+.overview-section {
+  padding: 24rpx;
+
+  .stat-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24rpx;
+
+    .stat-card {
+      background-color: $bg-color-light;
+      border-radius: $radius-card;
+      padding: 32rpx;
+      text-align: center;
+
+      &.primary {
+        background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+
+        .stat-value,
+        .stat-label {
+          color: $text-inverse;
+        }
+      }
+
+      &.warning {
+        .stat-value {
+          color: $warning;
+        }
+      }
+
+      &.success {
+        .stat-value {
+          color: $success;
+        }
+      }
+
+      .stat-value {
+        font-size: $font-size-xxl;
+        color: $primary;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 8rpx;
+      }
+
+      .stat-label {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+      }
+
+      .stat-change {
+        font-size: $font-size-xs;
+        margin-top: 8rpx;
+        display: block;
+
+        &.up {
+          color: $success;
+        }
+
+        &.down {
+          color: $error;
+        }
+      }
+    }
+  }
+}
+
+// 趋势
+.trend-section {
+  padding: 24rpx;
+
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16rpx;
+    margin-bottom: 32rpx;
+
+    .summary-card {
+      background-color: $bg-color-light;
+      border-radius: $radius-card;
+      padding: 24rpx;
+      text-align: center;
+
+      .summary-value {
+        font-size: $font-size-xl;
+        color: $primary;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8rpx;
+      }
+
+      .summary-label {
+        font-size: $font-size-xs;
+        color: $text-muted;
+      }
+    }
+  }
+
+  .trend-hint {
+    text-align: center;
+    padding: 48rpx;
+
+    .hint-text {
+      font-size: $font-size-md;
+      color: $text-muted;
+    }
+  }
+}
+
+// 排行
+.ranking-section {
+  padding: 16rpx;
+
+  .ranking-item {
+    display: flex;
+    align-items: center;
+    background-color: $bg-color-light;
+    border-radius: $radius-card;
+    padding: 20rpx;
+    margin-bottom: 16rpx;
+
+    .rank-number {
+      width: 48rpx;
+      height: 48rpx;
+      background-color: $bg-color;
+      border-radius: $radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20rpx;
+
+      &.top {
+        background-color: $primary;
+
+        .number {
+          color: $text-inverse;
+        }
+      }
+
+      .number {
+        font-size: $font-size-md;
+        color: $text-secondary;
+        font-weight: 600;
+      }
+    }
+
+    .rank-info {
+      flex: 1;
+
+      .dish-name {
+        font-size: $font-size-md;
+        color: $text-primary;
+        display: block;
+        margin-bottom: 4rpx;
+      }
+
+      .dish-category {
+        font-size: $font-size-xs;
+        color: $text-muted;
+      }
+    }
+
+    .rank-stats {
+      text-align: right;
+
+      .stat {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        display: block;
+        margin-bottom: 4rpx;
+      }
+
+      .revenue {
+        font-size: $font-size-md;
+        color: $primary;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// 空状态
+.empty-section {
+  text-align: center;
+  padding: 160rpx 0;
+
+  .empty-text {
+    font-size: $font-size-md;
+    color: $text-muted;
+  }
+}

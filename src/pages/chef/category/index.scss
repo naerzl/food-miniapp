@@ -1,0 +1,138 @@
+@import '../../../styles/theme.scss';
+
+.category-manage-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+
+  .loading-container {
+    padding: 200rpx 0;
+  }
+}
+
+// 空状态
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 40rpx;
+
+  .empty-icon {
+    font-size: 100rpx;
+    margin-bottom: 24rpx;
+  }
+
+  .empty-text {
+    font-size: $font-size-lg;
+    color: $text-primary;
+    font-weight: 500;
+    margin-bottom: 12rpx;
+  }
+
+  .empty-subtext {
+    font-size: $font-size-md;
+    color: $text-muted;
+  }
+}
+
+// 分类列表
+.category-list {
+  .category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32rpx;
+    background-color: $bg-color-light;
+    border-bottom: 1rpx solid $border-color-light;
+
+    .item-left {
+      display: flex;
+      align-items: center;
+
+      .sort-number {
+        width: 48rpx;
+        height: 48rpx;
+        background-color: $primary-bg;
+        border-radius: $radius-full;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $font-size-sm;
+        color: $primary;
+        margin-right: 24rpx;
+      }
+
+      .category-name {
+        font-size: $font-size-md;
+        color: $text-primary;
+      }
+    }
+
+    .item-arrow {
+      font-size: $font-size-lg;
+      color: $text-muted;
+    }
+  }
+}
+
+// 添加按钮
+.add-btn {
+  position: fixed;
+  right: 32rpx;
+  bottom: 48rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  border-radius: $radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow-lg;
+  z-index: $z-index-fixed;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .add-icon {
+    font-size: $font-size-xxl;
+    color: $text-inverse;
+    font-weight: 600;
+  }
+}
+
+// 弹窗
+.modal-content {
+  padding: 20rpx;
+
+  .modal-title {
+    font-size: $font-size-xl;
+    color: $text-primary;
+    font-weight: 600;
+    text-align: center;
+    display: block;
+    margin-bottom: 32rpx;
+  }
+
+  .form-item {
+    margin-bottom: 24rpx;
+
+    .label {
+      font-size: $font-size-md;
+      color: $text-secondary;
+      display: block;
+      margin-bottom: 12rpx;
+    }
+
+    .input {
+      width: 100%;
+      height: 80rpx;
+      background-color: $bg-color;
+      border-radius: $radius-md;
+      padding: 0 24rpx;
+      font-size: $font-size-md;
+      color: $text-primary;
+      box-sizing: border-box;
+    }
+  }
+}

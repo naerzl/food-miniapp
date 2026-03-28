@@ -1,0 +1,147 @@
+@import '../../../styles/theme.scss';
+
+.chef-layout-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+  padding-bottom: 48rpx;
+}
+
+// 用户卡片
+.user-card {
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  padding: 48rpx 32rpx;
+  display: flex;
+  align-items: center;
+
+  .user-avatar {
+    width: 100rpx;
+    height: 100rpx;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4rpx solid rgba(255, 255, 255, 0.3);
+
+    .avatar-text {
+      font-size: $font-size-xxl;
+      color: $text-inverse;
+      font-weight: 600;
+    }
+  }
+
+  .user-info {
+    flex: 1;
+    margin-left: 24rpx;
+
+    .user-name {
+      font-size: $font-size-xl;
+      color: $text-inverse;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8rpx;
+    }
+
+    .user-role {
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  .logout-btn {
+    padding: 12rpx 24rpx;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: $radius-full;
+
+    &:active {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .logout-text {
+      font-size: $font-size-sm;
+      color: $text-inverse;
+    }
+  }
+}
+
+// 区块标题
+.section-title {
+  font-size: $font-size-lg;
+  color: $text-primary;
+  font-weight: 600;
+  padding: 24rpx 32rpx;
+  display: block;
+}
+
+// 菜单区域
+.menu-section {
+  background-color: $bg-color-light;
+  margin-bottom: 16rpx;
+
+  .at-grid {
+    padding: 0 16rpx 24rpx;
+
+    .at-grid__item {
+      padding: 16rpx;
+
+      &:active {
+        opacity: 0.7;
+      }
+
+      .at-grid__item-inner {
+        padding: 24rpx 0;
+        border: none;
+      }
+
+      .at-grid__item-content {
+        margin-top: 16rpx;
+
+        .content-inner__text {
+          font-size: $font-size-sm;
+          color: $text-primary;
+        }
+      }
+    }
+  }
+}
+
+// 快捷入口
+.quick-section {
+  background-color: $bg-color-light;
+  padding-bottom: 24rpx;
+
+  .quick-buttons {
+    display: flex;
+    padding: 0 24rpx;
+    gap: 24rpx;
+
+    .quick-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32rpx;
+      background-color: $bg-color;
+      border-radius: $radius-card;
+
+      &:active {
+        opacity: 0.8;
+      }
+
+      &.primary {
+        background-color: $primary-bg;
+      }
+
+      .btn-icon {
+        font-size: 48rpx;
+        margin-bottom: 12rpx;
+      }
+
+      .btn-text {
+        font-size: $font-size-md;
+        color: $text-primary;
+        font-weight: 500;
+      }
+    }
+  }
+}
