@@ -9,15 +9,6 @@ export default defineAppConfig({
     'pages/guest/orders/index',
     'pages/guest/order-detail/index',
     'pages/guest/profile/index',
-    // 私厨端页面
-    'pages/chef/login/index',
-    'pages/chef/layout/index',
-    'pages/chef/dish/index',
-    'pages/chef/dish/edit/index',
-    'pages/chef/category/index',
-    'pages/chef/order/index',
-    'pages/chef/customer/index',
-    'pages/chef/stat/index',
   ],
   // 主包 TabBar (客人端)
   tabBar: {
@@ -65,38 +56,14 @@ export default defineAppConfig({
       root: 'pages/chef',
       name: 'chef',
       pages: [
-        {
-          path: 'login/index',
-          name: 'login',
-        },
-        {
-          path: 'layout/index',
-          name: 'layout',
-        },
-        {
-          path: 'dish/index',
-          name: 'dish',
-        },
-        {
-          path: 'dish/edit/index',
-          name: 'dish-edit',
-        },
-        {
-          path: 'category/index',
-          name: 'category',
-        },
-        {
-          path: 'order/index',
-          name: 'order',
-        },
-        {
-          path: 'customer/index',
-          name: 'customer',
-        },
-        {
-          path: 'stat/index',
-          name: 'stat',
-        },
+        'login/index',
+        'layout/index',
+        'dish/index',
+        'dish/edit/index',
+        'category/index',
+        'order/index',
+        'customer/index',
+        'stat/index',
       ],
     },
   ],
