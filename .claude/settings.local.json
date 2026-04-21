@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find /d/code/github/food/food-miniapp/src/pages -name *.tsx -o -name *.ts -o -name *.scss)"
+      "Bash(find /d/code/github/food/food-miniapp/src/pages -name *.tsx -o -name *.ts -o -name *.scss)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git reset *)",
+      "Bash(npm test *)"
     ]
   }
 }

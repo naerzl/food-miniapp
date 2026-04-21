@@ -14,12 +14,12 @@ const STATUS_TEXT: Record<OrderStatus, string> = {
   cancelled: '已取消',
 };
 
-const STATUS_COLOR: Record<OrderStatus, string> = {
-  pending_payment: '#FAAD14',
-  paid: '#1677FF',
-  preparing: '#722ED1',
-  completed: '#52C41A',
-  cancelled: '#999999',
+const STATUS_EMOJI: Record<OrderStatus, string> = {
+  pending_payment: '⏰',
+  paid: '💰',
+  preparing: '👨‍🍳',
+  completed: '✅',
+  cancelled: '❌',
 };
 
 const STATUS_DESC: Record<OrderStatus, string> = {
@@ -121,10 +121,10 @@ const OrderDetailPage: React.FC = () => {
   return (
     <View className="order-detail-page">
       {/* 状态区域 */}
-      <View
-        className="status-section"
-        style={{ backgroundColor: STATUS_COLOR[order.status] }}
-      >
+      <View className="status-section">
+        <View className="status-icon-wrapper">
+          <Text className="status-emoji">{STATUS_EMOJI[order.status]}</Text>
+        </View>
         <Text className="status-text">{STATUS_TEXT[order.status]}</Text>
         <Text className="status-desc">{STATUS_DESC[order.status]}</Text>
       </View>
