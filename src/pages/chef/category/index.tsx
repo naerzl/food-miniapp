@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, Input } from '@tarojs/components';
 import { AtActivityIndicator, AtSwipeAction, AtModal, AtModalContent, AtModalAction, AtButton } from 'taro-ui';
-import { categoryApi } from '../../../services/api';
+import { categoryApi } from '../../../services';
 import { Category, CreateCategoryDto } from '../../../../types/api';
 import './index.scss';
 

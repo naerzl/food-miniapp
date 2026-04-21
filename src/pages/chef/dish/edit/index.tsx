@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Taro, { useRouter } from '@tarojs/taro';
 import { View, Text, Input, Textarea, Picker } from '@tarojs/components';
 import { AtButton, AtSwitch } from 'taro-ui';
-import { dishApi, categoryApi } from '../../../../services/api';
+import { dishApi, categoryApi } from '../../../../services';
 import { Dish, Category, CreateDishDto } from '../../../../../types/api';
 import './index.scss';
 

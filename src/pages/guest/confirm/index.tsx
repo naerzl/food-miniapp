@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro';
 import { View, Text, Image, Textarea } from '@tarojs/components';
 import { AtButton, AtModal, AtModalContent, AtModalAction } from 'taro-ui';
 import { useCart, useAuth } from '../../../store';
-import { orderApi } from '../../../services/api';
+import { orderApi } from '../../../services';
 import './index.scss';
 
 const ConfirmPage: React.FC = () => {

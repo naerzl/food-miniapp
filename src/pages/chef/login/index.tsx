@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Taro from '@tarojs/taro';
 import { View, Text, TextInput, Image } from '@tarojs/components';
 import { AtButton, AtToast } from 'taro-ui';
-import { authApi } from '../../../services/api';
+import { authApi } from '../../../services';
 import { useAuth } from '../../../store';
 import './index.scss';
 

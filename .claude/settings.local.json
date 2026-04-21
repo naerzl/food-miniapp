@@ -9,7 +9,9 @@
       "Bash(npm run *)",
       "Bash(node -e ' *)",
       "Bash(npx tsc *)",
-      "Bash(curl -s http://localhost:10086)"
+      "Bash(curl -s http://localhost:10086)",
+      "Bash(git checkout *)",
+      "Bash(git *)"
     ]
   }
 }

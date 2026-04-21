@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Taro, { useDidShow, usePullDownRefresh, useReachBottom } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { AtActivityIndicator, AtTabs, AtTabsPane } from 'taro-ui';
-import { orderApi } from '../../../services/api';
+import { orderApi } from '../../../services';
 import { Order, OrderStatus } from '../../../../types/api';
 import './index.scss';
 

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import { AtActivityIndicator, AtSwitch, AtSearchBar } from 'taro-ui';
-import { userApi } from '../../../services/api';
+import { userApi } from '../../../services';
 import { User } from '../../../../types/api';
 import './index.scss';
 

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, Image, ScrollView } from '@tarojs/components';
 import { AtActivityIndicator, AtSwitch, AtFab, AtModal, AtModalContent, AtModalAction } from 'taro-ui';
-import { dishApi, categoryApi } from '../../../services/api';
+import { dishApi, categoryApi } from '../../../services';
 import { Dish, Category } from '../../../../types/api';
 import './index.scss';
 
