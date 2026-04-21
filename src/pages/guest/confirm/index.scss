@@ -77,12 +77,18 @@
 
 // 商品列表
 .items-section {
+  background-color: $bg-color-light;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+  margin: $spacing-md;
+  padding: $spacing-lg;
+
   .items-list {
     .item-row {
       display: flex;
       align-items: center;
       padding: 16rpx 0;
-      border-bottom: 1rpx solid $border-color;
+      border-bottom: 1rpx solid $border-color-light;
 
       &:last-child {
         border-bottom: none;
@@ -91,9 +97,10 @@
       .item-image {
         width: 100rpx;
         height: 100rpx;
-        border-radius: $radius-sm;
+        border-radius: $radius-md;
         background-color: $bg-color-dark;
         flex-shrink: 0;
+        box-shadow: $shadow-sm;
       }
 
       .item-detail {
@@ -129,6 +136,12 @@
 
 // 备注
 .remark-section {
+  background-color: $bg-color-light;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+  margin: $spacing-md;
+  padding: $spacing-lg;
+
   .remark-input {
     width: 100%;
     min-height: 160rpx;
@@ -138,6 +151,10 @@
     font-size: $font-size-md;
     color: $text-primary;
     box-sizing: border-box;
+
+    &::placeholder {
+      color: $text-placeholder;
+    }
   }
 
   .remark-count {
@@ -223,12 +240,13 @@ total-section {
   }
 
   .submit-btn {
-    width: 240rpx;
+    flex: 1;
     height: 80rpx;
     line-height: 80rpx;
     background-color: $primary !important;
     border-color: $primary !important;
-    border-radius: $radius-full !important;
+    border-radius: 20rpx !important;
     font-size: $font-size-lg !important;
+    margin-left: 24rpx;
   }
 }
