@@ -47,14 +47,14 @@
 
 // 用户信息卡片
 .user-card {
-  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
   padding: 48rpx 32rpx;
   display: flex;
   align-items: center;
 
   .user-avatar {
-    width: 120rpx;
-    height: 120rpx;
+    width: 80rpx;
+    height: 80rpx;
     border-radius: $radius-full;
     border: 4rpx solid rgba(255, 255, 255, 0.3);
     background-color: $bg-color-light;
@@ -80,20 +80,18 @@
 
 // 统计区域
 .stats-section {
-  display: flex;
-  justify-content: space-around;
-  background-color: $bg-color-light;
-  padding: 32rpx 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+  background-color: $bg-color;
+  padding: 24rpx;
   margin-bottom: 16rpx;
 
   .stat-card {
-    flex: 1;
+    background-color: $bg-color-light;
+    border-radius: $radius-md;
     text-align: center;
-    border-right: 1rpx solid $border-color-light;
-
-    &:last-child {
-      border-right: none;
-    }
+    padding: 24rpx 16rpx;
 
     .stat-value {
       font-size: $font-size-xxl;
@@ -115,6 +113,59 @@
   padding: 16rpx;
   text-align: center;
   background-color: $bg-color-light;
+}
+
+// 最爱菜品区域
+.favorite-section {
+  background-color: $bg-color;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+
+  .section-title {
+    font-size: $font-size-lg;
+    color: $text-primary;
+    font-weight: 600;
+    margin-bottom: 16rpx;
+  }
+
+  .favorite-dish-card {
+    background-color: $bg-color-light;
+    border-radius: $radius-md;
+    padding: 20rpx;
+    display: flex;
+    align-items: center;
+
+    .dish-image {
+      width: 120rpx;
+      height: 120rpx;
+      border-radius: $radius-sm;
+      background-color: $bg-color-dark;
+    }
+
+    .dish-info {
+      margin-left: 20rpx;
+      flex: 1;
+
+      .dish-name {
+        font-size: $font-size-md;
+        color: $text-primary;
+        font-weight: 600;
+        margin-bottom: 8rpx;
+      }
+
+      .dish-desc {
+        font-size: $font-size-sm;
+        color: $text-muted;
+        margin-bottom: 8rpx;
+      }
+
+      .dish-price {
+        font-size: $font-size-lg;
+        color: $primary;
+        font-weight: 700;
+      }
+    }
+  }
 }
 
 // 菜单区域
