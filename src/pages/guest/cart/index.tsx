@@ -63,9 +63,9 @@ const CartPage: React.FC = () => {
     return (
       <View className="cart-page">
         <View className="empty-container">
-          <View className="empty-icon">🛒</View>
-          <Text className="empty-text">购物车是空的</Text>
-          <Text className="empty-subtext">快去选购美味佳肴吧</Text>
+          <View className="empty-state-icon">🛒</View>
+          <Text className="empty-state-text">购物车是空的</Text>
+          <Text className="empty-state-subtext">快去选购美味佳肴吧</Text>
           <AtButton
             type="primary"
             className="go-shopping-btn"
