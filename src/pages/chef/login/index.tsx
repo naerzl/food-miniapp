@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Taro from '@tarojs/taro';
-import { View, Text, TextInput, Image } from '@tarojs/components';
+import { View, Text, Input, Image } from '@tarojs/components';
 import { AtButton, AtToast } from 'taro-ui';
 import { authApi } from '../../../services';
 import { useAuth } from '../../../store';
@@ -77,7 +77,7 @@ const ChefLoginPage: React.FC = () => {
         <View className="form-section">
           <View className="form-item">
             <Text className="form-label">用户名</Text>
-            <TextInput
+            <Input
               className="form-input"
               value={username}
               onInput={(e) => setUsername(e.detail.value)}
@@ -88,7 +88,7 @@ const ChefLoginPage: React.FC = () => {
 
           <View className="form-item">
             <Text className="form-label">密码</Text>
-            <TextInput
+            <Input
               className="form-input"
               value={password}
               onInput={(e) => setPassword(e.detail.value)}

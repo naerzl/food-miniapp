@@ -1,11 +1,11 @@
-@use'./theme.scss';
+@import './theme.scss';
 
 // 全局重置样式
 page {
-  background-color: theme.$bg-color;
-  font-size: theme.$font-size-md;
-  color: theme.$text-primary;
-  line-height: theme.$line-height-normal;
+  background-color: $bg-color;
+  font-size: $font-size-md;
+  color: $text-primary;
+  line-height: $line-height-normal;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   box-sizing: border-box;
 }
@@ -29,12 +29,12 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
 
 // 通用工具类
 // 文本
-.text-primary { color: theme.$text-primary; }
-.text-secondary { color: theme.$text-secondary; }
-.text-muted { color: theme.$text-muted; }
-.text-success { color: theme.$success; }
-.text-warning { color: theme.$warning; }
-.text-error { color: theme.$error; }
+.text-primary { color: $text-primary; }
+.text-secondary { color: $text-secondary; }
+.text-muted { color: $text-muted; }
+.text-success { color: $success; }
+.text-warning { color: $warning; }
+.text-error { color: $error; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .text-ellipsis {
@@ -51,61 +51,61 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
 }
 
 // 字体大小
-.fs-xs { font-size: theme.$font-size-xs; }
-.fs-sm { font-size: theme.$font-size-sm; }
-.fs-md { font-size: theme.$font-size-md; }
-.fs-lg { font-size: theme.$font-size-lg; }
-.fs-xl { font-size: theme.$font-size-xl; }
-.fs-xxl { font-size: theme.$font-size-xxl; }
+.fs-xs { font-size: $font-size-xs; }
+.fs-sm { font-size: $font-size-sm; }
+.fs-md { font-size: $font-size-md; }
+.fs-lg { font-size: $font-size-lg; }
+.fs-xl { font-size: $font-size-xl; }
+.fs-xxl { font-size: $font-size-xxl; }
 
 // 字体粗细
 .font-bold { font-weight: bold; }
 .font-medium { font-weight: 500; }
 
 // 间距
-.mt-xs { margin-top: theme.$spacing-xs; }
-.mt-sm { margin-top: theme.$spacing-sm; }
-.mt-md { margin-top: theme.$spacing-md; }
-.mt-lg { margin-top: theme.$spacing-lg; }
-.mt-xl { margin-top: theme.$spacing-xl; }
+.mt-xs { margin-top: $spacing-xs; }
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+.mt-xl { margin-top: $spacing-xl; }
 
-.mb-xs { margin-bottom: theme.$spacing-xs; }
-.mb-sm { margin-bottom: theme.$spacing-sm; }
-.mb-md { margin-bottom: theme.$spacing-md; }
-.mb-lg { margin-bottom: theme.$spacing-lg; }
-.mb-xl { margin-bottom:theme.$spacing-xl; }
+.mb-xs { margin-bottom: $spacing-xs; }
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+.mb-xl { margin-bottom:$spacing-xl; }
 
-.ml-xs { margin-left: theme.$spacing-xs; }
-.ml-sm { margin-left: theme.$spacing-sm; }
-.ml-md { margin-left: theme.$spacing-md; }
-.ml-lg { margin-left: theme.$spacing-lg; }
-.ml-xl { margin-left: theme.$spacing-xl; }
+.ml-xs { margin-left: $spacing-xs; }
+.ml-sm { margin-left: $spacing-sm; }
+.ml-md { margin-left: $spacing-md; }
+.ml-lg { margin-left: $spacing-lg; }
+.ml-xl { margin-left: $spacing-xl; }
 
-.mr-xs { margin-right: theme.$spacing-xs; }
-.mr-sm { margin-right: theme.$spacing-sm; }
-.mr-md { margin-right: theme.$spacing-md; }
-.mr-lg { margin-right: theme.$spacing-lg; }
-.mr-xl { margin-right: theme.$spacing-xl; }
+.mr-xs { margin-right: $spacing-xs; }
+.mr-sm { margin-right: $spacing-sm; }
+.mr-md { margin-right: $spacing-md; }
+.mr-lg { margin-right: $spacing-lg; }
+.mr-xl { margin-right: $spacing-xl; }
 
-.pt-xs { padding-top: theme.$spacing-xs; }
-.pt-sm { padding-top: theme.$spacing-sm; }
-.pt-md { padding-top: theme.$spacing-md; }
-.pt-lg { padding-top: theme.$spacing-lg; }
-.pt-xl { padding-top: theme.$spacing-xl; }
+.pt-xs { padding-top: $spacing-xs; }
+.pt-sm { padding-top: $spacing-sm; }
+.pt-md { padding-top: $spacing-md; }
+.pt-lg { padding-top: $spacing-lg; }
+.pt-xl { padding-top: $spacing-xl; }
 
-.pb-xs { padding-bottom: theme.$spacing-xs; }
-.pb-sm { padding-bottom: theme.$spacing-sm; }
-.pb-md { padding-bottom:theme.$spacing-md; }
-.pb-lg { padding-bottom: theme.$spacing-lg; }
-.pb-xl { padding-bottom: theme.$spacing-xl; }
+.pb-xs { padding-bottom: $spacing-xs; }
+.pb-sm { padding-bottom: $spacing-sm; }
+.pb-md { padding-bottom:$spacing-md; }
+.pb-lg { padding-bottom: $spacing-lg; }
+.pb-xl { padding-bottom: $spacing-xl; }
 
-.px-sm { padding-left: theme.$spacing-sm; padding-right: theme.$spacing-sm; }
-.px-md { padding-left: theme.$spacing-md; padding-right: theme.$spacing-md; }
-.px-lg { padding-left: theme.$spacing-lg; padding-right: theme.$spacing-lg; }
+.px-sm { padding-left: $spacing-sm; padding-right: $spacing-sm; }
+.px-md { padding-left: $spacing-md; padding-right: $spacing-md; }
+.px-lg { padding-left: $spacing-lg; padding-right: $spacing-lg; }
 
-.py-sm { padding-top: theme.$spacing-sm; padding-bottom: theme.$spacing-sm; }
-.py-md { padding-top: theme.$spacing-md; padding-bottom: theme.$spacing-md; }
-.py-lg { padding-top: theme.$spacing-lg; padding-bottom: theme.$spacing-lg; }
+.py-sm { padding-top: $spacing-sm; padding-bottom: $spacing-sm; }
+.py-md { padding-top: $spacing-md; padding-bottom: $spacing-md; }
+.py-lg { padding-top: $spacing-lg; padding-bottom: $spacing-lg; }
 
 // 布局
 .flex { display: flex; }
@@ -121,17 +121,17 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
 
 // 通用卡片
 .card {
-  background-color: theme.$bg-color-light;
-  border-radius: theme.$radius-card;
-  box-shadow: theme.$shadow-sm;
-  padding: theme.$spacing-md;
+  background-color: $bg-color-light;
+  border-radius: $radius-card;
+  box-shadow: $shadow-sm;
+  padding: $spacing-md;
 }
 
 .card-lg {
-  background-color: theme.$bg-color-light;
-  border-radius: theme.$radius-card;
-  box-shadow: theme.$shadow-md;
-  padding: theme.$spacing-lg;
+  background-color: $bg-color-light;
+  border-radius: $radius-card;
+  box-shadow: $shadow-md;
+  padding: $spacing-lg;
 }
 
 // 通用按钮样式
@@ -139,9 +139,9 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: theme.$radius-md;
-  font-size: theme.$font-size-md;
-  transition: all theme.$transition-normal;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  transition: all $transition-normal;
 
   &:active {
     opacity: 0.8;
@@ -150,53 +150,53 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
 }
 
 .btn-primary {
-  background-color: theme.$primary;
-  color: theme.$text-inverse;
+  background-color: $primary;
+  color: $text-inverse;
 
   &:hover {
-    background-color: theme.$primary-dark;
+    background-color: $primary-dark;
   }
 
   &:active {
-    background-color: theme.$primary-dark;
+    background-color: $primary-dark;
   }
 }
 
 .btn-primary-outline {
   background-color: transparent;
-  color: theme.$primary;
-  border: 2rpx solid theme.$primary;
+  color: $primary;
+  border: 2rpx solid $primary;
 
   &:hover {
-    background-color: theme.$primary-bg;
+    background-color: $primary-bg;
   }
 
   &:active {
-    background-color: theme.$primary-bg;
+    background-color: $primary-bg;
   }
 }
 
 .btn-default {
-  background-color: theme.$bg-color-light;
-  color: theme.$text-primary;
-  border: 1px solid theme.$border-color;
+  background-color: $bg-color-light;
+  color: $text-primary;
+  border: 1px solid $border-color;
 
   &:hover {
-    border-color: theme.$primary;
-    color: theme.$primary;
+    border-color: $primary;
+    color: $primary;
   }
 }
 
 .btn-warning {
-  background-color: theme.$warning;
-  color: theme.$text-primary;
+  background-color: $warning;
+  color: $text-primary;
 }
 
 // 分割线
 .divider {
   height: 1px;
-  background-color: theme.$border-color;
-  margin: theme.$spacing-md 0;
+  background-color: $border-color;
+  margin: $spacing-md 0;
 }
 
 // 空状态样式
@@ -210,19 +210,19 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
   .empty-state-icon {
     font-size: 100rpx;
     margin-bottom: 24rpx;
-    color: theme.$text-muted;
+    color: $text-muted;
   }
 
   .empty-state-text {
-    font-size: theme.$font-size-lg;
-    color: theme.$text-primary;
+    font-size: $font-size-lg;
+    color: $text-primary;
     font-weight: 500;
     margin-bottom: 12rpx;
   }
 
   .empty-state-subtext {
-    font-size: theme.$font-size-md;
-    color: theme.$text-muted;
+    font-size: $font-size-md;
+    color: $text-muted;
     text-align: center;
   }
 }
@@ -283,19 +283,19 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
 }
 
 .animate-fadeIn {
-  animation: fadeIn theme.$transition-normal ease-out;
+  animation: fadeIn $transition-normal ease-out;
 }
 
 .animate-slideUp {
-  animation: slideUp theme.$transition-normal ease-out;
+  animation: slideUp $transition-normal ease-out;
 }
 
 .animate-slideDown {
-  animation: slideDown theme.$transition-normal ease-out;
+  animation: slideDown $transition-normal ease-out;
 }
 
 .animate-scaleIn {
-  animation: scaleIn theme.$transition-normal ease-out;
+  animation: scaleIn $transition-normal ease-out;
 }
 
 .animate-bounce {
@@ -308,39 +308,39 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
 
 // 过渡效果
 .transition-all {
-  transition: all theme.$transition-normal;
+  transition: all $transition-normal;
 }
 
 .transition-fast {
-  transition: all theme.$transition-fast;
+  transition: all $transition-fast;
 }
 
 .transition-slow {
-  transition: all theme.$transition-slow;
+  transition: all $transition-slow;
 }
 
 // 页面容器
 .page-container {
   min-height: 100vh;
-  background-color: theme.$bg-color;
-  padding: theme.$spacing-md;
+  background-color: $bg-color;
+  padding: $spacing-md;
   padding-bottom: 140rpx;
 }
 
 .page-header {
-  padding: theme.$spacing-md 0;
-  margin-bottom: theme.$spacing-md;
+  padding: $spacing-md 0;
+  margin-bottom: $spacing-md;
 
   .page-title {
-    font-size: theme.$font-size-xl;
+    font-size: $font-size-xl;
     font-weight: bold;
-    color: theme.$text-primary;
+    color: $text-primary;
   }
 
   .page-subtitle {
-    font-size: theme.$font-size-sm;
-    color: theme.$text-muted;
-    margin-top: theme.$spacing-xs;
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin-top: $spacing-xs;
   }
 }
 
