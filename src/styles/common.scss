@@ -152,12 +152,39 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
 .btn-primary {
   background-color: $primary;
   color: $text-inverse;
+
+  &:hover {
+    background-color: $primary-dark;
+  }
+
+  &:active {
+    background-color: $primary-dark;
+  }
+}
+
+.btn-primary-outline {
+  background-color: transparent;
+  color: $primary;
+  border: 2rpx solid $primary;
+
+  &:hover {
+    background-color: $primary-bg;
+  }
+
+  &:active {
+    background-color: $primary-bg;
+  }
 }
 
 .btn-default {
   background-color: $bg-color-light;
   color: $text-primary;
   border: 1px solid $border-color;
+
+  &:hover {
+    border-color: $primary;
+    color: $primary;
+  }
 }
 
 .btn-warning {
@@ -170,6 +197,34 @@ view, text, scroll-view, swiper, button, form, input, textarea, label, navigator
   height: 1px;
   background-color: $border-color;
   margin: $spacing-md 0;
+}
+
+// 空状态样式
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+
+  .empty-state-icon {
+    font-size: 100rpx;
+    margin-bottom: 24rpx;
+    color: $text-muted;
+  }
+
+  .empty-state-text {
+    font-size: $font-size-lg;
+    color: $text-primary;
+    font-weight: 500;
+    margin-bottom: 12rpx;
+  }
+
+  .empty-state-subtext {
+    font-size: $font-size-md;
+    color: $text-muted;
+    text-align: center;
+  }
 }
 
 // 动画类
