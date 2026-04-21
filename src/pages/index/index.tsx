@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Taro from '@tarojs/taro';
-import { View, Text, Image } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import { AtButton } from 'taro-ui';
 import { useAuth } from '../../store';
 import './index.scss';

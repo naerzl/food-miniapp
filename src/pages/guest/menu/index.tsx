@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
-import { View, Text, ScrollView, RefreshControl, Image } from '@tarojs/components';
+import { View, Text, ScrollView, Image } from '@tarojs/components';
 import { AtActivityIndicator, AtBadge } from 'taro-ui';
 import { dishApi, categoryApi } from '../../../services/api';
 import { Dish, Category } from '../../../../types/api';
@@ -26,6 +26,7 @@ const MenuPage: React.FC = () => {
         categoryApi.getCategories(),
         dishApi.getTodayDishes(), // 只获取今日供应的菜品
       ]);
+
 
       setCategories(categoriesRes || []);
       // 只显示今日供应且未售罄的菜品
@@ -131,13 +132,6 @@ const MenuPage: React.FC = () => {
       <ScrollView
         className="dish-list"
         scrollY
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            color="#FF7A45"
-          />
-        }
       >
         {filteredDishes.length === 0 ? (
           <View className="empty-state">

@@ -39,6 +39,7 @@ const API_BASE_URL = process.env.TARO_APP_API_URL || 'http://localhost:18321';
 const requestInterceptor = (chain: any) => {
   const requestParams = chain.requestParams;
 
+  console.log(requestParams,'@@@@@@');
   // 添加基础 URL
   if (!requestParams.url.startsWith('http')) {
     requestParams.url = `${API_BASE_URL}${requestParams.url}`;
@@ -61,7 +62,10 @@ const requestInterceptor = (chain: any) => {
     };
   }
 
-  return chain.proceed(requestParams);
+  return chain.proceed(requestParams).then(res => {
+    console.log(`http <-- ${requestParams.url} result:`, res)
+    return res
+  });
 };
 
 // 响应拦截器
@@ -123,6 +127,7 @@ Taro.addInterceptor(responseInterceptor);
 
 // 通用请求方法
 async function request<T>(options: Taro.request.Option): Promise<T> {
+  console.log(options,'requestInterceptor')
   const res = await Taro.request(options);
   // 处理两种响应格式：{code, message, data} 或直接返回数据
   if (res.data?.code === 0) {
