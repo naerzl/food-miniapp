@@ -1,4 +1,4 @@
-import { User, UserRole } from './common';
+import { UserRole } from './common';
 
 export interface LoginDto {
   username?: string;
@@ -14,7 +14,13 @@ export interface WechatLoginDto {
 export interface AuthResponseDto {
   accessToken: string;
   expiresIn: number;
-  user: User;
+  user: {
+    id: string;
+    username?: string;
+    nickname?: string;
+    avatar?: string;
+    role: string;
+  };
 }
 
 export interface CreateUserDto {

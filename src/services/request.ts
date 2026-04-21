@@ -6,7 +6,6 @@ const API_BASE_URL = process.env.TARO_APP_API_URL || 'http://localhost:18321';
 const requestInterceptor = (chain: any) => {
   const requestParams = chain.requestParams;
 
-  console.log(requestParams, '@@@@@@');
   if (!requestParams.url.startsWith('http')) {
     requestParams.url = `${API_BASE_URL}${requestParams.url}`;
   }
@@ -84,7 +83,6 @@ Taro.addInterceptor(responseInterceptor);
 
 // 通用请求方法
 export async function request<T>(options: Taro.request.Option): Promise<T> {
-  console.log(options, 'requestInterceptor');
   const res = await Taro.request(options);
   if (res.data?.code === 0) {
     return res.data.data as T;
