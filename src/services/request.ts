@@ -1,42 +1,39 @@
+import axios, { AxiosRequestConfig, AxiosResponse } from 'taro-axios';
 import Taro from '@tarojs/taro';
+
+declare const process: {
+  env: {
+    TARO_APP_API_URL?: string;
+  };
+};
 
 const API_BASE_URL = process.env.TARO_APP_API_URL || 'http://localhost:18321';
 
-// 请求拦截器
-const requestInterceptor = (chain: any) => {
-  const requestParams = chain.requestParams;
+const httpClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+});
 
-  if (!requestParams.url.startsWith('http')) {
-    requestParams.url = `${API_BASE_URL}${requestParams.url}`;
+httpClient.interceptors.request.use(
+  (config) => {
+    const token = Taro.getStorageSync('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  const token = Taro.getStorageSync('token');
-  if (token) {
-    requestParams.header = {
-      ...requestParams.header,
-      Authorization: `Bearer ${token}`,
-    };
-  }
+httpClient.interceptors.response.use(
+  (response: AxiosResponse) => {
+    const { status, data } = response;
 
-  if (!requestParams.header?.['Content-Type']) {
-    requestParams.header = {
-      ...requestParams.header,
-      'Content-Type': 'application/json',
-    };
-  }
-
-  return chain.proceed(requestParams).then(res => {
-    console.log(`http <-- ${requestParams.url} result:`, res);
-    return res;
-  });
-};
-
-// 响应拦截器
-const responseInterceptor = (chain: any) => {
-  return chain.proceed().then((res: any) => {
-    if (res.statusCode >= 400) {
+    if (status >= 400) {
       let message = '请求失败';
-      switch (res.statusCode) {
+      switch (status) {
         case 401:
           message = '登录已过期，请重新登录';
           Taro.removeStorageSync('token');
@@ -56,36 +53,46 @@ const responseInterceptor = (chain: any) => {
           message = '服务器内部错误';
           break;
         default:
-          message = res.data?.message || `请求失败(${res.statusCode})`;
+          message = data?.message || `请求失败(${status})`;
       }
       Taro.showToast({ title: message, icon: 'none' });
       return Promise.reject(new Error(message));
     }
 
-    if (res.data?.code !== undefined && res.data?.code !== 0) {
-      Taro.showToast({ title: res.data.message || '操作失败', icon: 'none' });
-      return Promise.reject(new Error(res.data.message));
+    if (data?.code !== undefined && data?.code !== 0) {
+      Taro.showToast({ title: data.message || '操作失败', icon: 'none' });
+      return Promise.reject(new Error(data.message));
     }
 
-    return res;
-  }).catch((err: any) => {
-    if (err.errMsg?.includes('timeout')) {
+    return data;
+  },
+  (error) => {
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
       Taro.showToast({ title: '请求超时，请重试', icon: 'none' });
-    } else if (err.errMsg?.includes('fail')) {
+    } else if (error.message?.includes('Network Error') || error.message?.includes('fail')) {
       Taro.showToast({ title: '网络错误，请检查网络', icon: 'none' });
     }
-    return Promise.reject(err);
-  });
-};
-
-Taro.addInterceptor(requestInterceptor);
-Taro.addInterceptor(responseInterceptor);
-
-// 通用请求方法
-export async function request<T>(options: Taro.request.Option): Promise<T> {
-  const res = await Taro.request(options);
-  if (res.data?.code === 0) {
-    return res.data.data as T;
+    return Promise.reject(error);
   }
-  return res.data as T;
+);
+
+export interface RequestOptions {
+  url: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  data?: unknown;
+  header?: Record<string, string>;
 }
+
+export async function request<T>(options: RequestOptions): Promise<T> {
+  const config: AxiosRequestConfig = {
+    url: options.url,
+    method: options.method || 'GET',
+    data: options.data,
+    headers: options.header,
+  };
+
+  const res = await httpClient(config);
+  return (res as AxiosResponse).data as T;
+}
+
+export { httpClient };
