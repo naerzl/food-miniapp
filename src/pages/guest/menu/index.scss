@@ -1,4 +1,5 @@
 @import '../../../styles/theme.scss';
+@import '../../../styles/common.scss';
 
 .menu-page {
   min-height: 100vh;
@@ -36,7 +37,7 @@
       display: inline-block;
       padding: 12rpx 28rpx;
       margin-right: 16rpx;
-      background-color: $bg-color;
+      background-color: $primary-bg;
       border-radius: $radius-full;
       transition: all $transition-fast;
 
@@ -55,7 +56,7 @@
 
       .category-text {
         font-size: $font-size-md;
-        color: $text-primary;
+        color: $text-secondary;
       }
     }
   }
@@ -174,32 +175,7 @@
   }
 }
 
-// 空状态
-.empty-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 120rpx 40rpx;
-
-  .empty-icon {
-    font-size: 100rpx;
-    margin-bottom: 24rpx;
-  }
-
-  .empty-text {
-    font-size: $font-size-lg;
-    color: $text-primary;
-    font-weight: 500;
-    margin-bottom: 12rpx;
-  }
-
-  .empty-subtext {
-    font-size: $font-size-md;
-    color: $text-muted;
-    text-align: center;
-  }
-}
+// 空状态 - 使用 common.scss 的 empty-state 类
 
 // 购物车悬浮按钮
 .cart-float {

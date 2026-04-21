@@ -140,10 +140,10 @@ const MenuPage: React.FC = () => {
         }
       >
         {filteredDishes.length === 0 ? (
-          <View className="empty-container">
-            <View className="empty-icon">🍽️</View>
-            <Text className="empty-text">暂无菜品</Text>
-            <Text className="empty-subtext">厨师正在准备美味佳肴，请稍后再来</Text>
+          <View className="empty-state">
+            <View className="empty-state-icon">🍽️</View>
+            <Text className="empty-state-text">暂无菜品</Text>
+            <Text className="empty-state-subtext">厨师正在准备美味佳肴，请稍后再来</Text>
           </View>
         ) : (
           <View className="dish-grid">
