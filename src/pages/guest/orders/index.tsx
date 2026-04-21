@@ -125,8 +125,7 @@ const OrdersPage: React.FC = () => {
             <View className="order-header">
               <Text className="order-no">订单号：{order.orderNo}</Text>
               <Text
-                className="order-status"
-                style={{ color: STATUS_COLOR[order.status] }}
+                className={`order-status status-${order.status}`}
               >
                 {STATUS_TEXT[order.status]}
               </Text>
@@ -144,7 +143,7 @@ const OrdersPage: React.FC = () => {
                   <Text className="action-btn primary">去支付</Text>
                 )}
                 {order.status === 'completed' && (
-                  <Text className="action-btn">再来一单</Text>
+                  <Text className="action-btn cancel">再来一单</Text>
                 )}
               </View>
             </View>

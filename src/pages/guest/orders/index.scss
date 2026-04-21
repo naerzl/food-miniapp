@@ -72,9 +72,10 @@
 
   .order-card {
     background-color: $bg-color-light;
-    border-radius: $radius-card;
+    border-radius: 16rpx;
     padding: 24rpx;
     margin-bottom: 16rpx;
+    box-shadow: $shadow-card;
 
     &:active {
       opacity: 0.9;
@@ -92,8 +93,35 @@
       }
 
       .order-status {
-        font-size: $font-size-md;
+        font-size: $font-size-sm;
         font-weight: 500;
+        padding: 4rpx 16rpx;
+        border-radius: $radius-full;
+      }
+
+      .status-pending_payment {
+        background-color: $warning-bg;
+        color: $status-pending;
+      }
+
+      .status-paid {
+        background-color: $info-bg;
+        color: $status-paid;
+      }
+
+      .status-preparing {
+        background-color: #F9F0FF;
+        color: $status-preparing;
+      }
+
+      .status-completed {
+        background-color: $success-bg;
+        color: $status-completed;
+      }
+
+      .status-cancelled {
+        background-color: #F5F5F5;
+        color: $status-cancelled;
       }
     }
 
@@ -129,17 +157,23 @@
       }
 
       .order-actions {
+        display: flex;
+        gap: 16rpx;
+
         .action-btn {
           font-size: $font-size-sm;
-          color: $text-secondary;
-          padding: 8rpx 20rpx;
-          border: 1rpx solid $border-color;
-          border-radius: $radius-sm;
+          padding: 12rpx 28rpx;
+          border-radius: $radius-full;
+          border: none;
+
+          &.cancel {
+            color: $text-muted;
+            background-color: #F5F5F5;
+          }
 
           &.primary {
-            color: $primary;
-            border-color: $primary;
-            background-color: $primary-bg;
+            color: $text-inverse;
+            background-color: $primary;
           }
         }
       }
