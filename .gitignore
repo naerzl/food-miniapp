@@ -1,3 +1,4 @@
+.worktrees/
 dist/
 deploy_versions/
 .temp/
