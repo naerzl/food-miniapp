@@ -3,7 +3,7 @@ import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { AtActivityIndicator, AtTabs, AtTabsPane } from 'taro-ui';
 import { statisticsApi } from '../../../services';
-import { DashboardOverviewDto, TrendResponseDto, DishRankingItemDto } from '../../../../types/api';
+import { DashboardOverviewDto, TrendResponseDto, DishRankingItemDto } from '../../../../types';
 import './index.scss';
 
 const TABS = [
@@ -88,7 +88,17 @@ const StatPage: React.FC = () => {
   };
 
   const renderTrends = () => {
-    if (!trends) return null;
+    if (!trends || !trends.trend || trends.trend.length === 0) {
+      return (
+        <View className="empty-section">
+          <Text className="empty-text">暂无趋势数据</Text>
+        </View>
+      );
+    }
+
+    // Calculate max values for chart scaling
+    const maxOrders = Math.max(...trends.trend.map(t => t.orderCount), 1);
+    const maxRevenue = Math.max(...trends.trend.map(t => t.revenue), 1);
 
     return (
       <View className="trend-section">
@@ -106,8 +116,43 @@ const StatPage: React.FC = () => {
             <Text className="summary-label">客单价</Text>
           </View>
         </View>
-        <View className="trend-hint">
-          <Text className="hint-text">趋势图表功能开发中...</Text>
+
+        <View className="chart-section">
+          <Text className="chart-title">每日订单量</Text>
+          <View className="bar-chart">
+            {trends.trend.map((item, index) => (
+              <View key={index} className="bar-item">
+                <View className="bar-wrapper">
+                  <View
+                    className="bar orders-bar"
+                    style={{ height: `${(item.orderCount / maxOrders) * 100}%` }}
+                  >
+                    <Text className="bar-value">{item.orderCount}</Text>
+                  </View>
+                </View>
+                <Text className="bar-label">{item.date.slice(5)}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View className="chart-section">
+          <Text className="chart-title">每日营收</Text>
+          <View className="bar-chart">
+            {trends.trend.map((item, index) => (
+              <View key={index} className="bar-item">
+                <View className="bar-wrapper">
+                  <View
+                    className="bar revenue-bar"
+                    style={{ height: `${(item.revenue / maxRevenue) * 100}%` }}
+                  >
+                    <Text className="bar-value">¥{item.revenue.toFixed(0)}</Text>
+                  </View>
+                </View>
+                <Text className="bar-label">{item.date.slice(5)}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
     );
@@ -169,7 +214,7 @@ const StatPage: React.FC = () => {
       <AtTabs
         current={currentTab}
         tabList={TABS}
-        onClick={setCurrentTab}
+        onClick={(index) => setCurrentTab(index)}
         className="stat-tabs"
       />
       <View className="stat-content">

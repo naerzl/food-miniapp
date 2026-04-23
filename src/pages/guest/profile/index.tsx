@@ -4,7 +4,7 @@ import { View, Text, Image, Button } from '@tarojs/components';
 import { AtList, AtListItem, AtButton, AtActivityIndicator } from 'taro-ui';
 import { useAuth, useCart } from '../../../store';
 import { userApi, statisticsApi, authApi } from '../../../services';
-import { UserStatisticsDto, User } from '../../../../types/api';
+import { UserStatisticsDto, User } from '../../../../types';
 import './index.scss';
 
 const ProfilePage: React.FC = () => {

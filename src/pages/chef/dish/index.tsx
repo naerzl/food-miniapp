@@ -3,7 +3,7 @@ import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, Image, ScrollView } from '@tarojs/components';
 import { AtActivityIndicator, AtSwitch, AtFab, AtModal, AtModalContent, AtModalAction } from 'taro-ui';
 import { dishApi, categoryApi } from '../../../services';
-import { Dish, Category } from '../../../../types/api';
+import { Dish, Category } from '../../../../types';
 import './index.scss';
 
 const DishManagePage: React.FC = () => {

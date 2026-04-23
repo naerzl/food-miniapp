@@ -1,11 +1,14 @@
 import React from 'react';
 import { AppStoreProvider } from './store';
+import { WebSocketProvider } from './store/WebSocketContext';
 import './styles/common.scss';
 
 const App = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppStoreProvider>
-      {children}
+      <WebSocketProvider>
+        {children}
+      </WebSocketProvider>
     </AppStoreProvider>
   );
 };

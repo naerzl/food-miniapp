@@ -3,7 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro';
 import { View, Text, Input, Textarea, Picker } from '@tarojs/components';
 import { AtButton, AtSwitch } from 'taro-ui';
 import { dishApi, categoryApi } from '../../../../services';
-import { Dish, Category, CreateDishDto } from '../../../../../types/api';
+import { Dish, Category, CreateDishDto } from '../../../../../types';
 import './index.scss';
 
 const DishEditPage: React.FC = () => {

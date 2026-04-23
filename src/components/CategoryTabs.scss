@@ -1,0 +1,44 @@
+@import '../styles/theme.scss';
+
+.category-tabs {
+  display: flex;
+  align-items: center;
+  background: $bg-color-light;
+  padding: $spacing-sm 0;
+  border-bottom: 1px solid $border-color-light;
+
+  .tab-item {
+    flex: 1;
+    text-align: center;
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-md;
+    color: $text-secondary;
+    position: relative;
+    transition: color $transition-fast;
+
+    &:active {
+      opacity: 0.7;
+    }
+
+    &.active {
+      color: $primary;
+      font-weight: 600;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -$spacing-sm;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40rpx;
+        height: 4rpx;
+        background: $primary;
+        border-radius: $radius-full;
+      }
+    }
+  }
+
+  .tab-text {
+    display: block;
+  }
+}

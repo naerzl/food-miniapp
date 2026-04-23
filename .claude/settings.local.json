@@ -11,7 +11,9 @@
       "Bash(npx tsc *)",
       "Bash(curl -s http://localhost:10086)",
       "Bash(git checkout *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(pnpm build:weapp)",
+      "Bash(find node_modules/taro-ui -name \"*.d.ts\" -exec grep -l \"AtTabs\" {} \\\\;)"
     ]
   }
 }

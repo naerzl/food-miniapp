@@ -3,7 +3,7 @@ import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, Input } from '@tarojs/components';
 import { AtActivityIndicator, AtSwipeAction, AtModal, AtModalContent, AtModalAction, AtButton } from 'taro-ui';
 import { categoryApi } from '../../../services';
-import { Category, CreateCategoryDto } from '../../../../types/api';
+import { Category, CreateCategoryDto } from '../../../../types';
 import './index.scss';
 
 const CategoryManagePage: React.FC = () => {
