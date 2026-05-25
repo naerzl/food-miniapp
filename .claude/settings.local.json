@@ -20,7 +20,8 @@
       "WebFetch(domain:weapp-tw.icebreaker.top)",
       "WebFetch(domain:deepwiki.com)",
       "Bash(Select-Object -Last 30)",
-      "PowerShell(npm run *)"
+      "PowerShell(npm run *)",
+      "PowerShell(npm uninstall *)"
     ],
     "additionalDirectories": [
       "D:\\code\\githup\\food\\food-service"
