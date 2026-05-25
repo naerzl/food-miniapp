@@ -1,5 +1,11 @@
 # food-miniapp Project Guide
 
+
+## 交互语言要求
+
+**重要提示：** 请始终使用**中文**进行对话、问答以及文档编写。
+
+
 ## Project Overview
 This is a Taro (React) WeChat miniapp for a family ordering system.
 

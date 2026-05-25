@@ -12,8 +12,18 @@
       "Bash(curl -s http://localhost:10086)",
       "Bash(git checkout *)",
       "Bash(git *)",
-      "Bash(pnpm build:weapp)",
-      "Bash(find node_modules/taro-ui -name \"*.d.ts\" -exec grep -l \"AtTabs\" {} \\\\;)"
+      "Bash(npm install *)",
+      "Bash(node *)",
+      "PowerShell(git *)",
+      "Bash(Remove-Item *)",
+      "WebSearch",
+      "WebFetch(domain:weapp-tw.icebreaker.top)",
+      "WebFetch(domain:deepwiki.com)",
+      "Bash(Select-Object -Last 30)",
+      "PowerShell(npm run *)"
+    ],
+    "additionalDirectories": [
+      "D:\\code\\githup\\food\\food-service"
     ]
   }
 }
