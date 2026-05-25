@@ -1,8 +1,6 @@
 export default defineAppConfig({
   pages: [
-    // 首页
     'pages/index/index',
-    // 客人端页面
     'pages/guest/menu/index',
     'pages/guest/cart/index',
     'pages/guest/confirm/index',
@@ -10,7 +8,6 @@ export default defineAppConfig({
     'pages/guest/order-detail/index',
     'pages/guest/profile/index',
   ],
-  // 主包 TabBar (客人端)
   tabBar: {
     color: '#999999',
     selectedColor: '#6BBF99',
@@ -50,21 +47,4 @@ export default defineAppConfig({
     navigationBarTextStyle: 'black',
     backgroundColor: '#F8F9FA',
   },
-  // 分包配置
-  subpackages: [
-    {
-      root: 'pages/chef',
-      name: 'chef',
-      pages: [
-        'login/index',
-        'layout/index',
-        'dish/index',
-        'dish/edit/index',
-        'category/index',
-        'order/index',
-        'customer/index',
-        'stat/index',
-      ],
-    },
-  ],
-});
+})

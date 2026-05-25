@@ -43,7 +43,6 @@ httpClient.interceptors.response.use(
           message = '登录已过期，请重新登录';
           Taro.removeStorageSync('token');
           Taro.removeStorageSync('userInfo');
-          Taro.removeStorageSync('role');
           setTimeout(() => {
             Taro.redirectTo({ url: '/pages/index/index' });
           }, 1500);

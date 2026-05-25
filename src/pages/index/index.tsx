@@ -1,33 +1,22 @@
-import React, { useEffect } from 'react';
-import Taro from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
-import { AtButton } from 'taro-ui';
-import { useAuth } from '../../store';
-import './index.scss';
+import React, { useEffect } from 'react'
+import Taro from '@tarojs/taro'
+import { View, Text } from '@tarojs/components'
+import { AtButton } from 'taro-ui'
+import { useAuth } from '../../store'
+import './index.scss'
 
 const IndexPage: React.FC = () => {
-  const { isLogin, role } = useAuth();
+  const { isLogin } = useAuth()
 
   useEffect(() => {
-    // 根据登录态决定跳转
     if (isLogin) {
-      if (role === 'chef') {
-        // 私厨跳转到管理页
-        Taro.redirectTo({ url: '/pages/chef/layout/index' });
-      } else {
-        // 客人跳转到菜单页
-        Taro.switchTab({ url: '/pages/guest/menu/index' });
-      }
+      Taro.switchTab({ url: '/pages/guest/menu/index' })
     }
-  }, [isLogin, role]);
+  }, [isLogin])
 
-  const handleGuestEnter = () => {
-    Taro.switchTab({ url: '/pages/guest/menu/index' });
-  };
-
-  const handleChefEnter = () => {
-    Taro.navigateTo({ url: '/pages/chef/login/index' });
-  };
+  const handleEnter = () => {
+    Taro.switchTab({ url: '/pages/guest/menu/index' })
+  }
 
   return (
     <View className="index-page">
@@ -43,22 +32,9 @@ const IndexPage: React.FC = () => {
         <AtButton
           type="primary"
           className="guest-btn"
-          onClick={handleGuestEnter}
+          onClick={handleEnter}
         >
-          🍜 我是客人，去点餐
-        </AtButton>
-
-        <View className="divider">
-          <View className="line"></View>
-          <Text className="text">或</Text>
-          <View className="line"></View>
-        </View>
-
-        <AtButton
-          className="chef-btn"
-          onClick={handleChefEnter}
-        >
-          👨‍🍳 我是私厨，去管理
+          进入点餐
         </AtButton>
       </View>
 
@@ -66,7 +42,7 @@ const IndexPage: React.FC = () => {
         <Text className="footer-text">让家庭用餐更简单、更温馨</Text>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default IndexPage;
+export default IndexPage
