@@ -1,5 +1,7 @@
 import { defineConfig, type UserConfigExport } from '@tarojs/cli'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import tailwindcss from 'tailwindcss'
+import { UnifiedViteWeappTailwindcssPlugin } from 'weapp-tailwindcss/vite'
 import devConfig from './dev'
 import prodConfig from './prod'
 
@@ -27,7 +29,27 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
       }
     },
     framework: 'react',
-    compiler: 'vite',
+    compiler: {
+      type: 'vite',
+      vitePlugins: [
+        {
+          name: 'postcss-config-loader-plugin',
+          config(config) {
+            if (typeof config.css?.postcss === 'object') {
+              config.css.postcss.plugins?.unshift(tailwindcss())
+            }
+          },
+        },
+        UnifiedViteWeappTailwindcssPlugin({
+          rem2rpx: true,
+          disabled:
+            process.env.TARO_ENV === 'h5' ||
+            process.env.TARO_ENV === 'harmony' ||
+            process.env.TARO_ENV === 'rn',
+          injectAdditionalCssVarScope: true,
+        }),
+      ] as any,
+    },
     mini: {
       postcss: {
         pxtransform: {
