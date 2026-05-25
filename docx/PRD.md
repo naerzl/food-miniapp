@@ -7,10 +7,18 @@
 | 项目 | 内容 |
 |------|------|
 | 产品名称 | 家庭点菜系统 |
-| 文档版本 | V2.0 |
+| 文档版本 | V2.2 |
 | 创建日期 | 2026-04-21 |
-| 最后更新 | 2026-04-21 |
-| 状态 | 草稿 |
+| 最后更新 | 2026-05-25 |
+| 状态 | 进行中 |
+
+## 变更记录
+
+| 日期 | 版本 | 变更说明 | 操作人 |
+|------|------|----------|--------|
+| 2026-04-21 | V2.0 | 初始版本，定义 Phase 1-3 完整规划 | — |
+| 2026-05-22 | V2.1 | 状态更新为"进行中"；统一"用户管理"命名规范；补全 Phase 3 交付清单与 Sprint 排期计划 | — |
+| 2026-05-25 | V2.2 | Phase 3 后端：支付/退款/权限标记为暂缓（附原因）；实现数据导出（订单导出 + 统计报表导出）；修正接口状态 ⚠️→✅ | — |
 
 ---
 
@@ -328,20 +336,22 @@
 | 菜品销售排行 | 热销榜、营收榜、人气榜、滞销榜 | P0 |
 | 用户消费排行 | 家庭成员消费排行、累计消费、订单次数 | P1 |
 
-#### 3.2.6 客人管理
+#### 3.2.6 用户管理（原"客人管理"）
 
-**功能描述**：查看所有客人信息，可禁用某客人。
+> **V2.1 变更**：模块名从"客人管理"统一为"用户管理"，与代码中 `user` 模块（`/api/users`）保持一致。功能描述与 `customers` 后端模块（`/api/customers`）对齐。
+
+**功能描述**：查看所有用户信息，可禁用某用户。系统内用户分为两类角色：`user`（客人/家庭成员）和 `admin/merchant`（厨师/管理员）。
 
 **用户故事**：
-> 作为厨师，我希望查看所有客人的信息，必要时可以禁用某人。
+> 作为厨师，我希望查看所有用户的信息，必要时可以禁用某人。
 
 **功能详单**：
 
 | 功能点 | 描述 | 优先级 |
 |--------|------|--------|
-| 客人列表 | 查看所有客人（昵称、头像、注册时间、累计消费） | P1 |
-| 禁用客人 | 禁用后该客人无法下单 | P2 |
-| 客人统计 | 查看指定客人的详细消费统计 | P1 |
+| 用户列表 | 查看所有客人（昵称、头像、注册时间、累计消费） | P1 |
+| 禁用用户 | 禁用后该用户无法下单 | P2 |
+| 用户统计 | 查看指定用户的详细消费统计 | P1 |
 
 ---
 
@@ -417,14 +427,21 @@
 
 #### users（用户表）
 
+> **V2.1 变更**：与代码 `user.entity.ts` 对齐，补充 UUID 主键、phone/email、unionId、avatar、status 等字段。
+
 | 字段名 | 类型 | 说明 | 约束 |
 |--------|------|------|------|
-| id | int | 主键 | PK, AUTO_INCREMENT |
-| openId | varchar(64) | 微信唯一标识 | UNIQUE, NOT NULL |
-| nickname | varchar(50) | 微信昵称 | |
-| avatarUrl | varchar(255) | 微信头像 | |
+| id | varchar(36) | 主键（UUID） | PK, NOT NULL |
+| username | varchar(50) | 用户名 | |
+| nickname | varchar(50) | 昵称 | |
+| phone | varchar(20) | 手机号 | INDEX |
+| email | varchar(100) | 邮箱 | INDEX |
+| password | varchar(255) | bcrypt 加密密码 | |
+| openId | varchar(64) | 微信唯一标识 | INDEX |
+| unionId | varchar(64) | 微信 unionId | |
+| avatar | varchar(255) | 头像 URL | |
 | role | enum | 角色：admin/merchant/user | DEFAULT 'user' |
-| disabled | boolean | 是否禁用 | DEFAULT false |
+| status | enum | 状态：active/inactive/banned | DEFAULT 'active' |
 | createdAt | datetime | 创建时间 | |
 | updatedAt | datetime | 更新时间 | |
 
@@ -432,35 +449,45 @@
 
 | 字段名 | 类型 | 说明 | 约束 |
 |--------|------|------|------|
-| id | int | 主键 | PK, AUTO_INCREMENT |
+| id | varchar(36) | 主键（UUID） | PK, NOT NULL |
 | name | varchar(50) | 分类名称 | NOT NULL |
 | sortOrder | int | 排序序号 | DEFAULT 0 |
 | createdAt | datetime | 创建时间 | |
 
 #### dishes（菜品表）
 
+> **V2.1 变更**：补充 `soldOut`、`sortOrder`、`deletedAt` 字段，与代码 `dish.entity.ts` 对齐。
+
 | 字段名 | 类型 | 说明 | 约束 |
 |--------|------|------|------|
-| id | int | 主键 | PK, AUTO_INCREMENT |
-| categoryId | int | 分类ID | FK → categories.id |
-| name | varchar(100) | 菜品名称 | NOT NULL |
+| id | varchar(36) | 主键（UUID） | PK, NOT NULL |
+| categoryId | varchar(36) | 分类ID | FK → categories.id, INDEX |
+| name | varchar(100) | 菜品名称 | NOT NULL, INDEX |
 | price | decimal(10,2) | 价格 | NOT NULL |
-| image | varchar(255) | 图片URL | |
+| image | text | 图片URL | |
 | description | text | 简介 | |
 | available | boolean | 是否在售（全局） | DEFAULT true |
-| todaySupply | boolean | 今日是否供应 | DEFAULT false |
+| todaySupply | boolean | 今日是否供应 | DEFAULT true |
+| soldOut | boolean | 是否售罄 | DEFAULT false |
+| sortOrder | int | 排序值 | DEFAULT 0 |
+| deletedAt | datetime | 删除时间（软删除） | |
 | createdAt | datetime | 创建时间 | |
+| updatedAt | datetime | 更新时间 | |
 
 #### orders（订单表）
 
+> **V2.1 变更**：补充 `orderNo`、`paidAt`、`completedAt` 字段，与代码 `order.entity.ts` 对齐。
+
 | 字段名 | 类型 | 说明 | 约束 |
 |--------|------|------|------|
-| id | int | 主键 | PK, AUTO_INCREMENT |
-| orderNo | varchar(32) | 订单号 | UNIQUE, NOT NULL |
-| userId | int | 用户ID | FK → users.id |
+| id | varchar(36) | 主键（UUID） | PK, NOT NULL |
+| orderNo | varchar(32) | 订单号 | UNIQUE, NOT NULL, INDEX |
+| userId | varchar(36) | 用户ID | FK → users.id, INDEX |
 | totalAmount | decimal(10,2) | 总金额 | NOT NULL |
-| status | enum | 订单状态 | 见状态流转 |
+| status | enum | 订单状态 | 见状态流转, INDEX |
 | remark | text | 备注 | |
+| paidAt | datetime | 支付时间 | |
+| completedAt | datetime | 完成时间 | |
 | createdAt | datetime | 创建时间 | |
 | updatedAt | datetime | 更新时间 | |
 
@@ -478,9 +505,10 @@
 
 | 字段名 | 类型 | 说明 | 约束 |
 |--------|------|------|------|
-| id | int | 主键 | PK, AUTO_INCREMENT |
-| orderId | int | 订单ID | FK → orders.id |
-| dishId | int | 菜品ID | FK → dishes.id |
+| id | varchar(36) | 主键（UUID） | PK, NOT NULL |
+| orderId | varchar(36) | 订单ID | FK → orders.id |
+| dishId | varchar(36) | 菜品ID | FK → dishes.id |
+| dishName | varchar(100) | 菜品名称快照 | |
 | quantity | int | 数量 | NOT NULL |
 | price | decimal(10,2) | 下单时的单价（快照） | NOT NULL |
 
@@ -518,9 +546,10 @@
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │
 │  │ Auth模块  │ │ Dish模块  │ │Order模块  │ │Stat模块  │       │
 │  └──────────┘ └──────────┘ └──────────┘ └──────────┘       │
-│  ┌──────────┐ ┌──────────┐                                 │
-│  │User模块  │ │Event模块  │                                 │
-│  └──────────┘ └──────────┘                                 │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐                   │
+│  │User模块  │ │Event模块  │ │Customer │                   │
+│  │          │ │          │ │ 模块     │                   │
+│  └──────────┘ └──────────┘ └──────────┘                   │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -535,11 +564,14 @@
 
 ### 6.3 项目结构
 
+> **V2.1 变更**：代码实际存在 `customers` 模块（独立于 `user`），文档标注为"用户/客人管理"。
+
 ```
 src/
 ├── modules/
 │   ├── auth/           # 认证模块：JWT 登录、微信登录
-│   ├── user/           # 用户管理：CRUD、角色管理
+│   ├── user/           # 用户管理：CRUD、角色管理（厨师/管理员）
+│   ├── customers/      # 客人管理：客人列表、禁用、统计（V2.1 新增）
 │   ├── order/          # 订单管理：创建、状态流转
 │   ├── dish/           # 菜品管理：CRUD、批量操作
 │   ├── category/       # 分类管理
@@ -568,7 +600,7 @@ src/
 | 登录 | POST | /api/auth/login | 用户登录 | ✅ |
 | 微信登录 | POST | /api/auth/wechat-login | 微信小程序登录 | ✅ |
 
-#### 用户模块 (Users)
+#### 用户模块 (Users) — 厨师/管理员管理
 
 | 接口 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|------|
@@ -588,7 +620,7 @@ src/
 | 获取分类详情 | GET | /api/categories/{id} | 获取分类详情 | ✅ |
 | 更新分类 | PATCH | /api/categories/{id} | 更新分类 | ✅ |
 | 删除分类 | DELETE | /api/categories/{id} | 删除分类 | ✅ |
-| 重新排序 | PATCH | /api/categories/reorder | 重新排序分类 | ⚠️ |
+| 重新排序 | PATCH | /api/categories/reorder | 重新排序分类 | ✅ |
 
 #### 菜品模块 (Dishes)
 
@@ -602,7 +634,7 @@ src/
 | 删除菜品 | DELETE | /api/dishes/{id} | 删除菜品 | ✅ |
 | 设置售罄 | PATCH | /api/dishes/{id}/sold-out | 设置售罄状态 | ✅ |
 | 设置今日供应 | PATCH | /api/dishes/{id}/today-supply | 设置今日供应 | ✅ |
-| 批量今日供应 | POST | /api/dishes/batch/today-supply | 批量设置今日供应 | ⚠️ |
+| 批量今日供应 | POST | /api/dishes/batch/today-supply | 批量设置今日供应 | ✅ |
 | 批量售罄 | POST | /api/dishes/batch/sold-out | 批量设置售罄 | ✅ |
 | 批量上架 | POST | /api/dishes/batch/available | 批量设置上架状态 | ✅ |
 
@@ -613,28 +645,41 @@ src/
 | 创建订单 | POST | /api/orders | 创建订单 | ✅ |
 | 获取订单列表 | GET | /api/orders | 获取订单列表 | ✅ |
 | 智能筛选 | GET | /api/orders/filter | 智能筛选订单 | ✅ |
-| 获取最新订单 | GET | /api/orders/latest | 获取最新订单 | ⚠️ |
+| 获取最新订单 | GET | /api/orders/latest | 获取最新订单 | ✅ |
 | 获取订单详情 | GET | /api/orders/{id} | 获取订单详情 | ✅ |
 | 更新订单 | PATCH | /api/orders/{id} | 更新订单 | ✅ |
 | 更新订单状态 | PATCH | /api/orders/{id}/status | 更新订单状态 | ✅ |
 | 支付订单 | POST | /api/orders/{id}/pay | 支付订单 | ✅ |
 | 取消订单 | POST | /api/orders/{id}/cancel | 取消订单 | ✅ |
+| 导出订单 | GET | /api/orders/export | 导出订单为 Excel | ✅ |
 
 #### 统计模块 (Statistics)
 
 | 接口 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|------|
-| 今日概览 | GET | /api/statistics/dashboard | 今日经营数据 | ⚠️ |
-| 趋势数据 | GET | /api/statistics/trends | 订单/营收趋势 | ⚠️ |
-| 时段分布 | GET | /api/statistics/hourly-distribution | 24小时时段分布 | ⚠️ |
-| 菜品排行 | GET | /api/statistics/dishes/ranking | 菜品销售排行 | ⚠️ |
-| 用户排行 | GET | /api/statistics/users/ranking | 用户消费排行 | ⚠️ |
-| 用户统计 | GET | /api/statistics/users/{id} | 指定用户统计 | ⚠️ |
-| 我的统计 | GET | /api/statistics/my | 当前用户统计 | ⚠️ |
+| 今日概览 | GET | /api/statistics/dashboard | 今日经营数据 | ✅ |
+| 趋势数据 | GET | /api/statistics/trends | 订单/营收趋势 | ✅ |
+| 时段分布 | GET | /api/statistics/hourly-distribution | 24小时时段分布 | ✅ |
+| 菜品排行 | GET | /api/statistics/dishes/ranking | 菜品销售排行 | ✅ |
+| 用户排行 | GET | /api/statistics/users/ranking | 用户消费排行 | ✅ |
+| 用户统计 | GET | /api/statistics/users/{id} | 指定用户统计 | ✅ |
+| 我的统计 | GET | /api/statistics/my | 当前用户统计 | ✅ |
+| 导出统计报表 | GET | /api/statistics/export | 导出统计数据为 Excel | ✅ |
+
+#### 客人/用户管理模块 (Customers)
+
+> **V2.1 变更**：此模块为客人/家庭成员管理接口，前端文档统一称为"用户管理"。
+
+| 接口 | 方法 | 路径 | 说明 | 状态 |
+|------|------|------|------|------|
+| 获取客人列表 | GET | /api/customers | 分页获取客人列表（含统计） | ✅ |
+| 获取客人详情 | GET | /api/customers/{id} | 获取客人详情（含消费统计） | ✅ |
+| 更新客人状态 | PATCH | /api/customers/{id}/status | 禁用/启用客人 | ✅ |
 
 **状态图例**：
-- ✅ 已完成，Swagger 文档已覆盖
-- ⚠️ 项目已实现但 Swagger 文档缺失
+- ✅ 已完成（含 Swagger 文档）
+- 🔄 规划中
+- ❌ 暂缓（附原因）
 
 ### 6.5 WebSocket 事件
 
@@ -657,7 +702,7 @@ src/
 | 客人端 | 微信授权登录 | ✅ |
 | 客人端 | 菜单浏览 | ✅ |
 | 客人端 | 点菜购物车 | ✅ |
-| 客人端 | 下单支付 | ✅ |
+| 客人端 | 下单支付（虚拟） | ✅ |
 | 客人端 | 订单管理 | ✅ |
 | 厨师端 | 账号登录 | ✅ |
 | 厨师端 | 菜品管理 | ✅ |
@@ -677,19 +722,49 @@ src/
 | 运营效率 | 批量菜品管理 | ✅ |
 | 运营效率 | 智能订单筛选 | ✅ |
 | 系统优化 | 数据库索引优化 | ✅ |
+| 客人管理 | 客人列表/统计/禁用 | ✅ |
 
-### 7.3 第三阶段（规划中）
+### 7.3 第三阶段（进行中）
 
-**目标**：前端集成、微信支付、通知系统、高级权限。
+**目标**：前端集成、微信支付、通知系统、高级权限、数据导出。
 
-| 模块 | 功能 | 优先级 |
-|------|------|--------|
-| 前端集成 | Web 管理后台开发 | P1 |
-| 前端集成 | 微信小程序增强 | P1 |
-| 支付 | 接入真实微信支付 | P2 |
-| 通知 | 订阅消息通知 | P2 |
-| 权限 | 细粒度角色权限控制 | P2 |
-| 数据 | Excel/CSV 导出 | P3 |
+> **V2.1 更新说明**：支付（含退款）因需微信商户号，家庭场景不适用，标记为暂缓。权限系统当前 admin/user 已满足家庭场景，不做扩展。数据导出已在后端实现。
+
+#### 7.3.1 交付清单（补全）
+
+| 模块 | 功能 | 优先级 | 详细说明 |
+|------|------|--------|----------|
+| Web 后台 | 登录页面 | P1 | 用户名密码登录，JWT 刷新 |
+| Web 后台 | 仪表盘（Dashboard） | P1 | 今日数据概览卡片，快捷入口 |
+| Web 后台 | 菜品管理页面 | P1 | 表格展示，增删改查，批量操作 |
+| Web 后台 | 订单管理页面 | P1 | 实时订单列表，WebSocket 推送新订单，状态流转 |
+| Web 后台 | 分类管理页面 | P1 | 分类 CRUD，拖拽排序 |
+| Web 后台 | 用户管理页面 | P1 | 客人列表（含消费统计），禁用/启用 |
+| 微信小程序 | 首页（菜单） | P1 | 分类 tab，菜品卡片，售罄标识 |
+| 微信小程序 | 购物车 | P1 | 增减份数，删除，价格汇总 |
+| 微信小程序 | 确认订单页 | P1 | 菜品明细，备注，提交订单 |
+| 微信小程序 | 订单列表/详情 | P1 | 状态展示，取消订单 |
+| 微信小程序 | 个人中心 | P1 | 消费统计，最爱菜品，修改信息 |
+| 支付 | 真实微信支付接入 | P2 | 统一下单、回调处理、退款 |
+| 通知 | 订阅消息推送 | P2 | 订单状态变更通知客人 |
+| 权限 | 细粒度角色权限 | P2 | 菜单级、按钮级权限控制 |
+| 数据 | Excel/CSV 导出 | P3 | 订单导出、菜品库存导出 |
+
+#### 7.3.2 Sprint 排期计划
+
+> **说明**：以下排期为估算，按每人 1 Sprint = 2 周计算。实际排期视开发进度调整。
+
+| Sprint | 时间 | 目标 | 交付物 |
+|--------|------|------|--------|
+| **Sprint 1** | 2 周 | Web 后台核心 CRUD | 登录、菜品管理、分类管理页面完成 |
+| **Sprint 2** | 2 周 | Web 后台订单 + WebSocket | 订单管理页面、新订单 WebSocket 推送完成 |
+| **Sprint 3** | 2 周 | 微信小程序核心流程 | 首页、购物车、下单、订单页完成 |
+| **Sprint 4** | 2 周 | 微信小程序个人中心 + 数据对接 | 个人中心、统计数据对接完成 |
+| **Sprint 5** | 2 周 | 微信支付 + 订阅消息 | 支付回调、退款、消息通知完成 |
+| **Sprint 6** | 2 周 | 权限细化 + 数据导出 | 细粒度权限、Excel/CSV 导出完成 |
+| **Sprint 7** | 2 周 | 集成测试 + 部署 | 端到端测试、Bug 修复、生产部署 |
+
+**总预估工期**：约 14 周（3.5 个月），含缓冲。
 
 ---
 
@@ -760,7 +835,7 @@ pnpm migration:run   # 运行迁移
 | 术语 | 解释 |
 |------|------|
 | openId | 微信用户在小程序中的唯一标识 |
-| 虚拟支付 | 点击支付按钮直接成功，不涉及真实资金流转 |
+| virtual payment | 点击支付按钮直接成功，不涉及真实资金流转 |
 | 软删除 | 设置 deletedAt 标记，不物理删除数据 |
 
 ---
@@ -768,4 +843,4 @@ pnpm migration:run   # 运行迁移
 **文档结束**
 
 *本文档为产品需求文档，用于指导开发工作。*
-*最后更新：2026-04-21*
+*最后更新：2026-05-22*
