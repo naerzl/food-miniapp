@@ -7,7 +7,10 @@ export const categoryApi = {
     request<ApiResponse<Category[]>>({
       url: '/api/categories',
       method: 'GET',
-    }).then(res => res.data),
+    }).then(res => {
+      console.log(res.data)
+      return res.data
+    }),
 
   getCategoryById: (id: string) =>
     request<ApiResponse<Category>>({

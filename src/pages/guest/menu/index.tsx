@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, ScrollView, Image } from '@tarojs/components';
-import { AtActivityIndicator, AtBadge } from 'taro-ui';
+import { AtActivityIndicator, AtBadge, AtSearchBar } from 'taro-ui';
 import { dishApi, categoryApi } from '../../../services';
-import { Dish, Category } from '../../../../types/api';
+import { Dish, Category } from '../../../../types';
 import { useCart } from '../../../store';
 import './index.scss';
 
@@ -13,6 +13,7 @@ const MenuPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [searchKey, setSearchKey] = useState<string>('');
 
   const { items: cartItems, totalCount, addToCart } = useCart();
 
@@ -26,7 +27,6 @@ const MenuPage: React.FC = () => {
         categoryApi.getCategories(),
         dishApi.getTodayDishes(), // 只获取今日供应的菜品
       ]);
-
 
       setCategories(categoriesRes || []);
       // 只显示今日供应且未售罄的菜品
@@ -85,6 +85,14 @@ const MenuPage: React.FC = () => {
     ? dishes
     : dishes.filter(dish => dish.categoryId === activeCategory);
 
+  // Apply search filter
+  const displayDishes = searchKey
+    ? filteredDishes.filter(dish =>
+        dish.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+        dish.description?.toLowerCase().includes(searchKey.toLowerCase())
+      )
+    : filteredDishes;
+
   const getCategoryName = (categoryId: string) => {
     const category = categories.find(c => c.id === categoryId);
     return category?.name || '';
@@ -100,9 +108,18 @@ const MenuPage: React.FC = () => {
       </View>
     );
   }
-
   return (
     <View className="menu-page">
+      {/* 搜索栏 */}
+      <View className="search-section">
+        <AtSearchBar
+          value={searchKey}
+          placeholder="搜索菜品"
+          onChange={(value) => setSearchKey(value || '')}
+          onClear={() => setSearchKey('')}
+        />
+      </View>
+
       {/* 分类标签 */}
       <View className="category-section">
         <ScrollView
@@ -116,6 +133,7 @@ const MenuPage: React.FC = () => {
           >
             <Text className="category-text">全部</Text>
           </View>
+
           {categories.map(category => (
             <View
               key={category.id}
@@ -133,7 +151,7 @@ const MenuPage: React.FC = () => {
         className="dish-list"
         scrollY
       >
-        {filteredDishes.length === 0 ? (
+        {displayDishes.length === 0 ? (
           <View className="empty-state">
             <View className="empty-state-icon">🍽️</View>
             <Text className="empty-state-text">暂无菜品</Text>
@@ -141,7 +159,7 @@ const MenuPage: React.FC = () => {
           </View>
         ) : (
           <View className="dish-grid">
-            {filteredDishes.map(dish => (
+            {displayDishes.map(dish => (
               <View key={dish.id} className="dish-card">
                 <Image
                   className="dish-image"

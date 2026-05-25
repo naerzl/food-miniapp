@@ -3,7 +3,7 @@ import Taro, { useDidShow, usePullDownRefresh, useReachBottom } from '@tarojs/ta
 import { View, Text } from '@tarojs/components';
 import { AtActivityIndicator, AtTabs, AtTabsPane, AtButton, AtModal, AtModalContent, AtModalAction } from 'taro-ui';
 import { orderApi } from '../../../services';
-import { Order, OrderStatus } from '../../../../types/api';
+import { Order, OrderStatus } from '../../../../types';
 import './index.scss';
 
 const STATUS_TABS: { title: string; status: OrderStatus | 'all' }[] = [
@@ -201,7 +201,7 @@ const ChefOrderPage: React.FC = () => {
       <AtTabs
         current={currentTab}
         tabList={STATUS_TABS}
-        onClick={setCurrentTab}
+        onClick={(index) => setCurrentTab(index)}
         className="order-tabs"
       />
 

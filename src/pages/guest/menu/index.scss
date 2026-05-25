@@ -8,6 +8,12 @@
   flex-direction: column;
 }
 
+// 搜索区域
+.search-section {
+  background-color: $bg-color-light;
+  padding: 16rpx 24rpx;
+}
+
 // 加载状态
 .loading-container {
   display: flex;

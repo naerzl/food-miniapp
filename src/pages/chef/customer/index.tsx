@@ -3,7 +3,7 @@ import Taro, { useDidShow } from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import { AtActivityIndicator, AtSwitch, AtSearchBar } from 'taro-ui';
 import { userApi } from '../../../services';
-import { User } from '../../../../types/api';
+import { User } from '../../../../types';
 import './index.scss';
 
 const CustomerManagePage: React.FC = () => {

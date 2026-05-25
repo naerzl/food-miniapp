@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import { AtButton } from 'taro-ui';
-import { Dish } from '../../types/api';
+import { Dish } from '../../types';
 import './DishCard.scss';
 
 interface DishCardProps {

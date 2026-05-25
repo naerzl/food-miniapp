@@ -9,6 +9,10 @@ declare const process: {
 
 const API_BASE_URL = process.env.TARO_APP_API_URL || 'http://localhost:18321';
 
+export function getBaseUrl(): string {
+  return API_BASE_URL;
+}
+
 const httpClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -30,6 +34,7 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(
   (response: AxiosResponse) => {
     const { status, data } = response;
+    console.log(response,'res.data')
 
     if (status >= 400) {
       let message = '请求失败';
@@ -91,8 +96,7 @@ export async function request<T>(options: RequestOptions): Promise<T> {
     headers: options.header,
   };
 
-  const res = await httpClient(config);
-  return (res as AxiosResponse).data as T;
+  return httpClient(config);
 }
 
 export { httpClient };
