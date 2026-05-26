@@ -15,7 +15,7 @@ export const reqGetUsers = (page = 1, limit = 20) =>
     data: { page, limit },
   })
 
-export const reqGetUserById = (id: string) =>
+export const reqGetUserDetail = (id: string) =>
   request<ApiResponse<User>>({
     url: `/api/users/${id}`,
     method: 'GET',

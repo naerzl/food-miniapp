@@ -62,7 +62,7 @@ const OrdersPage: React.FC = () => {
   })
 
   useEffect(() => {
-    const unsubscribe = subscribeOrderUpdate((updatedOrder) => {
+    const unsubscribe = subscribeOrderUpdate(() => {
       Taro.showToast({
         title: '订单状态已更新',
         icon: 'none',

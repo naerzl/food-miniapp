@@ -13,7 +13,7 @@ const MenuPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all')
   const [loading, setLoading] = useState(true)
 
-  const { items: cartItems, totalCount, addToCart } = useCart()
+  const { totalCount, addToCart } = useCart()
 
   const loadData = useCallback(async (showLoading = true) => {
     try {

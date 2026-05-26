@@ -11,6 +11,28 @@ export interface OrderItem {
   remark?: string;
 }
 
+export interface OrderFilterParams {
+  statuses?: OrderStatus[]
+  dateRange?: string
+  startDate?: string
+  endDate?: string
+  userId?: string
+  orderNo?: string
+  minAmount?: number
+  maxAmount?: number
+  sortBy?: string
+  page?: number
+  pageSize?: number
+}
+
+export interface PaginatedOrders {
+  list: Order[]
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
+
 export interface Order {
   id: string;
   orderNo: string;

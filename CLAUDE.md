@@ -37,6 +37,6 @@ pnpm build:weapp  # Build for production
 - Follow existing SCSS patterns with theme variables
 
 ## Context
-- PRD Document: `D:\code\github\food\food-service\docx\PRD.md`
-- Backend API: `D:\code\github\food\food-service\swagger.json`
+- PRD Document: `D:\code\github\food\food-service\docx`
+- Backend API: `D:\code\github\food\food-service`
 - Related projects: `food-service` (backend), `food-web` (admin panel)

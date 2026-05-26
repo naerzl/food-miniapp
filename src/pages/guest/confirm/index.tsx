@@ -25,7 +25,7 @@ const ConfirmPage: React.FC = () => {
     try {
       const order = await reqPostCreateOrder({
         items: items.map(item => ({
-          dishId: item.dishId,
+          dishId: String(item.dishId),
           quantity: item.quantity,
         })),
         remark: remark.trim(),

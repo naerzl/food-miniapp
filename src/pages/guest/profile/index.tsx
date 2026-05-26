@@ -39,9 +39,15 @@ const ProfilePage: React.FC = () => {
   const handleWechatLogin = async () => {
     try {
       setLoading(true)
-      const { code } = await Taro.login({ provider: 'weixin' })
+      const { code } = await Taro.login()
       const res = await reqPostWechatLogin({ code })
-      login(res.accessToken, res.user)
+      login(res.accessToken, {
+        id: res.user.id,
+        username: res.user.username,
+        nickname: res.user.nickname,
+        avatar: res.user.avatar,
+        role: res.user.role as 'admin' | 'merchant' | 'user',
+      })
       Taro.showToast({ title: '登录成功', icon: 'success' })
       loadUserData()
     } catch (error) {

@@ -1,6 +1,6 @@
 import { request } from './request';
-import { ApiResponse } from '../types/common';
-import { Order, CreateOrderDto, UpdateOrderDto, OrderFilterParams, PaginatedOrders } from '../types/order';
+import { ApiResponse } from '../../types/common';
+import { Order, CreateOrderDto, UpdateOrderDto, OrderFilterParams, PaginatedOrders } from '../../types/order';
 
 export const reqPostCreateOrder = (data: CreateOrderDto) =>
   request<ApiResponse<Order>>({

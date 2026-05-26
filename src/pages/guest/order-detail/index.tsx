@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import { reqGetOrderDetail, reqPostPayOrder, reqPostCancelOrder } from '../../../services'
 import { Order, OrderStatus } from '../../../../types'
 
