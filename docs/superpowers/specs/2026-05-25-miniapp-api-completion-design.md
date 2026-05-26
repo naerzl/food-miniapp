@@ -12,17 +12,19 @@
 
 ## 一、新增 Service 文件
 
+> **命名规范**：按 `api-and-types.md`，请求函数命名为 `req` + `${METHOD}` + 业务语义。新增 service 文件统一采用此规范。现有 `xxxApi` 对象风格保持不变，避免大面积重构。
+
 ### 1. `src/services/statistics.ts`
 
 客人端统计接口：
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| `getMyStats()` | `GET /api/statistics/my` | 获取当前用户消费统计 |
+| `reqGetMyStats()` | `GET /api/statistics/my` | 获取当前用户消费统计 |
 
 响应类型 `IResGetMyStatsResponse`：
 ```typescript
-interface IResMyStatsResponse {
+interface IResGetMyStatsResponse {
   totalSpent: number        // 累计消费
   totalOrders: number       // 累计订单数
   monthlySpent: number      // 本月消费
@@ -36,7 +38,7 @@ interface IResMyStatsResponse {
 ```
 
 备用接口（暂不在页面使用）：
-| `getUserStats(userId)` | `GET /api/statistics/users/:id` | 查看指定用户统计 |
+| `reqGetUserStats(userId)` | `GET /api/statistics/users/:id` | 查看指定用户统计 |
 
 ### 2. `src/services/file.ts`
 
@@ -44,10 +46,10 @@ interface IResMyStatsResponse {
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| `checkFile(md5)` | `POST /api/files/check` | 检查文件是否已存在（秒传） |
-| `getPresignedUrl(data)` | `POST /api/files/presigned-url` | 获取预签名上传地址 |
-| `confirmUpload(data)` | `POST /api/files/confirm` | 确认上传完成 |
-| `releaseFile(fileId)` | `POST /api/files/release` | 释放未确认的文件 |
+| `reqPostCheckFile(md5)` | `POST /api/files/check` | 检查文件是否已存在（秒传） |
+| `reqPostPresignedUrl(data)` | `POST /api/files/presigned-url` | 获取预签名上传地址 |
+| `reqPostConfirmUpload(data)` | `POST /api/files/confirm` | 确认上传完成 |
+| `reqPostReleaseFile(fileId)` | `POST /api/files/release` | 释放未确认的文件 |
 
 请求类型：
 ```typescript
@@ -92,7 +94,7 @@ interface IResConfirmUploadResponse {
 
 ### `src/services/order.ts`
 
-- 新增 `getLatestOrder()` → `GET /api/orders/latest` — 获取最近一笔订单
+- 新增 `reqGetLatestOrder()` → `GET /api/orders/latest` — 获取最近一笔订单
 - 修复 `filterOrders` 参数：
   - `status` → `statuses: OrderStatus[]`（后端接收数组）
   - `limit` → `pageSize`（后端分页参数名）
@@ -109,7 +111,7 @@ filterOrders(params: { statuses?: OrderStatus[]; page?: number; pageSize?: numbe
 
 ### `src/services/category.ts`
 
-- 新增 `reorderCategories(items: { id: string; sortOrder: number }[])` → `PATCH /api/categories/reorder`
+- 新增 `reqPatchReorderCategories(items: { id: string; sortOrder: number }[])` → `PATCH /api/categories/reorder`
 
 ## 三、新增类型定义
 
