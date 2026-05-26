@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import Taro from '@tarojs/taro'
+import { connectWebSocket, disconnectWebSocket } from '../services/websocket'
 
 interface UserInfo {
   id: string
@@ -37,9 +38,11 @@ export const useAuthStore = create<AuthStore>()(
         Taro.setStorageSync('token', token)
         Taro.setStorageSync('userInfo', userInfo)
         set({ isLogin: true, token, userInfo })
+        connectWebSocket(userInfo.id).catch(err => { console.error('WebSocket 连接失败:', err) })
       },
 
       logout: () => {
+        disconnectWebSocket()
         Taro.removeStorageSync('token')
         Taro.removeStorageSync('userInfo')
         set({ isLogin: false, token: null, userInfo: null })
