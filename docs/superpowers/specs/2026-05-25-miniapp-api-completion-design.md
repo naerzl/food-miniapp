@@ -12,7 +12,7 @@
 
 ## 一、新增 Service 文件
 
-> **命名规范**：按 `api-and-types.md`，请求函数命名为 `req` + `${METHOD}` + 业务语义。新增 service 文件统一采用此规范。现有 `xxxApi` 对象风格保持不变，避免大面积重构。
+> **命名规范**：按 `api-and-types.md`，请求函数命名为 `req` + `${METHOD}` + 业务语义。所有 service（包括新增和现有）统一采用此规范，消除 `xxxApi` 对象风格的不一致性。
 
 ### 1. `src/services/statistics.ts`
 
@@ -152,6 +152,62 @@ filterOrders(params: { statuses?: OrderStatus[]; page?: number; pageSize?: numbe
 - 启用 Taro 下拉刷新 `usePullDownRefresh`
 - 监听 WebSocket `orderUpdate` 事件自动刷新列表
 - 显示订单状态变更的 Toast 提示
+
+## 六、现有 Service 重构
+
+所有现有 `xxxApi` 对象风格改为独立导出函数，方法名遵循 `req + Method + 业务语义` 规范。
+
+### `src/services/auth.ts`
+
+| 原命名 | 新命名 |
+|--------|--------|
+| `authApi.login()` | `reqPostLogin()` |
+| `authApi.register()` | `reqPostRegister()` |
+| `authApi.getProfile()` | `reqGetProfile()` |
+| `authApi.updateProfile()` | `reqPatchProfile()` |
+
+### `src/services/order.ts`
+
+| 原命名 | 新命名 |
+|--------|--------|
+| `orderApi.getOrders()` | `reqGetOrders()` |
+| `orderApi.getOrderDetail()` | `reqGetOrderDetail()` |
+| `orderApi.createOrder()` | `reqPostCreateOrder()` |
+| `orderApi.cancelOrder()` | `reqPatchCancelOrder()` |
+| `orderApi.filterOrders()` | `reqGetFilterOrders()` |
+
+### `src/services/dish.ts`
+
+| 原命名 | 新命名 |
+|--------|--------|
+| `dishApi.getDishes()` | `reqGetDishes()` |
+| `dishApi.getTodayDishes()` | `reqGetTodayDishes()` |
+| `dishApi.getDishDetail()` | `reqGetDishDetail()` |
+
+### `src/services/category.ts`
+
+| 原命名 | 新命名 |
+|--------|--------|
+| `categoryApi.getCategories()` | `reqGetCategories()` |
+| `categoryApi.createCategory()` | `reqPostCreateCategory()` |
+| `categoryApi.updateCategory()` | `reqPatchUpdateCategory()` |
+| `categoryApi.deleteCategory()` | `reqDeleteCategory()` |
+
+### `src/services/user.ts`
+
+| 原命名 | 新命名 |
+|--------|--------|
+| `userApi.getUsers()` | `reqGetUsers()` |
+| `userApi.getUserDetail()` | `reqGetUserDetail()` |
+| `userApi.createUser()` | `reqPostCreateUser()` |
+| `userApi.updateUser()` | `reqPatchUpdateUser()` |
+| `userApi.deleteUser()` | `reqDeleteUser()` |
+
+### `src/services/index.ts`
+
+- 移除所有 `xxxApi` 对象的 re-export
+- 改为 re-export 独立函数
+- 同步更新所有页面中的 import 和调用
 
 ## 不在范围内
 
