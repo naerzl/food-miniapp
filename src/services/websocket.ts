@@ -1,5 +1,5 @@
 /**
- * WebSocket 服务 - 用于接收新订单通知
+ * WebSocket 服务 - 用于接收订单通知
  * 使用 Taro 原生 API 实现
  */
 
@@ -12,16 +12,24 @@ let reconnectAttempts = 0
 const MAX_RECONNECT_ATTEMPTS = 5
 const RECONNECT_INTERVAL = 5000
 
+// 当前用户 ID，用于重连时重新加入房间
+let currentUserId: string | null = null
+
 // 订单通知回调
 type OrderCallback = (order: any) => void
-const orderCallbacks: OrderCallback[] = []
+const newOrderCallbacks: OrderCallback[] = []
+const orderUpdateCallbacks: OrderCallback[] = []
 
 /**
  * 连接到 WebSocket 服务器
+ * @param userId 用户 ID，连接成功后加入 order:user_{userId} 房间
  */
-export function connectWebSocket(): Promise<void> {
+export function connectWebSocket(userId: string): Promise<void> {
+  currentUserId = userId
   return new Promise((resolve, reject) => {
     if (isConnected) {
+      // 已连接时直接加入房间
+      joinUserRoom(userId)
       resolve()
       return
     }
@@ -37,7 +45,7 @@ export function connectWebSocket(): Promise<void> {
           console.log('WebSocket 连接成功')
           isConnected = true
           reconnectAttempts = 0
-          setupSocketListeners()
+          setupSocketListeners(userId)
           resolve()
         },
         fail: (err) => {
@@ -54,17 +62,26 @@ export function connectWebSocket(): Promise<void> {
 }
 
 /**
+ * 加入用户房间
+ */
+function joinUserRoom(userId: string) {
+  const roomName = `order:user_${userId}`
+  sendMessage('joinRoom', roomName)
+  console.log('已加入房间:', roomName)
+}
+
+/**
  * 设置 Socket 监听器
  */
-function setupSocketListeners() {
+function setupSocketListeners(userId: string) {
   if (!socket) return
 
   socket.onOpen(() => {
     console.log('WebSocket 已打开')
     isConnected = true
     reconnectAttempts = 0
-    // 加入商户房间以接收订单通知
-    sendMessage('joinRoom', 'merchants')
+    // 加入用户房间以接收订单通知
+    joinUserRoom(userId)
   })
 
   socket.onMessage((res) => {
@@ -72,10 +89,18 @@ function setupSocketListeners() {
       const data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
       console.log('WebSocket 收到消息:', data)
 
+      const eventType = data.type || data.event
+
       // 处理新订单通知
-      if (data.type === 'newOrder' || data.event === 'newOrder') {
+      if (eventType === 'newOrder') {
         const order = data.order || data.data
-        orderCallbacks.forEach(callback => callback(order))
+        newOrderCallbacks.forEach(callback => callback(order))
+      }
+
+      // 处理订单更新通知
+      if (eventType === 'orderUpdate') {
+        const order = data.order || data.data
+        orderUpdateCallbacks.forEach(callback => callback(order))
       }
     } catch (error) {
       console.error('解析 WebSocket 消息失败:', error)
@@ -91,7 +116,9 @@ function setupSocketListeners() {
       reconnectAttempts++
       console.log(`${RECONNECT_INTERVAL / 1000}秒后尝试重连...`)
       setTimeout(() => {
-        connectWebSocket().catch(console.error)
+        if (currentUserId) {
+          connectWebSocket(currentUserId).catch(console.error)
+        }
       }, RECONNECT_INTERVAL)
     }
   })
@@ -119,6 +146,7 @@ function sendMessage(event: string, data: any) {
  * 断开 WebSocket 连接
  */
 export function disconnectWebSocket() {
+  currentUserId = null
   if (socket) {
     socket.close({
       success: () => {
@@ -134,11 +162,24 @@ export function disconnectWebSocket() {
  * 订阅新订单通知
  */
 export function subscribeNewOrder(callback: OrderCallback) {
-  orderCallbacks.push(callback)
+  newOrderCallbacks.push(callback)
   return () => {
-    const index = orderCallbacks.indexOf(callback)
+    const index = newOrderCallbacks.indexOf(callback)
     if (index > -1) {
-      orderCallbacks.splice(index, 1)
+      newOrderCallbacks.splice(index, 1)
+    }
+  }
+}
+
+/**
+ * 订阅订单更新通知
+ */
+export function subscribeOrderUpdate(callback: OrderCallback) {
+  orderUpdateCallbacks.push(callback)
+  return () => {
+    const index = orderUpdateCallbacks.indexOf(callback)
+    if (index > -1) {
+      orderUpdateCallbacks.splice(index, 1)
     }
   }
 }
