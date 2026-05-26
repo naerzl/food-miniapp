@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import Taro, { useDidShow, useReachBottom } from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
-import { orderApi } from '../../../services'
+import { reqGetOrders } from '../../../services'
 import { Order, OrderStatus } from '../../../../types'
 
 const STATUS_TABS: { title: string; status: OrderStatus | 'all' }[] = [
@@ -30,7 +30,7 @@ const OrdersPage: React.FC = () => {
   const loadOrders = useCallback(async (pageNum = 1, isRefresh = false) => {
     try {
       const status = STATUS_TABS[currentTab].status
-      const res = await orderApi.getOrders(
+      const res = await reqGetOrders(
         status === 'all' ? undefined : status,
         pageNum,
         10

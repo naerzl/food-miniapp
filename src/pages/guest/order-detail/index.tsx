@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
-import { orderApi } from '../../../services'
+import { reqGetOrderDetail, reqPostPayOrder, reqPostCancelOrder } from '../../../services'
 import { Order, OrderStatus } from '../../../../types'
 
 const STATUS_CONFIG: Record<OrderStatus, { text: string; emoji: string; desc: string; color: string; bg: string }> = {
@@ -29,7 +29,7 @@ const OrderDetailPage: React.FC = () => {
   const loadOrderDetail = async () => {
     try {
       setLoading(true)
-      const data = await orderApi.getOrderById(orderId as string)
+      const data = await reqGetOrderDetail(orderId as string)
       setOrder(data)
     } catch (error) {
       console.error('加载订单详情失败:', error)
@@ -43,7 +43,7 @@ const OrderDetailPage: React.FC = () => {
     setShowPayModal(false)
     setActionLoading(true)
     try {
-      await orderApi.payOrder(orderId as string)
+      await reqPostPayOrder(orderId as string)
       Taro.showToast({ title: '支付成功', icon: 'success' })
       loadOrderDetail()
     } catch (error) {
@@ -57,7 +57,7 @@ const OrderDetailPage: React.FC = () => {
     setShowCancelModal(false)
     setActionLoading(true)
     try {
-      await orderApi.cancelOrder(orderId as string)
+      await reqPostCancelOrder(orderId as string)
       Taro.showToast({ title: '已取消', icon: 'success' })
       loadOrderDetail()
     } catch (error) {

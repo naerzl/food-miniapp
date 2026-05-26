@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { useAuth, useCart } from '../../../store'
-import { userApi, authApi } from '../../../services'
+import { reqGetProfile, reqPostWechatLogin } from '../../../services'
 import { User } from '../../../../types'
 
 const ProfilePage: React.FC = () => {
@@ -15,7 +15,7 @@ const ProfilePage: React.FC = () => {
     if (!isLogin) return
     try {
       setLoading(true)
-      const profileRes = await userApi.getProfile()
+      const profileRes = await reqGetProfile()
       setUserDetail(profileRes)
     } catch (error) {
       console.error('加载用户数据失败:', error)
@@ -31,7 +31,7 @@ const ProfilePage: React.FC = () => {
     try {
       setLoading(true)
       const { code } = await Taro.login({ provider: 'weixin' })
-      const res = await authApi.wechatLogin({ code })
+      const res = await reqPostWechatLogin({ code })
       login(res.accessToken, res.user)
       Taro.showToast({ title: '登录成功', icon: 'success' })
       loadUserData()

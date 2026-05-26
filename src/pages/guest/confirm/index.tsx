@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, Image, Textarea } from '@tarojs/components'
 import { useCart, useAuth } from '../../../store'
-import { orderApi } from '../../../services'
+import { reqPostCreateOrder } from '../../../services'
 
 const ConfirmPage: React.FC = () => {
   const { items, totalCount, totalAmount, clearCart } = useCart()
@@ -23,7 +23,7 @@ const ConfirmPage: React.FC = () => {
     setShowConfirm(false)
     setLoading(true)
     try {
-      const order = await orderApi.createOrder({
+      const order = await reqPostCreateOrder({
         items: items.map(item => ({
           dishId: item.dishId,
           quantity: item.quantity,

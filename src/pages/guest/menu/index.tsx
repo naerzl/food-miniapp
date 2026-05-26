@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { View, Text, ScrollView, Image } from '@tarojs/components'
-import { dishApi, categoryApi } from '../../../services'
+import { reqGetTodayDishes, reqGetCategories } from '../../../services'
 import { Dish, Category } from '../../../../types'
 import { useCart } from '../../../store'
 
@@ -19,8 +19,8 @@ const MenuPage: React.FC = () => {
     try {
       if (showLoading) setLoading(true)
       const [categoriesRes, dishesRes] = await Promise.all([
-        categoryApi.getCategories(),
-        dishApi.getTodayDishes(),
+        reqGetCategories(),
+        reqGetTodayDishes(),
       ])
       setCategories(categoriesRes || [])
       const available = (dishesRes || []).filter(
