@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { useAuth, useCart } from '../../../store'
-import { reqGetProfile, reqPostWechatLogin } from '../../../services'
+import { reqGetProfile, reqPostWechatLogin, reqGetMyStats } from '../../../services'
+import type { IResGetMyStatsResponse } from '../../../services/statistics'
 import { User } from '../../../../types'
 
 const ProfilePage: React.FC = () => {
@@ -10,17 +11,25 @@ const ProfilePage: React.FC = () => {
   const { clearCart } = useCart()
   const [loading, setLoading] = useState(false)
   const [userDetail, setUserDetail] = useState<User | null>(null)
+  const [myStats, setMyStats] = useState<IResGetMyStatsResponse | null>(null)
+  const [statsLoading, setStatsLoading] = useState(false)
 
   const loadUserData = useCallback(async () => {
     if (!isLogin) return
     try {
       setLoading(true)
-      const profileRes = await reqGetProfile()
-      setUserDetail(profileRes)
+      setStatsLoading(true)
+      const [profileData, statsData] = await Promise.all([
+        reqGetProfile(),
+        reqGetMyStats().catch(() => null),
+      ])
+      setUserDetail(profileData)
+      setMyStats(statsData)
     } catch (error) {
       console.error('加载用户数据失败:', error)
     } finally {
       setLoading(false)
+      setStatsLoading(false)
     }
   }, [isLogin])
 
@@ -115,6 +124,51 @@ const ProfilePage: React.FC = () => {
       {loading && (
         <View className="flex justify-center mt-4">
           <Text className="text-xs text-[#CCC]">加载中...</Text>
+        </View>
+      )}
+
+      {/* Stats skeleton */}
+      {statsLoading && !myStats && (
+        <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-3xl p-5 shadow-sm animate-pulse">
+          <View className="h-4 w-16 bg-[#E8DDD0] rounded-lg mb-3" />
+          <View className="grid grid-cols-3 gap-3">
+            {[1,2,3].map(i => (
+              <View key={i} className="text-center">
+                <View className="h-6 w-12 bg-[#E8DDD0] rounded-lg mx-auto" />
+                <View className="h-3 w-10 bg-[#E8DDD0] rounded-lg mx-auto mt-2" />
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
+
+      {/* Stats card */}
+      {myStats && (
+        <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-3xl p-5 shadow-sm">
+          <Text className="text-xs text-[#A39584] block mb-3">消费统计</Text>
+          <View className="grid grid-cols-3 gap-3">
+            <View className="text-center">
+              <Text className="text-lg font-bold text-[#E8833A] block">¥{myStats.totalSpent}</Text>
+              <Text className="text-xs text-[#A39584] mt-1 block">累计消费</Text>
+            </View>
+            <View className="text-center">
+              <Text className="text-lg font-bold text-[#E8833A] block">¥{myStats.monthlySpent}</Text>
+              <Text className="text-xs text-[#A39584] mt-1 block">本月消费</Text>
+            </View>
+            <View className="text-center">
+              <Text className="text-lg font-bold text-[#E8833A] block">{myStats.totalOrders}</Text>
+              <Text className="text-xs text-[#A39584] mt-1 block">订单总数</Text>
+            </View>
+          </View>
+          {myStats.favoriteDish && (
+            <View className="mt-3 pt-3 border-t border-[#F5E6D3] flex items-center justify-between">
+              <Text className="text-xs text-[#A39584]">最爱菜品</Text>
+              <View className="flex items-center gap-2">
+                <Text className="text-sm font-semibold text-[#4A3728]">{myStats.favoriteDish.name}</Text>
+                <Text className="text-xs text-[#E8833A]">×{myStats.favoriteDish.count}</Text>
+              </View>
+            </View>
+          )}
         </View>
       )}
 
