@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import Taro, { useDidShow, useReachBottom } from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
 import { reqGetOrders } from '../../../services'
+import { subscribeOrderUpdate } from '../../../services/websocket'
 import { Order, OrderStatus } from '../../../../types'
 
 const STATUS_TABS: { title: string; status: OrderStatus | 'all' }[] = [
@@ -53,6 +54,24 @@ const OrdersPage: React.FC = () => {
     setLoading(true)
     loadOrders(1)
   }, [currentTab, loadOrders])
+
+  Taro.usePullDownRefresh(() => {
+    loadOrders(1, true).finally(() => {
+      Taro.stopPullDownRefresh()
+    })
+  })
+
+  useEffect(() => {
+    const unsubscribe = subscribeOrderUpdate((updatedOrder) => {
+      Taro.showToast({
+        title: '订单状态已更新',
+        icon: 'none',
+        duration: 2000,
+      })
+      loadOrders(1, true)
+    })
+    return unsubscribe
+  }, [loadOrders])
 
   useDidShow(() => { loadOrders(1, true) })
 

@@ -2,4 +2,5 @@ export default definePageConfig({
   navigationBarTitleText: '我的订单',
   navigationBarBackgroundColor: '#FFFFFF',
   navigationBarTextStyle: 'black',
+  enablePullDownRefresh: true,
 });
