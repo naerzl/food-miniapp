@@ -20,7 +20,7 @@
 |------|------|------|
 | `getMyStats()` | `GET /api/statistics/my` | 获取当前用户消费统计 |
 
-响应类型 `IResMyStatsResponse`：
+响应类型 `IResGetMyStatsResponse`：
 ```typescript
 interface IResMyStatsResponse {
   totalSpent: number        // 累计消费
@@ -29,7 +29,6 @@ interface IResMyStatsResponse {
   monthlyOrders: number     // 本月订单数
   monthlyGrowth?: number    // 月环比增长率
   favoriteDish?: {
-    id: string
     name: string
     count: number
   }
@@ -52,7 +51,7 @@ interface IResMyStatsResponse {
 
 请求类型：
 ```typescript
-interface IReqPresignedUrlParams {
+interface IReqGetPresignedUrlParams {
   md5: string
   filename: string
   contentType: string
@@ -75,12 +74,12 @@ interface IResCheckFileResponse {
   url?: string      // 已存在时返回文件URL
 }
 
-interface IResPresignedUrlResponse {
+interface IResGetPresignedUrlResponse {
   uploadUrl: string  // 预签名上传地址
   fileUrl: string    // 上传成功后的文件访问URL
 }
 
-interface IResFileRecordResponse {
+interface IResConfirmUploadResponse {
   id: string
   url: string
   filename: string
@@ -116,8 +115,8 @@ filterOrders(params: { statuses?: OrderStatus[]; page?: number; pageSize?: numbe
 
 在 `src/types/` 下新增文件，按 `api-and-types.md` 规范命名：
 
-- `src/types/statistics.ts` — `IResMyStatsResponse`, `IFavoriteDishItem`
-- `src/types/file.ts` — `IReqPresignedUrlParams`, `IReqConfirmUploadParams`, `IResCheckFileResponse`, `IResPresignedUrlResponse`, `IResFileRecordResponse`
+- `src/types/statistics.ts` — `IResGetMyStatsResponse`, `IFavoriteDishItem`
+- `src/types/file.ts` — `IReqGetPresignedUrlParams`, `IReqConfirmUploadParams`, `IResCheckFileResponse`, `IResGetPresignedUrlResponse`, `IResConfirmUploadResponse`
 
 补充 `src/types/order.ts`：
 - `OrderFilterParams.statuses` 改为 `OrderStatus[]`
