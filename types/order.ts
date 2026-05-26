@@ -47,7 +47,7 @@ export interface UpdateOrderStatusDto {
 }
 
 export interface OrderFilterParams {
-  status?: OrderStatus | OrderStatus[];
+  statuses?: OrderStatus[];
   dateRange?: DateRange;
   startDate?: string;
   endDate?: string;
