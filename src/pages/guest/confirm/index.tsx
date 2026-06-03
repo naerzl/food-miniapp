@@ -51,17 +51,17 @@ const ConfirmPage: React.FC = () => {
     return (
       <View className="food-page">
         <View className="food-empty">
-        <View className="food-empty__icon">
-          <Text className="text-5xl">🛒</Text>
-        </View>
-        <Text className="text-lg font-bold text-[#4A3728] mb-2">购物车是空的</Text>
-        <Text className="text-sm text-[#A39584] mb-8">请先添加商品到购物车</Text>
-        <View
-          className="food-action rounded-full px-10 py-3 active:scale-95"
-          onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
-        >
-          <Text className="text-white font-semibold">去逛逛</Text>
-        </View>
+          <View className="food-empty__icon">
+            <Text className="text-5xl">🛒</Text>
+          </View>
+          <Text className="text-lg font-bold text-[#4A3728] mb-2">购物车是空的</Text>
+          <Text className="text-sm text-[#A39584] mb-8">请先添加商品到购物车</Text>
+          <View
+            className="food-action rounded-full px-10 py-3 active:scale-95"
+            onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
+          >
+            <Text className="text-white font-semibold">去逛逛</Text>
+          </View>
         </View>
       </View>
     )
