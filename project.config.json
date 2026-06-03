@@ -1,7 +1,7 @@
 {
 	"miniprogramRoot": "dist/",
-	"projectname": "food-miniapp",
-	"description": "",
+	"projectname": "food-app",
+	"description": "轻食客人端微信小程序",
 	"appid": "touristappid",
 	"setting": {
 		"urlCheck": true,

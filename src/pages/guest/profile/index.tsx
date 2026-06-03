@@ -6,6 +6,14 @@ import { reqGetProfile, reqPostWechatLogin, reqGetMyStats } from '../../../servi
 import type { IResGetMyStatsResponse } from '../../../services/statistics'
 import { User } from '../../../../types'
 
+declare const process: {
+  env: {
+    TARO_ENV?: string
+  }
+}
+
+const IS_H5 = process.env.TARO_ENV === 'h5'
+
 const ProfilePage: React.FC = () => {
   const { isLogin, login, logout } = useAuth()
   const { clearCart } = useCart()
@@ -71,10 +79,23 @@ const ProfilePage: React.FC = () => {
     })
   }
 
+  useEffect(() => {
+    if (IS_H5 && !isLogin) {
+      Taro.redirectTo({ url: '/pages/guest/login/index' })
+    }
+  }, [isLogin])
+
   if (!isLogin) {
+    if (IS_H5) {
+      return (
+        <View className="food-page flex items-center justify-center">
+          <Text className="text-sm text-[#A39584]">正在跳转登录页...</Text>
+        </View>
+      )
+    }
     return (
-      <View className="min-h-screen bg-[#FFF8F0] flex flex-col items-center justify-center px-8">
-        <View className="w-24 h-24 bg-[#F5E6D3] rounded-full flex items-center justify-center mb-6">
+      <View className="food-page flex flex-col items-center justify-center px-8">
+        <View className="food-empty__icon">
           <Text className="text-5xl">👋</Text>
         </View>
         <Text className="text-xl font-bold text-[#4A3728] mb-2">欢迎使用私厨点餐</Text>
@@ -83,7 +104,7 @@ const ProfilePage: React.FC = () => {
         </Text>
         <View
           className={`w-full rounded-full py-3.5 flex items-center justify-center shadow-lg active:scale-[0.98] transition-transform ${
-            loading ? 'bg-[#E0C8B0]' : 'bg-[#E8833A] shadow-[#E8833A]/25'
+            loading ? 'bg-[#E0C8B0]' : 'food-action'
           }`}
           onClick={loading ? undefined : handleWechatLogin}
         >
@@ -107,9 +128,9 @@ const ProfilePage: React.FC = () => {
   ]
 
   return (
-    <View className="min-h-screen bg-[#FFF8F0]">
+    <View className="food-page">
       {/* User card */}
-      <View className="mx-4 mt-4 bg-[#FFFAF5] rounded-3xl p-5 shadow-sm">
+      <View className="food-hero">
         <View className="flex items-center gap-4">
           <Image
             className="w-16 h-16 rounded-full border-2 border-white shadow-md"
@@ -117,12 +138,23 @@ const ProfilePage: React.FC = () => {
             mode="aspectFill"
           />
           <View>
-            <Text className="text-lg font-bold text-[#4A3728] block">
+            <Text className="food-hero__eyebrow">MY LIGHT KITCHEN</Text>
+            <Text className="text-xl font-bold text-[#FFF8F0] block mt-1">
               {userDetail?.nickname || userDetail?.username || '微信用户'}
             </Text>
-            <Text className="text-xs text-[#A39584] mt-0.5 block">
+            <Text className="text-xs text-[#FFF8F0]/75 mt-1 block">
               享受美味，享受生活
             </Text>
+          </View>
+        </View>
+        <View className="food-hero__chips">
+          <View className="food-chip">
+            <Text>订单</Text>
+            <Text>{myStats?.totalOrders ?? 0}</Text>
+          </View>
+          <View className="food-chip">
+            <Text>本月</Text>
+            <Text>¥{myStats?.monthlySpent ?? 0}</Text>
           </View>
         </View>
       </View>
@@ -135,7 +167,7 @@ const ProfilePage: React.FC = () => {
 
       {/* Stats skeleton */}
       {statsLoading && !myStats && (
-        <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-3xl p-5 shadow-sm animate-pulse">
+        <View className="food-card mx-4 mt-3 p-5 animate-pulse">
           <View className="h-4 w-16 bg-[#E8DDD0] rounded-lg mb-3" />
           <View className="grid grid-cols-3 gap-3">
             {[1,2,3].map(i => (
@@ -150,7 +182,7 @@ const ProfilePage: React.FC = () => {
 
       {/* Stats card */}
       {myStats && (
-        <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-3xl p-5 shadow-sm">
+        <View className="food-card mx-4 mt-3 p-5">
           <Text className="text-xs text-[#A39584] block mb-3">消费统计</Text>
           <View className="grid grid-cols-3 gap-3">
             <View className="text-center">
@@ -179,7 +211,7 @@ const ProfilePage: React.FC = () => {
       )}
 
       {/* Main menu */}
-      <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-3xl overflow-hidden shadow-sm">
+      <View className="food-card mx-4 mt-3 overflow-hidden">
         {menuItems.map((item, i) => (
           <View key={item.label}>
             {i > 0 && <View className="ml-16 border-t border-[#F5E6D3]" />}
@@ -201,7 +233,7 @@ const ProfilePage: React.FC = () => {
       </View>
 
       {/* Secondary menu */}
-      <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-3xl overflow-hidden shadow-sm">
+      <View className="food-card mx-4 mt-3 overflow-hidden">
         {otherItems.map((item, i) => (
           <View key={item.label}>
             {i > 0 && <View className="ml-16 border-t border-[#F5E6D3]" />}

@@ -1,5 +1,4 @@
 import { View, Text, ScrollView } from '@tarojs/components';
-import Taro from '@tarojs/taro';
 import './CategoryTabs.scss';
 
 interface Category {

@@ -17,12 +17,14 @@ interface AuthState {
   isLogin: boolean
   token: string | null
   userInfo: UserInfo | null
+  hydrated: boolean
 }
 
 interface AuthActions {
   login: (token: string, userInfo: UserInfo) => void
   logout: () => void
   updateUserInfo: (userInfo: UserInfo) => void
+  setHydrated: (hydrated: boolean) => void
 }
 
 type AuthStore = AuthState & AuthActions
@@ -33,6 +35,7 @@ export const useAuthStore = create<AuthStore>()(
       isLogin: false,
       token: null,
       userInfo: null,
+      hydrated: false,
 
       login: (token, userInfo) => {
         Taro.setStorageSync('token', token)
@@ -52,6 +55,10 @@ export const useAuthStore = create<AuthStore>()(
         Taro.setStorageSync('userInfo', userInfo)
         set({ userInfo })
       },
+
+      setHydrated: (hydrated) => {
+        set({ hydrated })
+      },
     }),
     {
       name: 'auth-storage',
@@ -60,6 +67,9 @@ export const useAuthStore = create<AuthStore>()(
         userInfo: state.userInfo,
         isLogin: state.isLogin,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state) state.setHydrated(true)
+      },
     }
   )
 )

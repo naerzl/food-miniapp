@@ -14,13 +14,7 @@ const CartPage: React.FC = () => {
       return
     }
     if (!isLogin) {
-      Taro.showModal({
-        title: '提示',
-        content: '请先登录后再下单',
-        success: (res) => {
-          if (res.confirm) Taro.switchTab({ url: '/pages/guest/profile/index' })
-        },
-      })
+      Taro.navigateTo({ url: '/pages/guest/login/index' })
       return
     }
     Taro.navigateTo({ url: '/pages/guest/confirm/index' })
@@ -28,24 +22,42 @@ const CartPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <View className="min-h-screen bg-[#FFF8F0] flex flex-col items-center justify-center px-8">
-        <View className="w-28 h-28 bg-[#F5E6D3] rounded-full flex items-center justify-center mb-6">
-          <Text className="text-5xl">🛒</Text>
-        </View>
-        <Text className="text-xl font-bold text-[#4A3728] mb-2">购物车是空的</Text>
-        <Text className="text-sm text-[#A39584] mb-8">快去选购美味佳肴吧</Text>
-        <View
-          className="bg-[#E8833A] text-white px-10 py-3 rounded-full font-semibold text-base shadow-lg shadow-[#E8833A]/25 active:scale-95 transition-transform"
-          onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
-        >
-          <Text className="text-white">去逛逛</Text>
+      <View className="food-page">
+        <View className="food-empty">
+          <View className="food-empty__icon">
+            <Text className="text-5xl">🛒</Text>
+          </View>
+          <Text className="text-xl font-bold text-[#4A3728] mb-2">购物车是空的</Text>
+          <Text className="text-sm text-[#A39584] mb-8">快去选购美味佳肴吧</Text>
+          <View
+            className="food-action text-white px-10 py-3 rounded-full font-semibold text-base active:scale-95 transition-transform"
+            onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
+          >
+            <Text className="text-white">去逛逛</Text>
+          </View>
         </View>
       </View>
     )
   }
 
   return (
-    <View className="min-h-screen bg-[#FFF8F0] pb-40">
+    <View className="food-page food-page--bottom">
+      <View className="food-hero">
+        <Text className="food-hero__eyebrow">YOUR CART</Text>
+        <Text className="food-hero__title">准备下单</Text>
+        <Text className="food-hero__desc">确认菜品数量，厨房会按这份清单为你备餐。</Text>
+        <View className="food-hero__chips">
+          <View className="food-chip">
+            <Text>商品</Text>
+            <Text>{totalCount} 件</Text>
+          </View>
+          <View className="food-chip">
+            <Text>合计</Text>
+            <Text>¥{totalAmount.toFixed(2)}</Text>
+          </View>
+        </View>
+      </View>
+
       {/* Header */}
       <View className="flex items-center justify-between px-5 py-4">
         <Text className="text-[#4A3728] font-semibold text-sm">
@@ -62,7 +74,7 @@ const CartPage: React.FC = () => {
       {/* Item list */}
       <View className="px-4 space-y-3">
         {items.map(item => (
-          <View key={item.dishId} className="bg-[#FFFAF5] rounded-2xl p-3 flex gap-3 shadow-sm">
+          <View key={item.dishId} className="food-card p-3 flex gap-3">
             <Image
               className="w-20 h-20 rounded-xl flex-shrink-0"
               src={item.image || 'https://via.placeholder.com/150/F5E6D3/8B7355?text=%F0%9F%8D%B2'}
@@ -92,7 +104,7 @@ const CartPage: React.FC = () => {
                     {item.quantity}
                   </Text>
                   <View
-                    className="w-7 h-7 bg-[#E8833A] rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-7 h-7 food-action rounded-full flex items-center justify-center active:scale-90 transition-transform"
                     onClick={() => updateQuantity(item.dishId, item.quantity + 1)}
                   >
                     <Text className="text-white text-base font-medium leading-none">+</Text>
@@ -117,7 +129,7 @@ const CartPage: React.FC = () => {
       </View>
 
       {/* Bottom checkout bar */}
-      <View className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-[#F0E6DA] px-5 py-4 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+      <View className="food-bottom-bar px-5 py-4 flex items-center justify-between">
         <View>
           <Text className="text-xs text-[#A39584]">合计</Text>
           <View className="flex items-baseline">
@@ -128,7 +140,7 @@ const CartPage: React.FC = () => {
           </View>
         </View>
         <View
-          className="bg-[#E8833A] rounded-full px-10 py-3.5 shadow-lg shadow-[#E8833A]/25 active:scale-95 transition-transform"
+          className="food-action rounded-full px-10 py-3.5 active:scale-95 transition-transform"
           onClick={handleCheckout}
         >
           <Text className="text-white font-semibold text-base">

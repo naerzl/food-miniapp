@@ -3,7 +3,10 @@ import Taro, { useDidShow, useReachBottom } from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
 import { reqGetOrders } from '../../../services'
 import { subscribeOrderUpdate } from '../../../services/websocket'
+import { useAuth } from '../../../store'
 import { Order, OrderStatus } from '../../../../types'
+
+const LOGIN_URL = '/pages/guest/login/index'
 
 const STATUS_TABS: { title: string; status: OrderStatus | 'all' }[] = [
   { title: '全部', status: 'all' },
@@ -22,11 +25,18 @@ const STATUS_CONFIG: Record<OrderStatus, { text: string; color: string; bg: stri
 }
 
 const OrdersPage: React.FC = () => {
+  const { isLogin } = useAuth()
   const [currentTab, setCurrentTab] = useState(0)
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+
+  useEffect(() => {
+    if (!isLogin) {
+      Taro.navigateTo({ url: LOGIN_URL })
+    }
+  }, [isLogin])
 
   const loadOrders = useCallback(async (pageNum = 1, isRefresh = false) => {
     try {
@@ -51,9 +61,10 @@ const OrdersPage: React.FC = () => {
   }, [currentTab])
 
   useEffect(() => {
+    if (!isLogin) return
     setLoading(true)
     loadOrders(1)
-  }, [currentTab, loadOrders])
+  }, [currentTab, loadOrders, isLogin])
 
   Taro.usePullDownRefresh(() => {
     loadOrders(1, true).finally(() => {
@@ -73,7 +84,7 @@ const OrdersPage: React.FC = () => {
     return unsubscribe
   }, [loadOrders])
 
-  useDidShow(() => { loadOrders(1, true) })
+  useDidShow(() => { if (isLogin) loadOrders(1, true) })
 
   useReachBottom(() => {
     if (hasMore && !loading) loadOrders(page + 1)
@@ -85,9 +96,25 @@ const OrdersPage: React.FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#FFF8F0]">
+    <View className="food-page">
+      <View className="food-hero">
+        <Text className="food-hero__eyebrow">ORDER TRACKING</Text>
+        <Text className="food-hero__title">我的订单</Text>
+        <Text className="food-hero__desc">查看支付、制作和完成状态，订单变更会自动同步。</Text>
+        <View className="food-hero__chips">
+          <View className="food-chip">
+            <Text>当前</Text>
+            <Text>{STATUS_TABS[currentTab].title}</Text>
+          </View>
+          <View className="food-chip">
+            <Text>订单</Text>
+            <Text>{orders.length} 单</Text>
+          </View>
+        </View>
+      </View>
+
       {/* Status tabs */}
-      <View className="sticky top-0 z-10 bg-[#FFF8F0]/95 backdrop-blur-sm pt-3 pb-2">
+      <View className="food-tabs">
         <ScrollView scrollX showScrollbar={false} className="px-4">
           <View className="flex gap-2">
             {STATUS_TABS.map((tab, i) => (
@@ -113,14 +140,14 @@ const OrdersPage: React.FC = () => {
           <Text className="text-[#CCC] text-sm">加载中...</Text>
         </View>
       ) : orders.length === 0 ? (
-        <View className="flex flex-col items-center justify-center pt-32 px-8">
-          <View className="w-24 h-24 bg-[#F5E6D3] rounded-full flex items-center justify-center mb-5">
+        <View className="food-empty">
+          <View className="food-empty__icon">
             <Text className="text-4xl">📋</Text>
           </View>
           <Text className="text-lg font-bold text-[#4A3728] mb-2">暂无订单</Text>
           <Text className="text-sm text-[#A39584] mb-8">快去下单吧</Text>
           <View
-            className="bg-[#E8833A] rounded-full px-8 py-3 shadow-lg shadow-[#E8833A]/25 active:scale-95"
+            className="food-action rounded-full px-8 py-3 active:scale-95"
             onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
           >
             <Text className="text-white font-semibold text-sm">去点餐</Text>
@@ -131,7 +158,7 @@ const OrdersPage: React.FC = () => {
           {orders.map(order => (
             <View
               key={order.id}
-              className="bg-[#FFFAF5] rounded-2xl p-4 shadow-sm active:scale-[0.99] transition-transform"
+              className="food-card p-4 active:scale-[0.99] transition-transform"
               onClick={() =>
                 Taro.navigateTo({ url: `/pages/guest/order-detail/index?id=${order.id}` })
               }

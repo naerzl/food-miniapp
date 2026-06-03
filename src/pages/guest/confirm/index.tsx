@@ -6,7 +6,7 @@ import { reqPostCreateOrder } from '../../../services'
 
 const ConfirmPage: React.FC = () => {
   const { items, totalCount, totalAmount, clearCart } = useCart()
-  const { userInfo } = useAuth()
+  const { isLogin, userInfo } = useAuth()
   const [remark, setRemark] = useState('')
   const [loading, setLoading] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -14,6 +14,10 @@ const ConfirmPage: React.FC = () => {
   const handleSubmit = () => {
     if (items.length === 0) {
       Taro.showToast({ title: '购物车是空的', icon: 'none' })
+      return
+    }
+    if (!isLogin) {
+      Taro.navigateTo({ url: '/pages/guest/login/index' })
       return
     }
     setShowConfirm(true)
@@ -45,24 +49,44 @@ const ConfirmPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <View className="min-h-screen bg-[#FFF8F0] flex flex-col items-center justify-center px-8">
-        <Text className="text-5xl mb-5">🛒</Text>
+      <View className="food-page">
+        <View className="food-empty">
+        <View className="food-empty__icon">
+          <Text className="text-5xl">🛒</Text>
+        </View>
         <Text className="text-lg font-bold text-[#4A3728] mb-2">购物车是空的</Text>
         <Text className="text-sm text-[#A39584] mb-8">请先添加商品到购物车</Text>
         <View
-          className="bg-[#E8833A] rounded-full px-10 py-3 shadow-lg shadow-[#E8833A]/25 active:scale-95"
+          className="food-action rounded-full px-10 py-3 active:scale-95"
           onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
         >
           <Text className="text-white font-semibold">去逛逛</Text>
+        </View>
         </View>
       </View>
     )
   }
 
   return (
-    <View className="min-h-screen bg-[#FFF8F0] pb-40">
+    <View className="food-page food-page--bottom">
+      <View className="food-hero">
+        <Text className="food-hero__eyebrow">ORDER CONFIRM</Text>
+        <Text className="food-hero__title">确认这份轻食</Text>
+        <Text className="food-hero__desc">核对菜品和备注，提交后可在订单页完成虚拟支付。</Text>
+        <View className="food-hero__chips">
+          <View className="food-chip">
+            <Text>数量</Text>
+            <Text>{totalCount} 件</Text>
+          </View>
+          <View className="food-chip">
+            <Text>应付</Text>
+            <Text>¥{totalAmount.toFixed(2)}</Text>
+          </View>
+        </View>
+      </View>
+
       {/* User info */}
-      <View className="bg-[#FFFAF5] mx-4 mt-4 rounded-2xl p-4 shadow-sm">
+      <View className="food-card mx-4 mt-4 p-4">
         <Text className="text-xs text-[#A39584] block mb-1">下单用户</Text>
         <View className="flex items-center gap-3">
           <View className="w-10 h-10 bg-[#F5E6D3] rounded-full flex items-center justify-center">
@@ -75,7 +99,7 @@ const ConfirmPage: React.FC = () => {
       </View>
 
       {/* Item list */}
-      <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-2xl p-4 shadow-sm">
+      <View className="food-card mx-4 mt-3 p-4">
         <Text className="text-xs text-[#A39584] block mb-3">
           商品清单（共 {totalCount} 件）
         </Text>
@@ -104,7 +128,7 @@ const ConfirmPage: React.FC = () => {
       </View>
 
       {/* Remark */}
-      <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-2xl p-4 shadow-sm">
+      <View className="food-card mx-4 mt-3 p-4">
         <View className="flex items-center justify-between mb-2">
           <Text className="text-xs text-[#A39584]">订单备注</Text>
           <Text className="text-xs text-[#CCC]">{remark.length}/200</Text>
@@ -121,7 +145,7 @@ const ConfirmPage: React.FC = () => {
       </View>
 
       {/* Amount summary */}
-      <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-2xl p-4 shadow-sm">
+      <View className="food-card mx-4 mt-3 p-4">
         <View className="flex justify-between items-center mb-2">
           <Text className="text-sm text-[#8B7355]">商品总额</Text>
           <Text className="text-sm text-[#4A3728]">¥{totalAmount.toFixed(2)}</Text>
@@ -137,10 +161,10 @@ const ConfirmPage: React.FC = () => {
       </View>
 
       {/* Submit button */}
-      <View className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-[#F0E6DA] px-5 py-4">
+      <View className="food-bottom-bar px-5 py-4">
         <View
           className={`w-full rounded-full py-3.5 flex items-center justify-center shadow-lg active:scale-[0.98] transition-transform ${
-            loading ? 'bg-[#E0C8B0]' : 'bg-[#E8833A] shadow-[#E8833A]/25'
+            loading ? 'bg-[#E0C8B0]' : 'food-action'
           }`}
           onClick={loading ? undefined : handleSubmit}
         >

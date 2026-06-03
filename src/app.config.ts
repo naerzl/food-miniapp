@@ -7,11 +7,12 @@ export default defineAppConfig({
     'pages/guest/orders/index',
     'pages/guest/order-detail/index',
     'pages/guest/profile/index',
+    'pages/guest/login/index',
   ],
   tabBar: {
-    color: '#999999',
-    selectedColor: '#6BBF99',
-    backgroundColor: '#FFFFFF',
+    color: '#8A826F',
+    selectedColor: '#2F6D4C',
+    backgroundColor: '#FFFCF5',
     borderStyle: 'black',
     list: [
       {
@@ -42,9 +43,9 @@ export default defineAppConfig({
   },
   window: {
     backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#FFFFFF',
-    navigationBarTitleText: '私厨点餐',
+    navigationBarBackgroundColor: '#FFF8EC',
+    navigationBarTitleText: '轻食',
     navigationBarTextStyle: 'black',
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#F8F3EA',
   },
 })

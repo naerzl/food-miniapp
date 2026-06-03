@@ -8,8 +8,8 @@ import prodConfig from './prod'
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig<'vite'>(async (merge, { command, mode }) => {
   const baseConfig: UserConfigExport<'vite'> = {
-    projectName: 'food-miniapp',
-    date: '2026-3-24',
+    projectName: 'food-app',
+    date: '2026-6-3',
     designWidth: 750,
     deviceRatio: {
       640: 2.34 / 2,
@@ -91,7 +91,7 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
       },
     },
     rn: {
-      appName: 'taroDemo',
+      appName: 'QingShi',
       postcss: {
         cssModules: {
           enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true

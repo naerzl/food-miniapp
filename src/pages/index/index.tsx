@@ -23,8 +23,8 @@ const IndexPage: React.FC = () => {
         <View className="w-28 h-28 bg-[#F5E6D3] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
           <Text className="text-6xl">🍽️</Text>
         </View>
-        <Text className="text-2xl font-bold text-[#4A3728] block mb-2">私厨点餐助手</Text>
-        <Text className="text-sm text-[#A39584] block">家庭私厨，美味随时享</Text>
+        <Text className="text-2xl font-bold text-[#4A3728] block mb-2">轻食</Text>
+        <Text className="text-sm text-[#A39584] block">今日菜单，轻松点餐</Text>
       </View>
 
       {/* Enter button */}
@@ -37,7 +37,7 @@ const IndexPage: React.FC = () => {
 
       {/* Footer */}
       <View className="absolute bottom-16">
-        <Text className="text-xs text-[#D0C8BC]">让家庭用餐更简单、更温馨</Text>
+        <Text className="text-xs text-[#D0C8BC]">让每一餐都有清楚的期待</Text>
       </View>
     </View>
   )

@@ -62,7 +62,12 @@ const MenuPage: React.FC = () => {
 
   if (loading) {
     return (
-      <View className="min-h-screen bg-[#FFF8F0]">
+      <View className="food-page">
+        <View className="food-hero">
+          <Text className="food-hero__eyebrow">TODAY'S LIGHT MENU</Text>
+          <Text className="food-hero__title">今日轻食厨房</Text>
+          <Text className="food-hero__desc">新鲜备餐中，稍等一下就能看到今天的菜单。</Text>
+        </View>
         <View className="px-4 pt-4">
           <View className="flex gap-3 overflow-hidden">
             {[1, 2, 3, 4].map(i => (
@@ -90,9 +95,31 @@ const MenuPage: React.FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#FFF8F0] pb-36">
+    <View className="food-page food-page--bottom">
+      <View className="food-hero">
+        <Text className="food-hero__eyebrow">TODAY'S LIGHT MENU</Text>
+        <Text className="food-hero__title">今日轻食厨房</Text>
+        <Text className="food-hero__desc">
+          按需现选，虚拟支付下单，厨房会同步收到你的订单。
+        </Text>
+        <View className="food-hero__chips">
+          <View className="food-chip">
+            <Text>上新</Text>
+            <Text>{dishes.length} 道</Text>
+          </View>
+          <View className="food-chip">
+            <Text>分类</Text>
+            <Text>{categories.length || 1} 个</Text>
+          </View>
+          <View className="food-chip">
+            <Text>购物车</Text>
+            <Text>{totalCount} 件</Text>
+          </View>
+        </View>
+      </View>
+
       {/* Category tabs */}
-      <View className="sticky top-0 z-10 bg-[#FFF8F0]/95 backdrop-blur-sm pt-3 pb-2">
+      <View className="food-tabs">
         <ScrollView scrollX showScrollbar={false} className="px-4">
           <View className="flex gap-2.5">
             <View
@@ -124,8 +151,10 @@ const MenuPage: React.FC = () => {
 
       {/* Dish grid */}
       {filteredDishes.length === 0 ? (
-        <View className="flex flex-col items-center justify-center pt-32 px-8">
-          <Text className="text-6xl mb-5">🍽️</Text>
+        <View className="food-empty">
+          <View className="food-empty__icon">
+            <Text className="text-5xl">🍽️</Text>
+          </View>
           <Text className="text-lg font-semibold text-[#4A3728] mb-2">暂无菜品</Text>
           <Text className="text-sm text-[#A39584] text-center">
             厨师正在准备美味佳肴，请稍后再来
@@ -137,16 +166,19 @@ const MenuPage: React.FC = () => {
             {filteredDishes.map(dish => (
               <View
                 key={dish.id}
-                className={`bg-[#FFFAF5] rounded-3xl overflow-hidden shadow-sm ${
+                className={`food-dish-card ${
                   dish.soldOut ? 'opacity-60' : ''
                 }`}
               >
-                <View className="relative">
+                <View className="food-image-frame">
                   <Image
                     className="w-full h-40"
                     src={dish.image || 'https://via.placeholder.com/300x200/F5E6D3/8B7355?text=%F0%9F%8D%B2'}
                     mode="aspectFill"
                   />
+                  <View className="food-image-tag">
+                    <Text>今日供应</Text>
+                  </View>
                   {dish.soldOut && (
                     <View className="absolute inset-0 bg-black/40 flex items-center justify-center">
                       <Text className="text-white text-sm font-semibold bg-black/60 px-4 py-1.5 rounded-full">
@@ -176,7 +208,7 @@ const MenuPage: React.FC = () => {
                     </View>
                     {!dish.soldOut && (
                       <View
-                        className="w-8 h-8 bg-[#E8833A] rounded-full flex items-center justify-center shadow-md shadow-[#E8833A]/25 active:scale-90 transition-transform"
+                        className="w-8 h-8 food-action rounded-full flex items-center justify-center active:scale-90 transition-transform"
                         onClick={() => handleAddToCart(dish)}
                       >
                         <Text className="text-white text-xl font-light leading-none">+</Text>
@@ -194,7 +226,7 @@ const MenuPage: React.FC = () => {
       {/* Floating cart button */}
       {totalCount > 0 && (
         <View
-          className="fixed right-5 bottom-28 z-20 bg-[#E8833A] rounded-full px-5 py-3.5 flex items-center gap-3 shadow-xl shadow-[#E8833A]/30 active:scale-95 transition-transform"
+          className="fixed right-5 bottom-28 z-20 food-action-green rounded-full px-5 py-3.5 flex items-center gap-3 active:scale-95 transition-transform"
           onClick={handleGoToCart}
         >
           <View className="relative">

@@ -1,13 +1,16 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'taro-axios';
 import Taro from '@tarojs/taro';
+import { useAuthStore } from '../store/authStore';
 
 declare const process: {
   env: {
+    TARO_ENV?: string;
     TARO_APP_API_URL?: string;
   };
 };
 
 const API_BASE_URL = process.env.TARO_APP_API_URL || 'http://localhost:18321';
+const IS_H5 = process.env.TARO_ENV === 'h5';
 
 export function getBaseUrl(): string {
   return API_BASE_URL;
@@ -34,17 +37,19 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(
   (response: AxiosResponse) => {
     const { status, data } = response;
-    console.log(response,'res.data')
 
     if (status >= 400) {
       let message = '请求失败';
       switch (status) {
         case 401:
           message = '登录已过期，请重新登录';
-          Taro.removeStorageSync('token');
-          Taro.removeStorageSync('userInfo');
+          useAuthStore.getState().logout();
           setTimeout(() => {
-            Taro.redirectTo({ url: '/pages/index/index' });
+            if (IS_H5) {
+              Taro.redirectTo({ url: '/pages/guest/login/index' });
+            } else {
+              Taro.redirectTo({ url: '/pages/index/index' });
+            }
           }, 1500);
           break;
         case 403:
@@ -95,7 +100,7 @@ export async function request<T>(options: RequestOptions): Promise<T> {
     headers: options.header,
   };
 
-  return httpClient(config);
+  return httpClient(config) as Promise<T>;
 }
 
 export { httpClient };

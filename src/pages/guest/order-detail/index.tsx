@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { reqGetOrderDetail, reqPostPayOrder, reqPostCancelOrder } from '../../../services'
+import { useAuth } from '../../../store'
 import { Order, OrderStatus } from '../../../../types'
+
+const LOGIN_URL = '/pages/guest/login/index'
 
 const STATUS_CONFIG: Record<OrderStatus, { text: string; emoji: string; desc: string; color: string; bg: string }> = {
   pending_payment: { text: '待支付', emoji: '⏰', desc: '请尽快完成支付，超时订单将自动取消', color: '#FAAD14', bg: '#FFFBE6' },
@@ -15,6 +18,7 @@ const STATUS_CONFIG: Record<OrderStatus, { text: string; emoji: string; desc: st
 const OrderDetailPage: React.FC = () => {
   const router = useRouter()
   const orderId = router.params.id
+  const { isLogin } = useAuth()
 
   const [order, setOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
@@ -23,8 +27,14 @@ const OrderDetailPage: React.FC = () => {
   const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
-    if (orderId) loadOrderDetail()
-  }, [orderId])
+    if (!isLogin) {
+      Taro.redirectTo({ url: LOGIN_URL })
+    }
+  }, [isLogin])
+
+  useEffect(() => {
+    if (orderId && isLogin) loadOrderDetail()
+  }, [orderId, isLogin])
 
   const loadOrderDetail = async () => {
     try {
@@ -40,6 +50,7 @@ const OrderDetailPage: React.FC = () => {
   }
 
   const handlePay = async () => {
+    if (actionLoading) return
     setShowPayModal(false)
     setActionLoading(true)
     try {
@@ -54,6 +65,7 @@ const OrderDetailPage: React.FC = () => {
   }
 
   const handleCancel = async () => {
+    if (actionLoading) return
     setShowCancelModal(false)
     setActionLoading(true)
     try {
@@ -74,7 +86,7 @@ const OrderDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <View className="min-h-screen bg-[#FFF8F0] flex items-center justify-center">
+      <View className="food-page flex items-center justify-center">
         <Text className="text-[#CCC]">加载中...</Text>
       </View>
     )
@@ -82,8 +94,10 @@ const OrderDetailPage: React.FC = () => {
 
   if (!order) {
     return (
-      <View className="min-h-screen bg-[#FFF8F0] flex flex-col items-center justify-center">
-        <Text className="text-4xl mb-4">❓</Text>
+      <View className="food-page food-empty">
+        <View className="food-empty__icon">
+          <Text className="text-4xl">❓</Text>
+        </View>
         <Text className="text-[#A39584]">订单不存在</Text>
       </View>
     )
@@ -92,9 +106,9 @@ const OrderDetailPage: React.FC = () => {
   const sc = STATUS_CONFIG[order.status]
 
   return (
-    <View className="min-h-screen bg-[#FFF8F0] pb-36">
+    <View className="food-page food-page--bottom">
       {/* Status header */}
-      <View className="mx-4 mt-4 rounded-3xl p-6 text-center shadow-sm"
+      <View className="mx-4 mt-4 rounded-3xl p-6 text-center shadow-sm border border-white/70"
         style={{ backgroundColor: sc.bg }}
       >
         <View className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
@@ -109,7 +123,7 @@ const OrderDetailPage: React.FC = () => {
       </View>
 
       {/* Items */}
-      <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-2xl p-4 shadow-sm">
+      <View className="food-card mx-4 mt-3 p-4">
         <Text className="text-xs text-[#A39584] block mb-3">商品信息</Text>
         <View className="space-y-3">
           {order.items?.map((item, i) => (
@@ -138,7 +152,7 @@ const OrderDetailPage: React.FC = () => {
       </View>
 
       {/* Order info */}
-      <View className="bg-[#FFFAF5] mx-4 mt-3 rounded-2xl p-4 shadow-sm">
+      <View className="food-card mx-4 mt-3 p-4">
         <Text className="text-xs text-[#A39584] block mb-3">订单信息</Text>
         <View className="space-y-2.5">
           <View className="flex justify-between">
@@ -172,16 +186,16 @@ const OrderDetailPage: React.FC = () => {
 
       {/* Action bar */}
       {order.status === 'pending_payment' && (
-        <View className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-[#F0E6DA] px-5 py-4 flex gap-3">
+        <View className="food-bottom-bar px-5 py-4 flex gap-3">
           <View
             className="flex-1 bg-white border border-[#E8DDD0] rounded-full py-3.5 flex items-center justify-center active:scale-[0.98]"
-            onClick={() => setShowCancelModal(true)}
+            onClick={actionLoading ? undefined : () => setShowCancelModal(true)}
           >
             <Text className="text-[#A39584] font-medium">取消订单</Text>
           </View>
           <View
-            className="flex-1 bg-[#E8833A] rounded-full py-3.5 flex items-center justify-center shadow-lg shadow-[#E8833A]/25 active:scale-[0.98]"
-            onClick={() => setShowPayModal(true)}
+            className="flex-1 food-action rounded-full py-3.5 flex items-center justify-center active:scale-[0.98]"
+            onClick={actionLoading ? undefined : () => setShowPayModal(true)}
           >
             <Text className="text-white font-semibold">立即支付</Text>
           </View>
@@ -189,9 +203,9 @@ const OrderDetailPage: React.FC = () => {
       )}
 
       {order.status === 'completed' && (
-        <View className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-[#F0E6DA] px-5 py-4">
+        <View className="food-bottom-bar px-5 py-4">
           <View
-            className="w-full bg-[#E8833A] rounded-full py-3.5 flex items-center justify-center shadow-lg shadow-[#E8833A]/25 active:scale-[0.98]"
+            className="w-full food-action-green rounded-full py-3.5 flex items-center justify-center active:scale-[0.98]"
             onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
           >
             <Text className="text-white font-semibold">再来一单</Text>
@@ -215,7 +229,7 @@ const OrderDetailPage: React.FC = () => {
               </View>
               <View className="w-px bg-[#F0E6DA]" />
               <View className="flex-1 py-3.5 flex items-center justify-center active:bg-[#FFF0E6]"
-                onClick={handleCancel}
+                onClick={actionLoading ? undefined : handleCancel}
               >
                 <Text className="text-[#FF4D4F] font-bold">确认取消</Text>
               </View>
@@ -249,7 +263,7 @@ const OrderDetailPage: React.FC = () => {
               </View>
               <View className="w-px bg-[#F0E6DA]" />
               <View className="flex-1 py-3.5 flex items-center justify-center active:bg-[#FFF0E6]"
-                onClick={handlePay}
+                onClick={actionLoading ? undefined : handlePay}
               >
                 <Text className="text-[#E8833A] font-bold">确认支付</Text>
               </View>
