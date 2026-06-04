@@ -4,15 +4,16 @@ export interface IReqGetPresignedUrlParams {
   md5: string
   filename: string
   contentType: string
-  folder?: string
+  folder?: 'dishes' | 'avatars' | 'temp'
 }
 
 export interface IReqConfirmUploadParams {
   md5: string
-  filename: string
+  storageKey: string
+  originalName: string
   contentType: string
   size: number
-  folder?: string
+  folder?: 'dishes' | 'avatars' | 'temp'
 }
 
 export interface IResCheckFileResponse {
@@ -22,7 +23,8 @@ export interface IResCheckFileResponse {
 
 export interface IResGetPresignedUrlResponse {
   uploadUrl: string
-  fileUrl: string
+  storageKey: string
+  expiresIn: number
 }
 
 export interface IResConfirmUploadResponse {
