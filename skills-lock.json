@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "Taro Documentation": {
+      "source": "whinc/my-claude-plugins",
+      "sourceType": "github",
+      "skillPath": "plugins/taro/skills/taro-docs/SKILL.md",
+      "computedHash": "ef96533b357750522492ec1441a1ce2b19067eac68deb76b73cd07229f56c8d4"
+    }
+  }
+}
