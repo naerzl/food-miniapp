@@ -1,7 +1,8 @@
 import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
+import { persist } from 'zustand/middleware'
 import Taro from '@tarojs/taro'
 import { connectWebSocket, disconnectWebSocket } from '../services/websocket'
+import { taroJsonStorage } from './taroStorage'
 
 interface UserInfo {
   id: string
@@ -28,19 +29,6 @@ interface AuthActions {
 }
 
 type AuthStore = AuthState & AuthActions
-
-const taroStorage = {
-  getItem: (name: string) => {
-    const value = Taro.getStorageSync(name)
-    return value || null
-  },
-  setItem: (name: string, value: string) => {
-    Taro.setStorageSync(name, value)
-  },
-  removeItem: (name: string) => {
-    Taro.removeStorageSync(name)
-  },
-}
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -77,7 +65,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => taroStorage),
+      storage: taroJsonStorage,
       partialize: (state) => ({
         token: state.token,
         userInfo: state.userInfo,

@@ -56,6 +56,9 @@ importers:
       '@tarojs/taro':
         specifier: 4.1.11
         version: 4.1.11(@tarojs/components@4.1.11(@tarojs/helper@4.1.11)(@types/react@18.3.30)(postcss@8.5.15)(rollup@3.30.0))(@tarojs/helper@4.1.11)(@tarojs/shared@4.1.11)(@types/react@18.3.30)(postcss@8.5.15)(rollup@3.30.0)
+      decimal.js:
+        specifier: ^10.6.0
+        version: 10.6.0
       react:
         specifier: ^18.0.0
         version: 18.0.0

@@ -168,7 +168,7 @@ const OrdersPage: React.FC = () => {
                   <Text className="text-xs text-[#8B7355]">{formatDate(order.createdAt)}</Text>
                   <Text className="text-lg font-bold text-[#E8833A]">
                     <Text className="text-[13px]">¥</Text>
-                    {order.totalAmount.toFixed(2)}
+                    {Number(order.totalAmount).toFixed(2)}
                   </Text>
                 </View>
               </View>

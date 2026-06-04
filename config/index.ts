@@ -34,7 +34,6 @@ function customTabBarPlugin(): any {
         `  data: {`,
         `    selected: 0,`,
         `    indicatorStyle: 'transform: translateX(0%);',`,
-        `    animated: false,`,
         `    switching: false,`,
         `    tabs: ${JSON.stringify(tabs)}`,
         `  },`,
@@ -49,10 +48,9 @@ function customTabBarPlugin(): any {
         `    }`,
         `  },`,
         `  methods: {`,
-        `    setSelected: function(index, animated) {`,
+        `    setSelected: function(index) {`,
         `      this.setData({`,
         `        selected: index,`,
-        `        animated: !!animated,`,
         `        indicatorStyle: 'transform: translateX(' + (index * 100) + '%);'`,
         `      })`,
         `    },`,
@@ -97,7 +95,7 @@ function customTabBarPlugin(): any {
 
     // index.wxml
     fs.writeFileSync(path.join(distDir, 'index.wxml'), [
-      `<view class="custom-tabbar {{animated ? 'custom-tabbar--animated' : ''}}">`,
+      `<view class="custom-tabbar">`,
       `  <view class="custom-tabbar__track">`,
       `    <view class="custom-tabbar__indicator" style="{{indicatorStyle}}"></view>`,
       `  </view>`,

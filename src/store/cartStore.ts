@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import Taro from '@tarojs/taro'
+import { taroJsonStorage } from './taroStorage'
 
 export interface CartItem {
   dishId: number | string
@@ -39,13 +40,11 @@ export const useCartStore = create<CartStore>()(
         } else {
           newItems = [...items, item]
         }
-        Taro.setStorageSync('cartItems', newItems)
         set({ items: newItems })
       },
 
       removeFromCart: (dishId) => {
         const newItems = get().items.filter((i) => i.dishId !== dishId)
-        Taro.setStorageSync('cartItems', newItems)
         set({ items: newItems })
       },
 
@@ -57,7 +56,6 @@ export const useCartStore = create<CartStore>()(
         const newItems = get().items.map((item) =>
           item.dishId === dishId ? { ...item, quantity } : item,
         )
-        Taro.setStorageSync('cartItems', newItems)
         set({ items: newItems })
       },
 
@@ -67,13 +65,22 @@ export const useCartStore = create<CartStore>()(
       },
 
       setCart: (items) => {
-        Taro.setStorageSync('cartItems', items)
         set({ items })
       },
     }),
     {
       name: 'cart-storage',
+      storage: taroJsonStorage,
       partialize: (state) => ({ items: state.items }),
+      onRehydrateStorage: () => (state) => {
+        if (!state || state.items.length > 0) return
+
+        const legacyItems = Taro.getStorageSync<CartItem[]>('cartItems')
+        if (Array.isArray(legacyItems) && legacyItems.length > 0) {
+          state.setCart(legacyItems)
+          Taro.removeStorageSync('cartItems')
+        }
+      },
     },
   ),
 )
@@ -81,7 +88,12 @@ export const useCartStore = create<CartStore>()(
 // 计算属性的 hook
 export const useCart = () => {
   const store = useCartStore()
-  const totalCount = store.items.reduce((sum, item) => sum + item.quantity, 0)
-  const totalAmount = store.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  return { ...store, totalCount, totalAmount }
+  // 确保 price 为数字（后端可能返回字符串）
+  const items = store.items.map((item) => ({
+    ...item,
+    price: Number(item.price),
+  }))
+  const totalCount = items.reduce((sum, item) => sum + item.quantity, 0)
+  const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  return { ...store, items, totalCount, totalAmount }
 }

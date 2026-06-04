@@ -18,7 +18,7 @@ export const reqGetOrders = (status?: string, page = 1, limit = 20) =>
   request<PaginatedOrders>({
     url: '/api/orders',
     method: 'GET',
-    data: { status, page, limit },
+    data: Object.fromEntries(Object.entries({ status, page, limit }).filter(([, v]) => v !== undefined)),
   })
 
 export const reqGetOrderDetail = (id: string) =>

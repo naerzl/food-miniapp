@@ -66,7 +66,7 @@ const MenuPage: React.FC = () => {
     addToCart({
       dishId: dish.id,
       dishName: dish.name,
-      price: dish.price,
+      price: Number(dish.price),
       quantity: 1,
       image: dish.image,
     })

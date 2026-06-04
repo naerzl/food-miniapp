@@ -35,6 +35,7 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     loadUserData()
   }, [loadUserData])
+
   useDidShow(() => {
     syncCustomTabBar(2)
     loadUserData()

@@ -210,14 +210,14 @@ const OrderDetailPage: React.FC = () => {
                   </Text>
                 </View>
                 <Text className="text-sm font-semibold text-[#2f3327]">
-                  ¥{(item.price * item.quantity).toFixed(2)}
+                  ¥{(Number(item.price) * item.quantity).toFixed(2)}
                 </Text>
               </View>
             ))}
             <View className="mt-2 flex items-center justify-between border-t border-[#E8DDD0] pt-3">
               <Text className="text-base font-bold text-[#2f3327]">合计</Text>
               <Text className="text-[22px] font-bold text-[#E8833A]">
-                ¥{order.totalAmount.toFixed(2)}
+                ¥{Number(order.totalAmount).toFixed(2)}
               </Text>
             </View>
           </View>
