@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, Text, Textarea } from '@tarojs/components'
 import { useCart, useAuth } from '../../../store'
 import { reqPostCreateOrder } from '../../../services'
-import { AuthGuard } from '../../../components/AuthGuard'
+import { withAuthGuard } from '../../../components/AuthGuard'
 
 const ConfirmPage: React.FC = () => {
   const { items, totalCount, totalAmount, clearCart } = useCart()
@@ -46,32 +46,29 @@ const ConfirmPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <AuthGuard>
-        <View className="food-page">
-          <View className="food-mobile">
-            <View className="food-empty">
-              <View className="food-empty__icon">
-                <Text className="text-5xl">🛒</Text>
-              </View>
-              <Text className="mb-2 text-lg font-bold text-[#4A3728]">购物车是空的</Text>
-              <Text className="mb-8 text-sm text-[#A39584]">请先添加商品到购物车</Text>
-              <View
-                className="food-action-green rounded-full px-10 py-3 active:scale-95"
-                onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
-              >
-                <Text className="font-semibold text-white">去逛逛</Text>
-              </View>
+      <View className="food-page">
+        <View className="food-mobile">
+          <View className="food-empty">
+            <View className="food-empty__icon">
+              <Text className="text-5xl">🛒</Text>
+            </View>
+            <Text className="mb-2 text-lg font-bold text-[#4A3728]">购物车是空的</Text>
+            <Text className="mb-8 text-sm text-[#A39584]">请先添加商品到购物车</Text>
+            <View
+              className="food-action-green rounded-full px-10 py-3 active:scale-95"
+              onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
+            >
+              <Text className="font-semibold text-white">去逛逛</Text>
             </View>
           </View>
         </View>
-      </AuthGuard>
+      </View>
     )
   }
 
   return (
-    <AuthGuard>
-      <View className="food-page food-page--bottom">
-        <View className="food-mobile">
+    <View className="food-page food-page--bottom">
+      <View className="food-mobile">
           <View className="food-hero">
             <Text className="food-hero__title">📋 确认订单</Text>
             <Text className="food-hero__desc">请核对订单信息，确认后提交</Text>
@@ -194,9 +191,8 @@ const ConfirmPage: React.FC = () => {
             </View>
           </View>
         )}
-      </View>
-    </AuthGuard>
+    </View>
   )
 }
 
-export default ConfirmPage
+export default withAuthGuard(ConfirmPage)

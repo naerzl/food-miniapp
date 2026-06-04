@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { useCart } from '../../../store'
-import { AuthGuard } from '../../../components/AuthGuard'
+import { withAuthGuard } from '../../../components/AuthGuard'
 
 const CartPage: React.FC = () => {
   const { items, totalCount, totalAmount, removeFromCart, updateQuantity, clearCart } = useCart()
@@ -18,32 +18,29 @@ const CartPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <AuthGuard>
-        <View className="food-page">
-          <View className="food-mobile">
-            <View className="food-empty">
-              <View className="food-empty__icon">
-                <Text className="text-5xl">🛒</Text>
-              </View>
-              <Text className="mb-2 text-xl font-bold text-[#4A3728]">购物车是空的</Text>
-              <Text className="mb-8 text-sm text-[#A39584]">快去选购美味佳肴吧</Text>
-              <View
-                className="food-action-green rounded-full px-10 py-3 font-semibold active:scale-95 transition-transform"
-                onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
-              >
-                <Text className="text-white">去逛逛</Text>
-              </View>
+      <View className="food-page">
+        <View className="food-mobile">
+          <View className="food-empty">
+            <View className="food-empty__icon">
+              <Text className="text-5xl">🛒</Text>
+            </View>
+            <Text className="mb-2 text-xl font-bold text-[#4A3728]">购物车是空的</Text>
+            <Text className="mb-8 text-sm text-[#A39584]">快去选购美味佳肴吧</Text>
+            <View
+              className="food-action-green rounded-full px-10 py-3 font-semibold active:scale-95 transition-transform"
+              onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
+            >
+              <Text className="text-white">去逛逛</Text>
             </View>
           </View>
         </View>
-      </AuthGuard>
+      </View>
     )
   }
 
   return (
-    <AuthGuard>
-      <View className="food-page food-page--bottom">
-        <View className="food-mobile">
+    <View className="food-page food-page--bottom">
+      <View className="food-mobile">
           <View className="food-hero">
             <Text className="food-hero__title">🛒 我的购物车</Text>
             <Text className="food-hero__desc">共 {totalCount} 件商品，精选健康美味</Text>
@@ -170,9 +167,8 @@ const CartPage: React.FC = () => {
             </View>
           </View>
         )}
-      </View>
-    </AuthGuard>
+    </View>
   )
 }
 
-export default CartPage
+export default withAuthGuard(CartPage)

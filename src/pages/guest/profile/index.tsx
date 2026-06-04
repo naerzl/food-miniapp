@@ -6,7 +6,7 @@ import { reqGetProfile, reqGetMyStats } from '../../../services'
 import type { IResGetMyStatsResponse } from '../../../services/statistics'
 import { User } from '../../../../types'
 import { syncCustomTabBar } from '../../../utils/tabBar'
-import { AuthGuard } from '../../../components/AuthGuard'
+import { withAuthGuard } from '../../../components/AuthGuard'
 
 const ProfilePage: React.FC = () => {
   const { isLogin, logout } = useAuth()
@@ -89,9 +89,8 @@ const ProfilePage: React.FC = () => {
   ]
 
   return (
-    <AuthGuard>
-      <View className="food-page">
-        <View className="food-mobile">
+    <View className="food-page">
+      <View className="food-mobile">
           <View className="food-hero food-hero--profile">
             <View className="flex items-center gap-4">
               {userDetail?.avatar ? (
@@ -196,8 +195,7 @@ const ProfilePage: React.FC = () => {
           </View>
         </View>
       </View>
-    </AuthGuard>
   )
 }
 
-export default ProfilePage
+export default withAuthGuard(ProfilePage)

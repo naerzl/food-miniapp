@@ -4,7 +4,7 @@ import { View, Text } from '@tarojs/components'
 import { reqGetOrderDetail, reqPostPayOrder, reqPostCancelOrder } from '../../../services'
 import { useAuth } from '../../../store'
 import { Order, OrderStatus } from '../../../../types'
-import { AuthGuard } from '../../../components/AuthGuard'
+import { withAuthGuard } from '../../../components/AuthGuard'
 
 const STATUS_CONFIG: Record<
   OrderStatus,
@@ -119,37 +119,32 @@ const OrderDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <AuthGuard>
-        <View className="food-page flex items-center justify-center">
-          <View className="food-mobile flex items-center justify-center">
-            <Text className="text-[#CCC]">加载中...</Text>
-          </View>
+      <View className="food-page flex items-center justify-center">
+        <View className="food-mobile flex items-center justify-center">
+          <Text className="text-[#CCC]">加载中...</Text>
         </View>
-      </AuthGuard>
+      </View>
     )
   }
 
   if (!order) {
     return (
-      <AuthGuard>
-        <View className="food-page">
-          <View className="food-mobile food-empty">
-            <View className="food-empty__icon">
-              <Text className="text-4xl">❓</Text>
-            </View>
-            <Text className="text-[#A39584]">订单不存在</Text>
+      <View className="food-page">
+        <View className="food-mobile food-empty">
+          <View className="food-empty__icon">
+            <Text className="text-4xl">❓</Text>
           </View>
+          <Text className="text-[#A39584]">订单不存在</Text>
         </View>
-      </AuthGuard>
+      </View>
     )
   }
 
   const sc = STATUS_CONFIG[order.status]
 
   return (
-    <AuthGuard>
-      <View className="food-page food-page--bottom">
-        <View className="food-mobile">
+    <View className="food-page food-page--bottom">
+      <View className="food-mobile">
           <View className="food-hero">
             <Text className="food-hero__title">📋 订单详情</Text>
             <Text className="food-hero__desc">订单号：{order.orderNo}</Text>
@@ -349,9 +344,8 @@ const OrderDetailPage: React.FC = () => {
             </View>
           </View>
         )}
-      </View>
-    </AuthGuard>
+    </View>
   )
 }
 
-export default OrderDetailPage
+export default withAuthGuard(OrderDetailPage)

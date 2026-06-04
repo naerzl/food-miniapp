@@ -34,3 +34,14 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
   return <>{children}</>
 }
+
+// 用于需要登录权限的页面，确保 children 组件的 hooks 不会在未登录时执行
+export function withAuthGuard<P extends object>(WrappedComponent: React.ComponentType<P>) {
+  const WithAuthGuard = (props: P) => (
+    <AuthGuard>
+      <WrappedComponent {...props} />
+    </AuthGuard>
+  )
+  WithAuthGuard.displayName = `withAuthGuard(${WrappedComponent.displayName || WrappedComponent.name})`
+  return WithAuthGuard
+}

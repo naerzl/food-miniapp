@@ -6,7 +6,7 @@ import { subscribeOrderUpdate } from '../../../services/websocket'
 import { useAuth } from '../../../store'
 import { Order, OrderStatus } from '../../../../types'
 import { syncCustomTabBar } from '../../../utils/tabBar'
-import { AuthGuard } from '../../../components/AuthGuard'
+import { withAuthGuard } from '../../../components/AuthGuard'
 
 const STATUS_TABS: { title: string; status: OrderStatus | 'all' }[] = [
   { title: '全部', status: 'all' },
@@ -92,9 +92,8 @@ const OrdersPage: React.FC = () => {
   }
 
   return (
-    <AuthGuard>
-      <View className="food-page">
-        <View className="food-mobile">
+    <View className="food-page">
+      <View className="food-mobile">
           <View className="food-hero">
             <Text className="food-hero__title">📋 我的订单</Text>
             <Text className="food-hero__desc">查看您的所有订单状态</Text>
@@ -177,8 +176,7 @@ const OrdersPage: React.FC = () => {
           )}
         </View>
       </View>
-    </AuthGuard>
   )
 }
 
-export default OrdersPage
+export default withAuthGuard(OrdersPage)
