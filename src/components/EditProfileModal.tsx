@@ -52,24 +52,23 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ visible, onClose, o
         folder: 'avatars',
       })
 
-      // 上传文件到 MinIO
-      await new Promise<void>((resolve, reject) => {
-        Taro.uploadFile({
-          url: presignedRes.uploadUrl,
+      // 读取文件为 ArrayBuffer
+      const fileData = await new Promise<ArrayBuffer>((resolve, reject) => {
+        Taro.getFileSystemManager().readFile({
           filePath: avatarPath,
-          name: 'file',
-          header: {
-            'Content-Type': 'image/jpeg',
-          },
-          success: (res) => {
-            if (res.statusCode === 200 || res.statusCode === 204) {
-              resolve()
-            } else {
-              reject(new Error(`Upload failed with status ${res.statusCode}`))
-            }
-          },
+          success: (res) => resolve(res.data as ArrayBuffer),
           fail: (err) => reject(err),
         })
+      })
+
+      // 使用 PUT 方法上传文件到 MinIO
+      await Taro.request({
+        url: presignedRes.uploadUrl,
+        method: 'PUT',
+        header: {
+          'Content-Type': 'image/jpeg',
+        },
+        data: fileData,
       })
 
       // 确认上传
