@@ -72,7 +72,7 @@ const MenuPage: React.FC = () => {
   }
 
   const handleGoToCart = () => {
-    Taro.switchTab({ url: '/pages/guest/cart/index' })
+    Taro.navigateTo({ url: '/pages/guest/cart/index' })
   }
 
   const filteredDishes =
@@ -217,9 +217,7 @@ const MenuPage: React.FC = () => {
                   <View className="flex items-center justify-between mt-3">
                     <View className="flex items-baseline">
                       <Text className="text-[13px] text-[#E8833A] font-medium">¥</Text>
-                      <Text className="text-lg font-bold text-[#E8833A] ml-0.5">
-                        {dish.price.toFixed(0)}
-                      </Text>
+                      <Text className="text-lg font-bold text-[#E8833A] ml-0.5">{dish.price}</Text>
                     </View>
                     {!dish.soldOut && (
                       <View
