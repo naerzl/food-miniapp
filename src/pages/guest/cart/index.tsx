@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { useCart, useAuth } from '../../../store'
+import { getLoginUrl } from '../../../utils/env'
 
 const CartPage: React.FC = () => {
   const { items, totalCount, totalAmount, removeFromCart, updateQuantity, clearCart } = useCart()
@@ -14,7 +15,7 @@ const CartPage: React.FC = () => {
       return
     }
     if (!isLogin) {
-      Taro.navigateTo({ url: '/pages/guest/login/index' })
+      Taro.navigateTo({ url: getLoginUrl() })
       return
     }
     Taro.navigateTo({ url: '/pages/guest/confirm/index' })

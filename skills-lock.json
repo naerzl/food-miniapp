@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "plugins/taro/skills/taro-docs/SKILL.md",
       "computedHash": "ef96533b357750522492ec1441a1ce2b19067eac68deb76b73cd07229f56c8d4"
+    },
+    "react-to-taro": {
+      "source": "dafang/taro-weapp-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/react-to-taro/SKILL.md",
+      "computedHash": "98a19534ba40707bd27643cf1f4db137b8d89ac36189f38305d0ecc060c5c678"
     }
   }
 }

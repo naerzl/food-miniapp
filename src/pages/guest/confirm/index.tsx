@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, Text, Textarea } from '@tarojs/components'
 import { useCart, useAuth } from '../../../store'
 import { reqPostCreateOrder } from '../../../services'
+import { getLoginUrl } from '../../../utils/env'
 
 const ConfirmPage: React.FC = () => {
   const { items, totalCount, totalAmount, clearCart } = useCart()
@@ -17,7 +18,7 @@ const ConfirmPage: React.FC = () => {
       return
     }
     if (!isLogin) {
-      Taro.navigateTo({ url: '/pages/guest/login/index' })
+      Taro.navigateTo({ url: getLoginUrl() })
       return
     }
     setShowConfirm(true)

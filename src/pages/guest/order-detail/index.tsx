@@ -4,8 +4,7 @@ import { View, Text } from '@tarojs/components'
 import { reqGetOrderDetail, reqPostPayOrder, reqPostCancelOrder } from '../../../services'
 import { useAuth } from '../../../store'
 import { Order, OrderStatus } from '../../../../types'
-
-const LOGIN_URL = '/pages/guest/login/index'
+import { getLoginUrl } from '../../../utils/env'
 
 const STATUS_CONFIG: Record<
   OrderStatus,
@@ -68,7 +67,7 @@ const OrderDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (!isLogin) {
-      Taro.redirectTo({ url: LOGIN_URL })
+      Taro.redirectTo({ url: getLoginUrl() })
     }
   }, [isLogin])
 

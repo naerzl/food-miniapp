@@ -8,6 +8,7 @@ export default defineAppConfig({
     'pages/guest/order-detail/index',
     'pages/guest/profile/index',
     'pages/guest/login/index',
+    'pages/guest/wechat-login/index',
   ],
   tabBar: {
     custom: true,

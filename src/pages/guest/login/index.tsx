@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, Text, Input } from '@tarojs/components'
 import { useAuth } from '../../../store'
 import { reqPostLogin } from '../../../services'
+import { isWeapp } from '../../../utils/env'
 
 type AuthUser = {
   id?: string
@@ -200,12 +201,14 @@ const LoginPage: React.FC = () => {
             </View>
 
             <View className="food-login-social">
-              <View
-                className="food-login-social__button active:scale-95"
-                onClick={() => Taro.showToast({ title: '请在我的页面使用微信登录', icon: 'none' })}
-              >
-                <Text className="text-2xl">💬</Text>
-              </View>
+              {isWeapp && (
+                <View
+                  className="food-login-social__button active:scale-95"
+                  onClick={() => Taro.redirectTo({ url: '/pages/guest/wechat-login/index' })}
+                >
+                  <Text className="text-2xl">💬</Text>
+                </View>
+              )}
               <View
                 className="food-login-social__button active:scale-95"
                 onClick={() => Taro.showToast({ title: '验证码登录暂未开放', icon: 'none' })}

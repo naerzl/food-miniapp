@@ -2,16 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { useAuth, useCart } from '../../../store'
-import { reqGetProfile, reqPostWechatLogin, reqGetMyStats } from '../../../services'
+import { reqGetProfile, reqGetMyStats } from '../../../services'
 import type { IResGetMyStatsResponse } from '../../../services/statistics'
 import { User } from '../../../../types'
-
-const IS_H5 = Taro.getEnv() === Taro.ENV_TYPE.WEB
+import { syncCustomTabBar } from '../../../utils/tabBar'
+import { getLoginUrl } from '../../../utils/env'
 
 const ProfilePage: React.FC = () => {
-  const { isLogin, login, logout } = useAuth()
+  const { isLogin, logout } = useAuth()
   const { clearCart } = useCart()
-  const [loading, setLoading] = useState(false)
+  const [, setLoading] = useState(false)
   const [userDetail, setUserDetail] = useState<User | null>(null)
   const [myStats, setMyStats] = useState<IResGetMyStatsResponse | null>(null)
 
@@ -36,29 +36,9 @@ const ProfilePage: React.FC = () => {
     loadUserData()
   }, [loadUserData])
   useDidShow(() => {
+    syncCustomTabBar(2)
     loadUserData()
   })
-
-  const handleWechatLogin = async () => {
-    try {
-      setLoading(true)
-      const { code } = await Taro.login()
-      const res = await reqPostWechatLogin({ code })
-      login(res.accessToken, {
-        id: res.user.id,
-        username: res.user.username,
-        nickname: res.user.nickname,
-        avatar: res.user.avatar,
-        role: res.user.role as 'admin' | 'merchant' | 'user',
-      })
-      Taro.showToast({ title: '登录成功', icon: 'success' })
-      loadUserData()
-    } catch (error) {
-      Taro.showToast({ title: '登录失败', icon: 'none' })
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleLogout = () => {
     Taro.showModal({
@@ -75,41 +55,16 @@ const ProfilePage: React.FC = () => {
   }
 
   useEffect(() => {
-    if (IS_H5 && !isLogin) {
-      Taro.redirectTo({ url: '/pages/guest/login/index' })
+    if (!isLogin) {
+      Taro.redirectTo({ url: getLoginUrl() })
     }
   }, [isLogin])
 
   if (!isLogin) {
-    if (IS_H5) {
-      return (
-        <View className="food-page flex items-center justify-center">
-          <View className="food-mobile flex items-center justify-center">
-            <Text className="text-sm text-[#A39584]">正在跳转登录页...</Text>
-          </View>
-        </View>
-      )
-    }
     return (
-      <View className="food-page">
-        <View className="food-mobile flex min-h-screen flex-col items-center justify-center px-8">
-          <View className="food-empty__icon">
-            <Text className="text-5xl">👋</Text>
-          </View>
-          <Text className="mb-2 text-xl font-bold text-[#4A3728]">欢迎使用轻食</Text>
-          <Text className="mb-10 text-center text-sm text-[#A39584]">
-            登录后可查看订单、享受更多服务
-          </Text>
-          <View
-            className={`flex w-full items-center justify-center rounded-full py-3.5 shadow-lg active:scale-[0.98] transition-transform ${
-              loading ? 'bg-[#E0C8B0]' : 'food-action-green'
-            }`}
-            onClick={loading ? undefined : handleWechatLogin}
-          >
-            <Text className="text-base font-semibold text-white">
-              {loading ? '登录中...' : '微信一键登录'}
-            </Text>
-          </View>
+      <View className="food-page flex items-center justify-center">
+        <View className="food-mobile flex items-center justify-center">
+          <Text className="text-sm text-[#A39584]">正在跳转登录页...</Text>
         </View>
       </View>
     )

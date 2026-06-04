@@ -4,6 +4,7 @@ import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { reqGetTodayDishes, reqGetCategories } from '../../../services'
 import { Dish, Category } from '../../../../types'
 import { useCart } from '../../../store'
+import { syncCustomTabBar } from '../../../utils/tabBar'
 
 const SKELETON_COUNT = 4
 const DISH_ICONS = [
@@ -53,6 +54,7 @@ const MenuPage: React.FC = () => {
     loadData()
   }, [loadData])
   useDidShow(() => {
+    syncCustomTabBar(0)
     loadData(false)
   })
 

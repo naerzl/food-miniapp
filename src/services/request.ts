@@ -1,10 +1,10 @@
 import Taro from '@tarojs/taro'
 import { useAuthStore } from '../store/authStore'
+import { getLoginUrl } from '../utils/env'
 
 declare const __API_BASE_URL__: string
 
 const API_BASE_URL = __API_BASE_URL__
-const IS_H5 = Taro.getEnv() === Taro.ENV_TYPE.WEB
 
 export interface RequestOptions {
   url: string
@@ -37,9 +37,7 @@ function getErrorMessage(statusCode: number, data: unknown): string {
 function handleUnauthorized() {
   useAuthStore.getState().logout()
   setTimeout(() => {
-    Taro.redirectTo({
-      url: IS_H5 ? '/pages/guest/login/index' : '/pages/index/index',
-    })
+    Taro.redirectTo({ url: getLoginUrl() })
   }, 1500)
 }
 

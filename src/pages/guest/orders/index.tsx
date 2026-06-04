@@ -5,8 +5,8 @@ import { reqGetOrders } from '../../../services'
 import { subscribeOrderUpdate } from '../../../services/websocket'
 import { useAuth } from '../../../store'
 import { Order, OrderStatus } from '../../../../types'
-
-const LOGIN_URL = '/pages/guest/login/index'
+import { syncCustomTabBar } from '../../../utils/tabBar'
+import { getLoginUrl } from '../../../utils/env'
 
 const STATUS_TABS: { title: string; status: OrderStatus | 'all' }[] = [
   { title: '全部', status: 'all' },
@@ -34,7 +34,7 @@ const OrdersPage: React.FC = () => {
 
   useEffect(() => {
     if (!isLogin) {
-      Taro.navigateTo({ url: LOGIN_URL })
+      Taro.navigateTo({ url: getLoginUrl() })
     }
   }, [isLogin])
 
@@ -84,6 +84,7 @@ const OrdersPage: React.FC = () => {
   }, [loadOrders])
 
   useDidShow(() => {
+    syncCustomTabBar(1)
     if (isLogin) loadOrders(1, true)
   })
 
