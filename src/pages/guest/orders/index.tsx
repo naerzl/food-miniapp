@@ -10,18 +10,18 @@ const LOGIN_URL = '/pages/guest/login/index'
 
 const STATUS_TABS: { title: string; status: OrderStatus | 'all' }[] = [
   { title: '全部', status: 'all' },
-  { title: '待支付', status: 'pending_payment' },
-  { title: '待制作', status: 'paid' },
-  { title: '制作中', status: 'preparing' },
+  { title: '待付款', status: 'pending_payment' },
+  { title: '制作中', status: 'paid' },
+  { title: '待取餐', status: 'preparing' },
   { title: '已完成', status: 'completed' },
 ]
 
-const STATUS_CONFIG: Record<OrderStatus, { text: string; color: string; bg: string }> = {
-  pending_payment: { text: '待支付', color: '#FAAD14', bg: '#FFFBE6' },
-  paid: { text: '待制作', color: '#1677FF', bg: '#E6F4FF' },
-  preparing: { text: '制作中', color: '#722ED1', bg: '#F9F0FF' },
-  completed: { text: '已完成', color: '#52C41A', bg: '#F6FFED' },
-  cancelled: { text: '已取消', color: '#999', bg: '#F5F5F5' },
+const STATUS_CONFIG: Record<OrderStatus, { text: string; badgeClass: string }> = {
+  pending_payment: { text: '待付款', badgeClass: 'status-pending' },
+  paid: { text: '待制作', badgeClass: 'status-paid' },
+  preparing: { text: '制作中', badgeClass: 'status-preparing' },
+  completed: { text: '已完成', badgeClass: 'status-completed' },
+  cancelled: { text: '已取消', badgeClass: 'status-cancelled' },
 }
 
 const OrdersPage: React.FC = () => {
@@ -98,125 +98,88 @@ const OrdersPage: React.FC = () => {
 
   return (
     <View className="food-page">
-      {/* Hero */}
-      <View
-        className="mx-4 mt-3 pt-5 px-5 pb-6 rounded-b-[24px] relative z-[1]"
-        style={{
-          background: 'linear-gradient(135deg, #2f5e3f, #538a56)',
-          boxShadow: '0 8px 32px rgba(47, 94, 63, 0.2)',
-        }}
-      >
-        <Text className="text-[22px] font-bold text-white block">📋 我的订单</Text>
-        <Text className="text-[13px] text-white/75 block mt-1">查看您的所有订单状态</Text>
-      </View>
-
-      {/* Status tabs */}
-      <View className="food-tabs">
-        <ScrollView scrollX showScrollbar={false} className="px-4">
-          <View className="flex gap-2">
-            {STATUS_TABS.map((tab, i) => (
-              <View
-                key={tab.status}
-                className={`flex-shrink-0 px-5 py-2 rounded-full text-xs font-semibold transition-all duration-200 ${
-                  currentTab === i
-                    ? 'text-white'
-                    : 'bg-white/70 text-[#8B7355] border border-[#E8DDD0]'
-                }`}
-                style={
-                  currentTab === i
-                    ? {
-                        background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
-                        borderColor: 'transparent',
-                      }
-                    : {}
-                }
-                onClick={() => setCurrentTab(i)}
-              >
-                <Text>{tab.title}</Text>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
-
-      {/* Order list */}
-      {loading && orders.length === 0 ? (
-        <View className="flex items-center justify-center pt-32">
-          <Text className="text-[#CCC] text-sm">加载中...</Text>
+      <View className="food-mobile">
+        <View className="food-hero">
+          <Text className="food-hero__title">📋 我的订单</Text>
+          <Text className="food-hero__desc">查看您的所有订单状态</Text>
         </View>
-      ) : orders.length === 0 ? (
-        <View className="food-empty">
-          <View className="food-empty__icon">
-            <Text className="text-4xl">📋</Text>
-          </View>
-          <Text className="text-lg font-bold text-[#4A3728] mb-2">暂无订单</Text>
-          <Text className="text-sm text-[#A39584] mb-8">快去下单吧</Text>
-          <View
-            className="rounded-full px-8 py-3 active:scale-95 transition-transform"
-            style={{
-              background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
-              boxShadow: '0 12px 26px rgba(224, 102, 51, 0.26)',
-            }}
-            onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
-          >
-            <Text className="text-white font-semibold text-sm">去点餐</Text>
-          </View>
-        </View>
-      ) : (
-        <View className="px-4 pt-2 space-y-3 pb-8">
-          {orders.map((order) => (
-            <View
-              key={order.id}
-              className="food-card p-4 active:scale-[0.99] transition-transform"
-              onClick={() =>
-                Taro.navigateTo({ url: `/pages/guest/order-detail/index?id=${order.id}` })
-              }
-            >
-              <View className="flex items-center justify-between mb-3">
-                <Text className="text-xs text-[#A39584]">{order.orderNo}</Text>
+
+        <View className="food-tabs">
+          <ScrollView scrollX showScrollbar={false} className="px-4">
+            <View className="flex gap-2">
+              {STATUS_TABS.map((tab, i) => (
                 <View
-                  className="px-3 py-1 rounded-full"
-                  style={{ backgroundColor: STATUS_CONFIG[order.status].bg }}
+                  key={tab.status}
+                  className={`food-pill ${currentTab === i ? 'food-pill--active' : ''}`}
+                  onClick={() => setCurrentTab(i)}
                 >
-                  <Text
-                    className="text-xs font-semibold"
-                    style={{ color: STATUS_CONFIG[order.status].color }}
-                  >
+                  <Text>{tab.title}</Text>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+
+        {loading && orders.length === 0 ? (
+          <View className="flex items-center justify-center pt-32">
+            <Text className="text-sm text-[#CCC]">加载中...</Text>
+          </View>
+        ) : orders.length === 0 ? (
+          <View className="food-empty">
+            <View className="food-empty__icon">
+              <Text className="text-4xl">📋</Text>
+            </View>
+            <Text className="mb-2 text-lg font-bold text-[#4A3728]">暂无订单</Text>
+            <Text className="mb-8 text-sm text-[#A39584]">快去下单吧</Text>
+            <View
+              className="food-action rounded-full px-8 py-3 active:scale-95 transition-transform"
+              onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
+            >
+              <Text className="text-sm font-semibold text-white">去点餐</Text>
+            </View>
+          </View>
+        ) : (
+          <View className="space-y-4 px-4 pt-4 pb-[100px]">
+            {orders.map((order) => (
+              <View
+                key={order.id}
+                className="food-card p-5 active:scale-[0.98] transition-transform"
+                onClick={() =>
+                  Taro.navigateTo({ url: `/pages/guest/order-detail/index?id=${order.id}` })
+                }
+              >
+                <View className="mb-3 flex items-center justify-between">
+                  <Text className="text-[13px] text-[#8B7355]">{order.orderNo}</Text>
+                  <Text className={`status-badge ${STATUS_CONFIG[order.status].badgeClass}`}>
                     {STATUS_CONFIG[order.status].text}
                   </Text>
                 </View>
-              </View>
-              <View className="flex flex-wrap gap-2 mb-3">
-                {order.items?.map((item, idx) => (
-                  <View
-                    key={idx}
-                    className="px-2.5 py-1 rounded-lg"
-                    style={{ background: 'rgba(47, 51, 39, 0.05)' }}
-                  >
-                    <Text className="text-xs text-[#4A3728]">
-                      {item.dishName} x{item.quantity}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-              <View className="flex items-center justify-between pt-3 border-t border-[#F5E6D3]">
-                <Text className="text-xs text-[#CCC]">{formatDate(order.createdAt)}</Text>
-                <View className="flex items-baseline">
-                  <Text className="text-xs text-[#E8833A] font-semibold">¥</Text>
+                <View className="mb-3 flex flex-wrap gap-2">
+                  {order.items?.map((item, idx) => (
+                    <View key={idx} className="rounded-lg bg-[#2f33270d] px-2.5 py-1">
+                      <Text className="text-xs text-[#4A3728]">
+                        {item.dishName} x{item.quantity}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+                <View className="flex items-center justify-between border-t border-[#E8DDD0] pt-3">
+                  <Text className="text-xs text-[#8B7355]">{formatDate(order.createdAt)}</Text>
                   <Text className="text-lg font-bold text-[#E8833A]">
+                    <Text className="text-[13px]">¥</Text>
                     {order.totalAmount.toFixed(2)}
                   </Text>
                 </View>
               </View>
-            </View>
-          ))}
-          {hasMore && (
-            <View className="flex justify-center py-4">
-              <Text className="text-xs text-[#CCC]">加载更多...</Text>
-            </View>
-          )}
-        </View>
-      )}
+            ))}
+            {hasMore && (
+              <View className="flex justify-center py-4">
+                <Text className="text-xs text-[#CCC]">加载更多...</Text>
+              </View>
+            )}
+          </View>
+        )}
+      </View>
     </View>
   )
 }

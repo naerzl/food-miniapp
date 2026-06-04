@@ -24,7 +24,6 @@
 
 - 后端：`D:\code\githup\food\food-service`
 - 厨师端 Web：`D:\code\githup\food\food-web`
-- 迁移来源：`D:\code\githup\food\food-miniapp`
 - PRD：`D:\code\githup\food\food-service\docx\PRD.md`
 
 ## 开发命令

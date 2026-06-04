@@ -35,7 +35,9 @@ const IndexPage: React.FC = () => {
         >
           <Text className="text-[56px]">🥗</Text>
         </View>
-        <Text className="text-[32px] font-bold text-[#2f3327] tracking-[4px] block mb-2">轻食</Text>
+        <Text className="text-[32px] font-bold text-[#2f3327] tracking-[4px] block mb-2">
+          轻食
+        </Text>
         <Text className="text-sm text-[#8B7355] block">家庭私厨 · 健康轻食</Text>
       </View>
 

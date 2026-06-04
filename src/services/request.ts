@@ -73,7 +73,6 @@ export async function request<T>(options: RequestOptions): Promise<T> {
       return Promise.reject(new Error(message))
     }
 
-    console.log(data, 'data============')
     const data = response.data as { code?: number; message?: string; data?: unknown } | T
 
     // 检查是否是标准的 ApiResponse 格式 { code, message, data }

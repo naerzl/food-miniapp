@@ -23,17 +23,19 @@ const CartPage: React.FC = () => {
   if (items.length === 0) {
     return (
       <View className="food-page">
-        <View className="food-empty">
-          <View className="food-empty__icon">
-            <Text className="text-5xl">🛒</Text>
-          </View>
-          <Text className="text-xl font-bold text-[#4A3728] mb-2">购物车是空的</Text>
-          <Text className="text-sm text-[#A39584] mb-8">快去选购美味佳肴吧</Text>
-          <View
-            className="food-action text-white px-10 py-3 rounded-full font-semibold text-base active:scale-95 transition-transform"
-            onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
-          >
-            <Text className="text-white">去逛逛</Text>
+        <View className="food-mobile">
+          <View className="food-empty">
+            <View className="food-empty__icon">
+              <Text className="text-5xl">🛒</Text>
+            </View>
+            <Text className="mb-2 text-xl font-bold text-[#4A3728]">购物车是空的</Text>
+            <Text className="mb-8 text-sm text-[#A39584]">快去选购美味佳肴吧</Text>
+            <View
+              className="food-action-green rounded-full px-10 py-3 font-semibold active:scale-95 transition-transform"
+              onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
+            >
+              <Text className="text-white">去逛逛</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -42,121 +44,101 @@ const CartPage: React.FC = () => {
 
   return (
     <View className="food-page food-page--bottom">
-      {/* Hero */}
-      <View
-        className="mx-4 mt-3 pt-5 px-5 pb-6 rounded-b-[24px] relative z-[1]"
-        style={{
-          background: 'linear-gradient(135deg, #2f5e3f, #538a56)',
-          boxShadow: '0 8px 32px rgba(47, 94, 63, 0.2)',
-        }}
-      >
-        <Text className="text-[22px] font-bold text-white block">🛒 我的购物车</Text>
-        <Text className="text-[13px] text-white/75 block mt-1">
-          共 {totalCount} 件商品，精选健康美味
-        </Text>
-      </View>
-
-      {/* Header */}
-      <View className="flex items-center justify-between px-5 py-4">
-        <Text className="text-[#4A3728] font-semibold text-sm">
-          共 <Text className="text-[#E8833A] font-bold">{totalCount}</Text> 件商品
-        </Text>
-        <View
-          className="bg-white border border-[#E8DDD0] px-4 py-1.5 rounded-full active:scale-95 transition-transform"
-          onClick={() => setShowClearConfirm(true)}
-        >
-          <Text className="text-[#A39584] text-xs">清空</Text>
+      <View className="food-mobile">
+        <View className="food-hero">
+          <Text className="food-hero__title">🛒 我的购物车</Text>
+          <Text className="food-hero__desc">共 {totalCount} 件商品，精选健康美味</Text>
         </View>
-      </View>
 
-      {/* Item list */}
-      <View className="px-4 space-y-3">
-        {items.map((item) => (
-          <View key={item.dishId} className="food-card p-3 flex gap-3">
-            <Image
-              className="w-20 h-20 rounded-xl flex-shrink-0"
-              src={item.image || 'https://via.placeholder.com/150/F5E6D3/8B7355?text=%F0%9F%8D%B2'}
-              mode="aspectFill"
-            />
-            <View className="flex-1 flex flex-col justify-between min-w-0">
-              <View>
-                <Text className="text-[15px] font-semibold text-[#2f3327] block truncate">
-                  {item.dishName}
-                </Text>
-                <Text className="text-sm text-[#E8833A] font-medium mt-0.5 block">
-                  ¥{item.price.toFixed(2)}
-                </Text>
-              </View>
-              <View className="flex items-center justify-between">
-                <Text className="text-xs text-[#A39584]">
-                  小计 ¥{(item.price * item.quantity).toFixed(2)}
-                </Text>
-                <View className="flex items-center gap-2">
-                  <View
-                    className="w-7 h-7 bg-[#F5E6D3] rounded-full flex items-center justify-center active:scale-90 transition-transform"
-                    onClick={() => updateQuantity(item.dishId, item.quantity - 1)}
-                  >
-                    <Text className="text-[#4A3728] text-base font-medium leading-none">−</Text>
-                  </View>
-                  <Text className="text-[#4A3728] font-bold text-base w-7 text-center">
-                    {item.quantity}
+        <View className="flex items-center justify-between px-5 py-4">
+          <Text className="text-sm font-semibold text-[#4A3728]">
+            共 <Text className="font-bold text-[#E8833A]">{totalCount}</Text> 件商品
+          </Text>
+          <View
+            className="rounded-full border border-[#E8DDD0] bg-white px-4 py-1.5 active:scale-95 transition-transform"
+            onClick={() => setShowClearConfirm(true)}
+          >
+            <Text className="text-xs text-[#A39584]">清空</Text>
+          </View>
+        </View>
+
+        <View className="space-y-3 px-4 pb-[140px]">
+          {items.map((item) => (
+            <View key={item.dishId} className="food-card flex gap-3 p-4">
+              {item.image ? (
+                <Image
+                  className="h-20 w-20 flex-shrink-0 rounded-[20px]"
+                  src={item.image}
+                  mode="aspectFill"
+                />
+              ) : (
+                <View className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-[20px] bg-[#E8F5E9]">
+                  <Text className="text-[32px]">🥗</Text>
+                </View>
+              )}
+              <View className="flex min-w-0 flex-1 flex-col justify-between">
+                <View>
+                  <Text className="block truncate text-[15px] font-semibold text-[#2f3327]">
+                    {item.dishName}
                   </Text>
-                  <View
-                    className="w-7 h-7 rounded-full flex items-center justify-center active:scale-90 transition-transform"
-                    style={{
-                      background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
-                    }}
-                    onClick={() => updateQuantity(item.dishId, item.quantity + 1)}
-                  >
-                    <Text className="text-white text-base font-medium leading-none">+</Text>
+                  <Text className="mt-0.5 block text-xs text-[#8B7355]">健康轻食 · 当日现做</Text>
+                </View>
+                <View className="mt-2 flex items-center justify-between">
+                  <Text className="text-lg font-bold text-[#E8833A]">
+                    <Text className="text-[13px]">¥</Text>
+                    {item.price.toFixed(0)}
+                  </Text>
+                  <View className="flex items-center gap-2">
+                    <View className="qty-control">
+                      <View
+                        className="qty-btn active:scale-90"
+                        onClick={() => updateQuantity(item.dishId, item.quantity - 1)}
+                      >
+                        <Text>−</Text>
+                      </View>
+                      <Text className="qty-value">{item.quantity}</Text>
+                      <View
+                        className="qty-btn active:scale-90"
+                        onClick={() => updateQuantity(item.dishId, item.quantity + 1)}
+                      >
+                        <Text>+</Text>
+                      </View>
+                    </View>
+                    <View
+                      className="food-delete-btn"
+                      onClick={() => {
+                        Taro.showModal({
+                          title: '提示',
+                          content: '确定要删除这个商品吗？',
+                          success: (res) => {
+                            if (res.confirm) removeFromCart(item.dishId)
+                          },
+                        })
+                      }}
+                    >
+                      <Text className="text-sm">×</Text>
+                    </View>
                   </View>
                 </View>
               </View>
             </View>
-            <View
-              className="flex-shrink-0 flex items-center"
-              onClick={() => {
-                Taro.showModal({
-                  title: '提示',
-                  content: '确定要删除这个商品吗？',
-                  success: (res) => {
-                    if (res.confirm) removeFromCart(item.dishId)
-                  },
-                })
-              }}
-            >
-              <Text className="text-[#CCC] text-xs">✕</Text>
-            </View>
-          </View>
-        ))}
-      </View>
-
-      {/* Bottom checkout bar */}
-      <View
-        className="fixed bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between z-[100]"
-        style={{
-          background: 'rgba(255, 252, 245, 0.9)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(232, 221, 208, 0.95)',
-        }}
-      >
-        <View>
-          <Text className="text-xs text-[#A39584]">合计</Text>
-          <View className="flex items-baseline">
-            <Text className="text-sm text-[#E8833A] font-bold">¥</Text>
-            <Text className="text-2xl font-bold text-[#E8833A]">{totalAmount.toFixed(2)}</Text>
-          </View>
+          ))}
         </View>
-        <View
-          className="rounded-full px-10 py-3.5 active:scale-95 transition-transform"
-          style={{
-            background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
-            boxShadow: '0 12px 26px rgba(224, 102, 51, 0.26)',
-          }}
-          onClick={handleCheckout}
-        >
-          <Text className="text-white font-semibold text-base">去结算 ({totalCount})</Text>
+
+        <View className="food-bottom-bar">
+          <View className="mb-3 flex items-center justify-between">
+            <Text className="text-sm text-[#4A3728]">合计</Text>
+            <Text className="text-2xl font-bold text-[#E8833A]">
+              <Text className="text-sm">¥</Text>
+              {totalAmount.toFixed(2)}
+            </Text>
+          </View>
+          <View
+            className="food-action-green flex w-full items-center justify-center rounded-full py-4 active:scale-[0.98]"
+            onClick={handleCheckout}
+          >
+            <Text className="text-base font-semibold text-white">去结算 ({totalCount})</Text>
+          </View>
         </View>
       </View>
 

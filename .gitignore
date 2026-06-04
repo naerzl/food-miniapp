@@ -7,3 +7,9 @@ node_modules/
 .DS_Store
 .swc
 .idea
+.design/
+.agents/
+.claude/
+.codegraph/
+skills-lock.json
+.mcp.json

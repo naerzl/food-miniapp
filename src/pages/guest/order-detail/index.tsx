@@ -9,21 +9,23 @@ const LOGIN_URL = '/pages/guest/login/index'
 
 const STATUS_CONFIG: Record<
   OrderStatus,
-  { text: string; emoji: string; desc: string; color: string; bg: string }
+  { text: string; emoji: string; desc: string; color: string; bg: string; badgeClass: string }
 > = {
   pending_payment: {
-    text: '待支付',
+    text: '待付款',
     emoji: '⏰',
     desc: '请尽快完成支付，超时订单将自动取消',
     color: '#FAAD14',
     bg: '#FFFBE6',
+    badgeClass: 'status-pending',
   },
   paid: {
-    text: '已支付',
+    text: '待制作',
     emoji: '💰',
     desc: '支付成功，等待厨师接单制作',
     color: '#1677FF',
     bg: '#E6F4FF',
+    badgeClass: 'status-paid',
   },
   preparing: {
     text: '制作中',
@@ -31,6 +33,7 @@ const STATUS_CONFIG: Record<
     desc: '美味正在精心制作中，请耐心等待',
     color: '#722ED1',
     bg: '#F9F0FF',
+    badgeClass: 'status-preparing',
   },
   completed: {
     text: '已完成',
@@ -38,8 +41,16 @@ const STATUS_CONFIG: Record<
     desc: '订单已完成，感谢您的光临',
     color: '#52C41A',
     bg: '#F6FFED',
+    badgeClass: 'status-completed',
   },
-  cancelled: { text: '已取消', emoji: '❌', desc: '订单已取消', color: '#999', bg: '#F5F5F5' },
+  cancelled: {
+    text: '已取消',
+    emoji: '❌',
+    desc: '订单已取消',
+    color: '#999',
+    bg: '#F5F5F5',
+    badgeClass: 'status-cancelled',
+  },
 }
 
 const STATUS_ORDER: OrderStatus[] = ['pending_payment', 'paid', 'preparing', 'completed']
@@ -116,18 +127,22 @@ const OrderDetailPage: React.FC = () => {
   if (loading) {
     return (
       <View className="food-page flex items-center justify-center">
-        <Text className="text-[#CCC]">加载中...</Text>
+        <View className="food-mobile flex items-center justify-center">
+          <Text className="text-[#CCC]">加载中...</Text>
+        </View>
       </View>
     )
   }
 
   if (!order) {
     return (
-      <View className="food-page food-empty">
-        <View className="food-empty__icon">
-          <Text className="text-4xl">❓</Text>
+      <View className="food-page">
+        <View className="food-mobile food-empty">
+          <View className="food-empty__icon">
+            <Text className="text-4xl">❓</Text>
+          </View>
+          <Text className="text-[#A39584]">订单不存在</Text>
         </View>
-        <Text className="text-[#A39584]">订单不存在</Text>
       </View>
     )
   }
@@ -136,158 +151,143 @@ const OrderDetailPage: React.FC = () => {
 
   return (
     <View className="food-page food-page--bottom">
-      {/* Status header */}
-      <View
-        className="mx-4 mt-3 rounded-3xl p-6 text-center shadow-sm border border-white/70"
-        style={{ backgroundColor: sc.bg }}
-      >
-        <View className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
-          <Text className="text-3xl">{sc.emoji}</Text>
+      <View className="food-mobile">
+        <View className="food-hero">
+          <Text className="food-hero__title">📋 订单详情</Text>
+          <Text className="food-hero__desc">订单号：{order.orderNo}</Text>
         </View>
-        <Text className="text-xl font-bold block mb-1" style={{ color: sc.color }}>
-          {sc.text}
-        </Text>
-        <Text className="text-sm block" style={{ color: sc.color, opacity: 0.7 }}>
-          {sc.desc}
-        </Text>
-      </View>
 
-      {/* Status timeline */}
-      <View className="food-card mx-4 mt-3 p-5">
-        <Text className="text-base font-bold text-[#2f3327] block mb-4">📍 订单状态</Text>
-        <View className="flex items-center justify-between px-2">
-          {['已下单', '待付款', '制作中', '待取餐'].map((label, idx) => {
-            const isCompleted = idx <= STATUS_ORDER.indexOf(order.status)
-            const isCurrent = idx === STATUS_ORDER.indexOf(order.status)
-            return (
-              <React.Fragment key={label}>
-                <View className="flex flex-col items-center gap-1.5">
-                  <View
-                    className="w-4 h-4 rounded-full border-[3px]"
-                    style={{
-                      background: isCompleted ? '#E8833A' : 'var(--border)',
-                      borderColor: isCompleted ? 'rgba(232, 131, 58, 0.3)' : 'var(--border)',
-                    }}
-                  />
-                  <Text
-                    className="text-[11px]"
-                    style={{ color: isCurrent ? '#E8833A' : '#8B7355' }}
-                  >
-                    {label}
-                  </Text>
-                </View>
-                {idx < 3 && (
-                  <View
-                    className="flex-1 h-[2px] mx-1 mb-5"
-                    style={{
-                      background: isCompleted ? '#E8833A' : 'var(--border)',
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            )
-          })}
-        </View>
-      </View>
-
-      {/* Items */}
-      <View className="food-card mx-4 mt-3 p-5">
-        <Text className="text-base font-bold text-[#2f3327] block mb-3">🍽️ 商品信息</Text>
-        <View className="space-y-3">
-          {order.items?.map((item, i) => (
-            <View key={i} className="flex gap-3 items-center">
-              <View className="flex-1 min-w-0">
-                <Text className="text-sm font-semibold text-[#2f3327] block truncate">
-                  {item.dishName}
-                </Text>
-                <Text className="text-xs text-[#8B7355] mt-0.5 block">
-                  ¥{item.price.toFixed(2)} × {item.quantity}
-                </Text>
-              </View>
-              <Text className="text-[#E8833A] font-bold text-sm flex-shrink-0">
-                ¥{(item.price * item.quantity).toFixed(2)}
+        <View className="px-4 pt-4 pb-[140px]">
+          <View className="food-card food-section-card">
+            <Text className="food-section-title">📍 订单状态</Text>
+            <View className="mb-4 flex items-center gap-2">
+              <Text className={`status-badge ${sc.badgeClass}`}>{sc.text}</Text>
+              <Text className="text-[13px] text-[#8B7355]">
+                创建于 {formatDate(order.createdAt)}
               </Text>
             </View>
-          ))}
-        </View>
-        <View className="border-t border-[#F0E6DA] mt-4 pt-3 flex justify-between items-center">
-          <Text className="text-base font-bold text-[#2f3327]">合计</Text>
-          <View className="flex items-baseline">
-            <Text className="text-xs text-[#E8833A] font-bold">¥</Text>
-            <Text className="text-xl font-bold text-[#E8833A]">{order.totalAmount.toFixed(2)}</Text>
+            <View className="flex items-center justify-between py-4">
+              {['已下单', '待付款', '制作中', '待取餐'].map((label, idx) => {
+                const currentIndex = Math.max(STATUS_ORDER.indexOf(order.status), 0)
+                const isCompleted = idx <= currentIndex && order.status !== 'cancelled'
+                const isCurrent = idx === currentIndex && order.status !== 'cancelled'
+                return (
+                  <React.Fragment key={label}>
+                    <View className="flex flex-1 flex-col items-center gap-1.5">
+                      <View
+                        className="h-4 w-4 rounded-full border-[3px]"
+                        style={{
+                          background: isCompleted ? '#E8833A' : '#E8DDD0',
+                          borderColor: isCompleted ? 'rgba(232, 131, 58, 0.3)' : '#E8DDD0',
+                        }}
+                      />
+                      <Text
+                        className="text-[11px]"
+                        style={{ color: isCurrent ? '#E8833A' : '#8B7355' }}
+                      >
+                        {label}
+                      </Text>
+                    </View>
+                    {idx < 3 && (
+                      <View
+                        className="mb-5 h-[2px] flex-1"
+                        style={{ background: isCompleted ? '#E8833A' : '#E8DDD0' }}
+                      />
+                    )}
+                  </React.Fragment>
+                )
+              })}
+            </View>
+          </View>
+
+          <View className="food-card food-section-card">
+            <Text className="food-section-title">🍽️ 商品信息</Text>
+            {order.items?.map((item, i) => (
+              <View key={i} className="food-info-row">
+                <View className="min-w-0 flex-1">
+                  <Text className="block truncate text-sm text-[#2f3327]">
+                    {item.dishName}
+                    <Text className="ml-2 text-[13px] text-[#8B7355]">x{item.quantity}</Text>
+                  </Text>
+                </View>
+                <Text className="text-sm font-semibold text-[#2f3327]">
+                  ¥{(item.price * item.quantity).toFixed(2)}
+                </Text>
+              </View>
+            ))}
+            <View className="mt-2 flex items-center justify-between border-t border-[#E8DDD0] pt-3">
+              <Text className="text-base font-bold text-[#2f3327]">合计</Text>
+              <Text className="text-[22px] font-bold text-[#E8833A]">
+                ¥{order.totalAmount.toFixed(2)}
+              </Text>
+            </View>
+          </View>
+
+          <View className="food-card food-section-card">
+            <Text className="food-section-title">📋 订单信息</Text>
+            <View className="food-info-row">
+              <Text className="text-sm text-[#8B7355]">订单编号</Text>
+              <Text className="text-sm font-semibold text-[#2f3327]">{order.orderNo}</Text>
+            </View>
+            <View className="food-info-row">
+              <Text className="text-sm text-[#8B7355]">下单时间</Text>
+              <Text className="text-sm font-semibold text-[#2f3327]">
+                {formatDate(order.createdAt)}
+              </Text>
+            </View>
+            {order.paidAt && (
+              <View className="food-info-row">
+                <Text className="text-sm text-[#8B7355]">支付时间</Text>
+                <Text className="text-sm font-semibold text-[#2f3327]">
+                  {formatDate(order.paidAt)}
+                </Text>
+              </View>
+            )}
+            {order.completedAt && (
+              <View className="food-info-row">
+                <Text className="text-sm text-[#8B7355]">完成时间</Text>
+                <Text className="text-sm font-semibold text-[#2f3327]">
+                  {formatDate(order.completedAt)}
+                </Text>
+              </View>
+            )}
+            {order.remark && (
+              <View className="pt-3">
+                <Text className="mb-1 block text-sm text-[#8B7355]">备注</Text>
+                <Text className="text-sm text-[#2f3327]">{order.remark}</Text>
+              </View>
+            )}
           </View>
         </View>
+
+        {order.status === 'pending_payment' && (
+          <View className="food-bottom-bar flex gap-3">
+            <View
+              className="flex flex-1 items-center justify-center rounded-full border border-[#E8DDD0] bg-white py-3.5 active:scale-[0.98]"
+              onClick={actionLoading ? undefined : () => setShowCancelModal(true)}
+            >
+              <Text className="font-medium text-[#A39584]">取消订单</Text>
+            </View>
+            <View
+              className="food-action flex flex-1 items-center justify-center rounded-full py-3.5 active:scale-[0.98]"
+              onClick={actionLoading ? undefined : () => setShowPayModal(true)}
+            >
+              <Text className="font-semibold text-white">立即支付</Text>
+            </View>
+          </View>
+        )}
+
+        {order.status === 'completed' && (
+          <View className="food-bottom-bar">
+            <View
+              className="food-action-green flex w-full items-center justify-center rounded-full py-3.5 active:scale-[0.98]"
+              onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
+            >
+              <Text className="font-semibold text-white">再来一单</Text>
+            </View>
+          </View>
+        )}
       </View>
-
-      {/* Order info */}
-      <View className="food-card mx-4 mt-3 p-5">
-        <Text className="text-base font-bold text-[#2f3327] block mb-3">📋 订单信息</Text>
-        <View className="space-y-2.5">
-          <View className="flex justify-between py-1">
-            <Text className="text-sm text-[#8B7355]">订单编号</Text>
-            <Text className="text-sm text-[#2f3327]">{order.orderNo}</Text>
-          </View>
-          <View className="flex justify-between py-1">
-            <Text className="text-sm text-[#8B7355]">下单时间</Text>
-            <Text className="text-sm text-[#2f3327]">{formatDate(order.createdAt)}</Text>
-          </View>
-          {order.paidAt && (
-            <View className="flex justify-between py-1">
-              <Text className="text-sm text-[#8B7355]">支付时间</Text>
-              <Text className="text-sm text-[#2f3327]">{formatDate(order.paidAt)}</Text>
-            </View>
-          )}
-          {order.completedAt && (
-            <View className="flex justify-between py-1">
-              <Text className="text-sm text-[#8B7355]">完成时间</Text>
-              <Text className="text-sm text-[#2f3327]">{formatDate(order.completedAt)}</Text>
-            </View>
-          )}
-          {order.remark && (
-            <View className="pt-2.5 border-t border-[#F0E6DA]">
-              <Text className="text-sm text-[#8B7355] block mb-1">备注</Text>
-              <Text className="text-sm text-[#2f3327]">{order.remark}</Text>
-            </View>
-          )}
-        </View>
-      </View>
-
-      {/* Action bar */}
-      {order.status === 'pending_payment' && (
-        <View className="food-bottom-bar px-5 py-4 flex gap-3">
-          <View
-            className="flex-1 bg-white border border-[#E8DDD0] rounded-full py-3.5 flex items-center justify-center active:scale-[0.98]"
-            onClick={actionLoading ? undefined : () => setShowCancelModal(true)}
-          >
-            <Text className="text-[#A39584] font-medium">取消订单</Text>
-          </View>
-          <View
-            className="flex-1 rounded-full py-3.5 flex items-center justify-center active:scale-[0.98]"
-            style={{
-              background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
-              boxShadow: '0 12px 26px rgba(224, 102, 51, 0.26)',
-            }}
-            onClick={actionLoading ? undefined : () => setShowPayModal(true)}
-          >
-            <Text className="text-white font-semibold">立即支付</Text>
-          </View>
-        </View>
-      )}
-
-      {order.status === 'completed' && (
-        <View className="food-bottom-bar px-5 py-4">
-          <View
-            className="w-full rounded-full py-3.5 flex items-center justify-center active:scale-[0.98]"
-            style={{
-              background: 'linear-gradient(135deg, #5b9b58, #2f6d4c)',
-              boxShadow: '0 12px 26px rgba(47, 109, 76, 0.24)',
-            }}
-            onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
-          >
-            <Text className="text-white font-semibold">再来一单</Text>
-          </View>
-        </View>
-      )}
 
       {/* Cancel modal */}
       {showCancelModal && (

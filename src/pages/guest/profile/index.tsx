@@ -84,28 +84,32 @@ const ProfilePage: React.FC = () => {
     if (IS_H5) {
       return (
         <View className="food-page flex items-center justify-center">
-          <Text className="text-sm text-[#A39584]">正在跳转登录页...</Text>
+          <View className="food-mobile flex items-center justify-center">
+            <Text className="text-sm text-[#A39584]">正在跳转登录页...</Text>
+          </View>
         </View>
       )
     }
     return (
-      <View className="food-page flex flex-col items-center justify-center px-8">
-        <View className="food-empty__icon">
-          <Text className="text-5xl">👋</Text>
-        </View>
-        <Text className="text-xl font-bold text-[#4A3728] mb-2">欢迎使用私厨点餐</Text>
-        <Text className="text-sm text-[#A39584] mb-10 text-center">
-          登录后可查看订单、享受更多服务
-        </Text>
-        <View
-          className={`w-full rounded-full py-3.5 flex items-center justify-center shadow-lg active:scale-[0.98] transition-transform ${
-            loading ? 'bg-[#E0C8B0]' : 'food-action'
-          }`}
-          onClick={loading ? undefined : handleWechatLogin}
-        >
-          <Text className="text-white font-semibold text-base">
-            {loading ? '登录中...' : '微信一键登录'}
+      <View className="food-page">
+        <View className="food-mobile flex min-h-screen flex-col items-center justify-center px-8">
+          <View className="food-empty__icon">
+            <Text className="text-5xl">👋</Text>
+          </View>
+          <Text className="mb-2 text-xl font-bold text-[#4A3728]">欢迎使用轻食</Text>
+          <Text className="mb-10 text-center text-sm text-[#A39584]">
+            登录后可查看订单、享受更多服务
           </Text>
+          <View
+            className={`flex w-full items-center justify-center rounded-full py-3.5 shadow-lg active:scale-[0.98] transition-transform ${
+              loading ? 'bg-[#E0C8B0]' : 'food-action-green'
+            }`}
+            onClick={loading ? undefined : handleWechatLogin}
+          >
+            <Text className="text-base font-semibold text-white">
+              {loading ? '登录中...' : '微信一键登录'}
+            </Text>
+          </View>
         </View>
       </View>
     )
@@ -146,111 +150,108 @@ const ProfilePage: React.FC = () => {
 
   return (
     <View className="food-page">
-      {/* User card */}
-      <View
-        className="mx-4 mt-3 pt-8 px-5 pb-6 rounded-b-[24px] relative z-[1]"
-        style={{
-          background: 'linear-gradient(135deg, #2f5e3f, #538a56)',
-          boxShadow: '0 8px 32px rgba(47, 94, 63, 0.2)',
-        }}
-      >
-        <View className="flex items-center gap-4">
-          <Image
-            className="w-16 h-16 rounded-full border-2 border-white/30 shadow-md"
-            src={
-              userDetail?.avatar ||
-              'https://via.placeholder.com/100/F5E6D3/8B7355?text=%F0%9F%91%A4'
-            }
-            mode="aspectFill"
-          />
-          <View>
-            <Text className="text-xl font-bold text-white block">
-              {userDetail?.nickname || userDetail?.username || '微信用户'}
-            </Text>
-            <Text className="text-[13px] text-white/75 mt-1 block">
-              {userDetail?.phone || '享受美味，享受生活'}
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Stats */}
-      <View className="px-4 -mt-2 relative z-[2]">
-        <View className="food-card p-5">
-          <View className="grid grid-cols-3 gap-4">
-            <View className="text-center">
-              <Text className="text-[22px] font-bold text-[#E8833A] block">
-                {myStats?.totalOrders ?? 0}
+      <View className="food-mobile">
+        <View className="food-hero food-hero--profile">
+          <View className="flex items-center gap-4">
+            {userDetail?.avatar ? (
+              <Image
+                className="h-16 w-16 flex-shrink-0 rounded-full border-[3px] border-white/30"
+                src={userDetail.avatar}
+                mode="aspectFill"
+              />
+            ) : (
+              <View className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border-[3px] border-white/30 bg-[#FFFDF7]">
+                <Text className="text-[32px]">👤</Text>
+              </View>
+            )}
+            <View className="min-w-0 flex-1">
+              <Text className="block truncate text-xl font-bold text-white">
+                {userDetail?.nickname || userDetail?.username || '微信用户'}
               </Text>
-              <Text className="text-xs text-[#8B7355] mt-1 block">累计订单</Text>
-            </View>
-            <View className="text-center">
-              <Text className="text-[22px] font-bold text-[#E8833A] block">
-                ¥{myStats?.totalSpent ?? 0}
+              <Text className="mt-1 block text-[13px] text-white/75">
+                {userDetail?.phone || '享受美味，享受生活'}
               </Text>
-              <Text className="text-xs text-[#8B7355] mt-1 block">累计消费</Text>
-            </View>
-            <View className="text-center">
-              <Text className="text-[22px] font-bold text-[#E8833A] block">
-                {myStats?.totalOrders ?? 0}
-              </Text>
-              <Text className="text-xs text-[#8B7355] mt-1 block">待取餐</Text>
             </View>
           </View>
         </View>
-      </View>
 
-      {/* Main menu */}
-      <View className="food-card mx-4 mt-3 overflow-hidden">
-        {menuItems.map((item, i) => (
-          <View key={item.label}>
-            {i > 0 && <View className="ml-16 border-t border-[#F5E6D3]" />}
-            <View
-              className="flex items-center gap-4 px-5 py-4 active:bg-[#FFF8F0] transition-colors"
-              onClick={() => Taro.switchTab({ url: item.url })}
-            >
-              <View
-                className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: item.bg }}
-              >
-                <Text className="text-lg">{item.icon}</Text>
+        <View className="relative z-[2] -mt-2 px-4 pt-4">
+          <View className="food-card p-5">
+            <View className="grid grid-cols-3 gap-4">
+              <View className="text-center">
+                <Text className="block text-[22px] font-bold text-[#E8833A]">
+                  {myStats?.totalOrders ?? 0}
+                </Text>
+                <Text className="mt-1 block text-xs text-[#8B7355]">累计订单</Text>
               </View>
-              <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">{item.label}</Text>
-              <Text className="text-[#D0C8BC] text-lg">›</Text>
+              <View className="text-center">
+                <Text className="block text-[22px] font-bold text-[#E8833A]">
+                  ¥{myStats?.totalSpent ?? 0}
+                </Text>
+                <Text className="mt-1 block text-xs text-[#8B7355]">累计消费</Text>
+              </View>
+              <View className="text-center">
+                <Text className="block text-[22px] font-bold text-[#E8833A]">
+                  {myStats?.totalOrders ?? 0}
+                </Text>
+                <Text className="mt-1 block text-xs text-[#8B7355]">待取餐</Text>
+              </View>
             </View>
           </View>
-        ))}
-      </View>
+        </View>
 
-      {/* Secondary menu */}
-      <View className="food-card mx-4 mt-3 overflow-hidden">
-        {otherItems.map((item, i) => (
-          <View key={item.label}>
-            {i > 0 && <View className="ml-16 border-t border-[#F5E6D3]" />}
-            <View
-              className="flex items-center gap-4 px-5 py-4 active:bg-[#FFF8F0] transition-colors"
-              onClick={() => Taro.showToast({ title: '功能开发中', icon: 'none' })}
-            >
-              <View
-                className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: item.bg }}
-              >
-                <Text className="text-lg">{item.icon}</Text>
+        <View className="px-4 pt-3 pb-[100px]">
+          <View className="food-card overflow-hidden">
+            {menuItems.map((item, i) => (
+              <View key={item.label}>
+                {i > 0 && <View className="ml-16 border-t border-[#E8DDD0]" />}
+                <View
+                  className="flex items-center gap-3 px-5 py-4 active:bg-[#00000008] transition-colors"
+                  onClick={() => Taro.switchTab({ url: item.url })}
+                >
+                  <View
+                    className="flex h-9 w-9 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: item.bg }}
+                  >
+                    <Text className="text-lg">{item.icon}</Text>
+                  </View>
+                  <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">
+                    {item.label}
+                  </Text>
+                  <Text className="text-lg text-[#A39584]">›</Text>
+                </View>
               </View>
-              <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">{item.label}</Text>
-              <Text className="text-[#D0C8BC] text-lg">›</Text>
+            ))}
+            {otherItems.map((item) => (
+              <View key={item.label}>
+                <View className="ml-16 border-t border-[#E8DDD0]" />
+                <View
+                  className="flex items-center gap-3 px-5 py-4 active:bg-[#00000008] transition-colors"
+                  onClick={() => Taro.showToast({ title: '功能开发中', icon: 'none' })}
+                >
+                  <View
+                    className="flex h-9 w-9 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: item.bg }}
+                  >
+                    <Text className="text-lg">{item.icon}</Text>
+                  </View>
+                  <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">
+                    {item.label}
+                  </Text>
+                  <Text className="text-lg text-[#A39584]">›</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          <View className="px-0 py-6">
+            <View
+              className="flex w-full items-center justify-center rounded-full border border-[#E8DDD0] bg-transparent py-3.5 active:scale-[0.98] transition-transform"
+              onClick={handleLogout}
+            >
+              <Text className="font-medium text-[#8B7355]">退出登录</Text>
             </View>
           </View>
-        ))}
-      </View>
-
-      {/* Logout */}
-      <View className="mx-4 mt-6 mb-8">
-        <View
-          className="w-full bg-white border border-[#E8DDD0] rounded-full py-3.5 flex items-center justify-center active:scale-[0.98] transition-transform"
-          onClick={handleLogout}
-        >
-          <Text className="text-[#A39584] font-medium">退出登录</Text>
         </View>
       </View>
     </View>
