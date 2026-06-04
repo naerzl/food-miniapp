@@ -6,7 +6,7 @@ import { reqGetProfile, reqGetMyStats } from '../../../services'
 import type { IResGetMyStatsResponse } from '../../../services/statistics'
 import { User } from '../../../../types'
 import { syncCustomTabBar } from '../../../utils/tabBar'
-import { getLoginUrl } from '../../../utils/env'
+import { AuthGuard } from '../../../components/AuthGuard'
 
 const ProfilePage: React.FC = () => {
   const { isLogin, logout } = useAuth()
@@ -55,22 +55,6 @@ const ProfilePage: React.FC = () => {
     })
   }
 
-  useEffect(() => {
-    if (!isLogin) {
-      Taro.redirectTo({ url: getLoginUrl() })
-    }
-  }, [isLogin])
-
-  if (!isLogin) {
-    return (
-      <View className="food-page flex items-center justify-center">
-        <View className="food-mobile flex items-center justify-center">
-          <Text className="text-sm text-[#A39584]">正在跳转登录页...</Text>
-        </View>
-      </View>
-    )
-  }
-
   const menuItems = [
     {
       icon: '📋',
@@ -105,112 +89,114 @@ const ProfilePage: React.FC = () => {
   ]
 
   return (
-    <View className="food-page">
-      <View className="food-mobile">
-        <View className="food-hero food-hero--profile">
-          <View className="flex items-center gap-4">
-            {userDetail?.avatar ? (
-              <Image
-                className="h-16 w-16 flex-shrink-0 rounded-full border-[3px] border-white/30"
-                src={userDetail.avatar}
-                mode="aspectFill"
-              />
-            ) : (
-              <View className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border-[3px] border-white/30 bg-[#FFFDF7]">
-                <Text className="text-[32px]">👤</Text>
-              </View>
-            )}
-            <View className="min-w-0 flex-1">
-              <Text className="block truncate text-xl font-bold text-white">
-                {userDetail?.nickname || userDetail?.username || '微信用户'}
-              </Text>
-              <Text className="mt-1 block text-[13px] text-white/75">
-                {userDetail?.phone || '享受美味，享受生活'}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View className="relative z-[2] -mt-2 px-4 pt-4">
-          <View className="food-card p-5">
-            <View className="grid grid-cols-3 gap-4">
-              <View className="text-center">
-                <Text className="block text-[22px] font-bold text-[#E8833A]">
-                  {myStats?.totalOrders ?? 0}
+    <AuthGuard>
+      <View className="food-page">
+        <View className="food-mobile">
+          <View className="food-hero food-hero--profile">
+            <View className="flex items-center gap-4">
+              {userDetail?.avatar ? (
+                <Image
+                  className="h-16 w-16 flex-shrink-0 rounded-full border-[3px] border-white/30"
+                  src={userDetail.avatar}
+                  mode="aspectFill"
+                />
+              ) : (
+                <View className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border-[3px] border-white/30 bg-[#FFFDF7]">
+                  <Text className="text-[32px]">👤</Text>
+                </View>
+              )}
+              <View className="min-w-0 flex-1">
+                <Text className="block truncate text-xl font-bold text-white">
+                  {userDetail?.nickname || userDetail?.username || '微信用户'}
                 </Text>
-                <Text className="mt-1 block text-xs text-[#8B7355]">累计订单</Text>
-              </View>
-              <View className="text-center">
-                <Text className="block text-[22px] font-bold text-[#E8833A]">
-                  ¥{myStats?.totalSpent ?? 0}
+                <Text className="mt-1 block text-[13px] text-white/75">
+                  {userDetail?.phone || '享受美味，享受生活'}
                 </Text>
-                <Text className="mt-1 block text-xs text-[#8B7355]">累计消费</Text>
-              </View>
-              <View className="text-center">
-                <Text className="block text-[22px] font-bold text-[#E8833A]">
-                  {myStats?.totalOrders ?? 0}
-                </Text>
-                <Text className="mt-1 block text-xs text-[#8B7355]">待取餐</Text>
               </View>
             </View>
           </View>
-        </View>
 
-        <View className="px-4 pt-3 pb-[100px]">
-          <View className="food-card overflow-hidden">
-            {menuItems.map((item, i) => (
-              <View key={item.label}>
-                {i > 0 && <View className="ml-16 border-t border-[#E8DDD0]" />}
-                <View
-                  className="flex items-center gap-3 px-5 py-4 active:bg-[#00000008] transition-colors"
-                  onClick={() => Taro.switchTab({ url: item.url })}
-                >
-                  <View
-                    className="flex h-9 w-9 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: item.bg }}
-                  >
-                    <Text className="text-lg">{item.icon}</Text>
-                  </View>
-                  <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">
-                    {item.label}
+          <View className="relative z-[2] -mt-2 px-4 pt-4">
+            <View className="food-card p-5">
+              <View className="grid grid-cols-3 gap-4">
+                <View className="text-center">
+                  <Text className="block text-[22px] font-bold text-[#E8833A]">
+                    {myStats?.totalOrders ?? 0}
                   </Text>
-                  <Text className="text-lg text-[#A39584]">›</Text>
+                  <Text className="mt-1 block text-xs text-[#8B7355]">累计订单</Text>
+                </View>
+                <View className="text-center">
+                  <Text className="block text-[22px] font-bold text-[#E8833A]">
+                    ¥{myStats?.totalSpent ?? 0}
+                  </Text>
+                  <Text className="mt-1 block text-xs text-[#8B7355]">累计消费</Text>
+                </View>
+                <View className="text-center">
+                  <Text className="block text-[22px] font-bold text-[#E8833A]">
+                    {myStats?.totalOrders ?? 0}
+                  </Text>
+                  <Text className="mt-1 block text-xs text-[#8B7355]">待取餐</Text>
                 </View>
               </View>
-            ))}
-            {otherItems.map((item) => (
-              <View key={item.label}>
-                <View className="ml-16 border-t border-[#E8DDD0]" />
-                <View
-                  className="flex items-center gap-3 px-5 py-4 active:bg-[#00000008] transition-colors"
-                  onClick={() => Taro.showToast({ title: '功能开发中', icon: 'none' })}
-                >
-                  <View
-                    className="flex h-9 w-9 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: item.bg }}
-                  >
-                    <Text className="text-lg">{item.icon}</Text>
-                  </View>
-                  <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">
-                    {item.label}
-                  </Text>
-                  <Text className="text-lg text-[#A39584]">›</Text>
-                </View>
-              </View>
-            ))}
+            </View>
           </View>
 
-          <View className="px-0 py-6">
-            <View
-              className="flex w-full items-center justify-center rounded-full border border-[#E8DDD0] bg-transparent py-3.5 active:scale-[0.98] transition-transform"
-              onClick={handleLogout}
-            >
-              <Text className="font-medium text-[#8B7355]">退出登录</Text>
+          <View className="px-4 pt-3 pb-[100px]">
+            <View className="food-card overflow-hidden">
+              {menuItems.map((item, i) => (
+                <View key={item.label}>
+                  {i > 0 && <View className="ml-16 border-t border-[#E8DDD0]" />}
+                  <View
+                    className="flex items-center gap-3 px-5 py-4 active:bg-[#00000008] transition-colors"
+                    onClick={() => Taro.switchTab({ url: item.url })}
+                  >
+                    <View
+                      className="flex h-9 w-9 items-center justify-center rounded-xl"
+                      style={{ backgroundColor: item.bg }}
+                    >
+                      <Text className="text-lg">{item.icon}</Text>
+                    </View>
+                    <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">
+                      {item.label}
+                    </Text>
+                    <Text className="text-lg text-[#A39584]">›</Text>
+                  </View>
+                </View>
+              ))}
+              {otherItems.map((item) => (
+                <View key={item.label}>
+                  <View className="ml-16 border-t border-[#E8DDD0]" />
+                  <View
+                    className="flex items-center gap-3 px-5 py-4 active:bg-[#00000008] transition-colors"
+                    onClick={() => Taro.showToast({ title: '功能开发中', icon: 'none' })}
+                  >
+                    <View
+                      className="flex h-9 w-9 items-center justify-center rounded-xl"
+                      style={{ backgroundColor: item.bg }}
+                    >
+                      <Text className="text-lg">{item.icon}</Text>
+                    </View>
+                    <Text className="flex-1 text-[15px] font-medium text-[#2f3327]">
+                      {item.label}
+                    </Text>
+                    <Text className="text-lg text-[#A39584]">›</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+
+            <View className="px-0 py-6">
+              <View
+                className="flex w-full items-center justify-center rounded-full border border-[#E8DDD0] bg-transparent py-3.5 active:scale-[0.98] transition-transform"
+                onClick={handleLogout}
+              >
+                <Text className="font-medium text-[#8B7355]">退出登录</Text>
+              </View>
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </AuthGuard>
   )
 }
 

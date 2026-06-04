@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react'
-import Taro from '@tarojs/taro'
+import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text, Input } from '@tarojs/components'
 import { useAuth } from '../../../store'
 import { reqPostLogin } from '../../../services'
 import { isWeapp } from '../../../utils/env'
+import { goToAuthRedirect } from '../../../utils/authRedirect'
 
 type AuthUser = {
   id?: string
@@ -39,6 +40,8 @@ function normalizeAuthResponse(response: unknown): {
 }
 
 const LoginPage: React.FC = () => {
+  const router = useRouter()
+  const redirect = router.params.redirect
   const { login } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -89,7 +92,7 @@ const LoginPage: React.FC = () => {
       })
       Taro.showToast({ title: '登录成功', icon: 'success', duration: 1000 })
       setTimeout(() => {
-        Taro.switchTab({ url: '/pages/guest/menu/index' })
+        goToAuthRedirect(redirect)
       }, 1000)
     } catch (error) {
       console.error('登录失败:', error)
@@ -107,9 +110,7 @@ const LoginPage: React.FC = () => {
             <View className="food-login__logo">
               <Text className="text-[42px]">🥗</Text>
             </View>
-            <Text className="block text-[26px] font-bold tracking-[3px] text-[#2f3327]">
-              轻食
-            </Text>
+            <Text className="block text-[26px] font-bold tracking-[3px] text-[#2f3327]">轻食</Text>
             <Text className="mt-1.5 block text-[13px] text-[#8B7355]">家庭私厨 · 健康轻食</Text>
           </View>
 
@@ -157,10 +158,7 @@ const LoginPage: React.FC = () => {
                     if (passwordError) setPasswordError('')
                   }}
                 />
-                <View
-                  className="food-input-suffix"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
+                <View className="food-input-suffix" onClick={() => setShowPassword(!showPassword)}>
                   <Text>{showPassword ? '🙈' : '👁️'}</Text>
                 </View>
               </View>
@@ -204,7 +202,13 @@ const LoginPage: React.FC = () => {
               {isWeapp && (
                 <View
                   className="food-login-social__button active:scale-95"
-                  onClick={() => Taro.redirectTo({ url: '/pages/guest/wechat-login/index' })}
+                  onClick={() =>
+                    Taro.redirectTo({
+                      url: `/pages/guest/wechat-login/index${
+                        redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''
+                      }`,
+                    })
+                  }
                 >
                   <Text className="text-2xl">💬</Text>
                 </View>

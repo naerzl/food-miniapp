@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import Taro from '@tarojs/taro'
+import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { useAuth } from '../../../store'
 import { reqPostWechatLogin } from '../../../services'
+import { goToAuthRedirect } from '../../../utils/authRedirect'
 
 const WechatLoginPage: React.FC = () => {
+  const router = useRouter()
+  const redirect = router.params.redirect
   const { login } = useAuth()
   const [loading, setLoading] = useState(false)
 
@@ -22,7 +25,7 @@ const WechatLoginPage: React.FC = () => {
       })
       Taro.showToast({ title: '登录成功', icon: 'success', duration: 1000 })
       setTimeout(() => {
-        Taro.switchTab({ url: '/pages/guest/menu/index' })
+        goToAuthRedirect(redirect)
       }, 1000)
     } catch (error) {
       console.error('微信登录失败:', error)
@@ -33,7 +36,9 @@ const WechatLoginPage: React.FC = () => {
   }
 
   const goToAccountLogin = () => {
-    Taro.redirectTo({ url: '/pages/guest/login/index' })
+    Taro.redirectTo({
+      url: `/pages/guest/login/index${redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''}`,
+    })
   }
 
   return (
@@ -44,9 +49,7 @@ const WechatLoginPage: React.FC = () => {
             <View className="food-login__logo">
               <Text className="text-[42px]">🥗</Text>
             </View>
-            <Text className="block text-[26px] font-bold tracking-[3px] text-[#2f3327]">
-              轻食
-            </Text>
+            <Text className="block text-[26px] font-bold tracking-[3px] text-[#2f3327]">轻食</Text>
             <Text className="mt-1.5 block text-[13px] text-[#8B7355]">家庭私厨 · 健康轻食</Text>
           </View>
 

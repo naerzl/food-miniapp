@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { useAuthStore } from '../store/authStore'
-import { getLoginUrl } from '../utils/env'
+import { goToLoginWithRedirect } from '../utils/authRedirect'
 
 declare const __API_BASE_URL__: string
 
@@ -37,7 +37,7 @@ function getErrorMessage(statusCode: number, data: unknown): string {
 function handleUnauthorized() {
   useAuthStore.getState().logout()
   setTimeout(() => {
-    Taro.redirectTo({ url: getLoginUrl() })
+    goToLoginWithRedirect()
   }, 1500)
 }
 
