@@ -1,5 +1,4 @@
 import { defineConfig, type UserConfigExport } from '@tarojs/cli'
-import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import tailwindcss from 'tailwindcss'
 import { UnifiedViteWeappTailwindcssPlugin } from 'weapp-tailwindcss/vite'
 import devConfig from './dev'
@@ -21,6 +20,7 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
     outputRoot: 'dist',
     plugins: [],
     defineConstants: {
+      __API_BASE_URL__: JSON.stringify(process.env.TARO_APP_API_URL || 'http://localhost:18321'),
     },
     copy: {
       patterns: [

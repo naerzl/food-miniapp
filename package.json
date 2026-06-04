@@ -29,6 +29,8 @@
     "dev:jd": "pnpm build:jd -- --watch",
     "dev:quickapp": "pnpm build:quickapp -- --watch",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,scss}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,scss}\"",
     "test": "jest"
   },
   "browserslist": [

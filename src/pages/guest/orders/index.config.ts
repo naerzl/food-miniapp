@@ -3,4 +3,4 @@ export default definePageConfig({
   navigationBarBackgroundColor: '#FFFFFF',
   navigationBarTextStyle: 'black',
   enablePullDownRefresh: true,
-});
+})

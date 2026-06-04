@@ -40,12 +40,14 @@ export function connectWebSocket(userId: string): Promise<void> {
         console.error('WebSocket 连接失败:', err)
         isConnected = false
         reject(err)
-      }
-    }).then((task) => {
-      socket = task
-      setupSocketListeners()
-      resolve()
-    }).catch(reject)
+      },
+    })
+      .then((task) => {
+        socket = task
+        setupSocketListeners()
+        resolve()
+      })
+      .catch(reject)
   })
 }
 
@@ -68,12 +70,12 @@ function setupSocketListeners() {
 
       if (data.type === 'newOrder' || data.event === 'newOrder') {
         const order = data.order || data.data
-        newOrderCallbacks.forEach(cb => cb(order))
+        newOrderCallbacks.forEach((cb) => cb(order))
       }
 
       if (data.type === 'orderUpdate' || data.event === 'orderUpdate') {
         const order = data.order || data.data
-        orderUpdateCallbacks.forEach(cb => cb(order))
+        orderUpdateCallbacks.forEach((cb) => cb(order))
       }
     } catch (error) {
       console.error('解析 WebSocket 消息失败:', error)

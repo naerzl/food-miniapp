@@ -15,13 +15,13 @@ export interface IResGetMyStatsResponse {
 }
 
 export const reqGetMyStats = () =>
-  request<{ code: number; message: string; data: IResGetMyStatsResponse }>({
+  request<IResGetMyStatsResponse>({
     url: '/api/statistics/my',
     method: 'GET',
-  }).then(res => res.data)
+  })
 
 export const reqGetUserStats = (userId: string) =>
-  request<{ code: number; message: string; data: IResGetMyStatsResponse }>({
+  request<IResGetMyStatsResponse>({
     url: `/api/statistics/users/${userId}`,
     method: 'GET',
-  }).then(res => res.data)
+  })

@@ -6,6 +6,21 @@ import { Dish, Category } from '../../../../types'
 import { useCart } from '../../../store'
 
 const SKELETON_COUNT = 4
+const DISH_ICONS = [
+  { keywords: ['沙拉', '生菜', '蔬', '菜'], icon: '🥗' },
+  { keywords: ['饭', '米', '藜麦', '谷物'], icon: '🍚' },
+  { keywords: ['汤', '粥'], icon: '🥣' },
+  { keywords: ['饮', '汁', '茶', '拿铁'], icon: '🥤' },
+  { keywords: ['甜', '布丁', '蛋糕'], icon: '🍮' },
+  { keywords: ['鸡', '牛', '虾', '鱼', '肉'], icon: '🍗' },
+]
+
+function getDishIcon(dish: Dish) {
+  const text = `${dish.name}${dish.description || ''}`
+  const matched = DISH_ICONS.find((item) => item.keywords.some((keyword) => text.includes(keyword)))
+
+  return matched?.icon || '🍽️'
+}
 
 const MenuPage: React.FC = () => {
   const [dishes, setDishes] = useState<Dish[]>([])
@@ -24,7 +39,7 @@ const MenuPage: React.FC = () => {
       ])
       setCategories(categoriesRes || [])
       const available = (dishesRes || []).filter(
-        (d: Dish) => d.todaySupply && !d.soldOut && d.available
+        (d: Dish) => d.todaySupply && !d.soldOut && d.available,
       )
       setDishes(available)
     } catch (error) {
@@ -34,8 +49,12 @@ const MenuPage: React.FC = () => {
     }
   }, [])
 
-  useEffect(() => { loadData() }, [loadData])
-  useDidShow(() => { loadData(false) })
+  useEffect(() => {
+    loadData()
+  }, [loadData])
+  useDidShow(() => {
+    loadData(false)
+  })
 
   const handleAddToCart = (dish: Dish) => {
     if (dish.soldOut || !dish.todaySupply) {
@@ -56,9 +75,8 @@ const MenuPage: React.FC = () => {
     Taro.switchTab({ url: '/pages/guest/cart/index' })
   }
 
-  const filteredDishes = activeCategory === 'all'
-    ? dishes
-    : dishes.filter(d => d.categoryId === activeCategory)
+  const filteredDishes =
+    activeCategory === 'all' ? dishes : dishes.filter((d) => d.categoryId === activeCategory)
 
   if (loading) {
     return (
@@ -70,8 +88,11 @@ const MenuPage: React.FC = () => {
         </View>
         <View className="px-4 pt-4">
           <View className="flex gap-3 overflow-hidden">
-            {[1, 2, 3, 4].map(i => (
-              <View key={i} className="flex-shrink-0 w-24 h-10 bg-[#F0E6DA] rounded-full animate-pulse" />
+            {[1, 2, 3, 4].map((i) => (
+              <View
+                key={i}
+                className="flex-shrink-0 w-24 h-10 bg-[#F0E6DA] rounded-full animate-pulse"
+              />
             ))}
           </View>
         </View>
@@ -96,24 +117,44 @@ const MenuPage: React.FC = () => {
 
   return (
     <View className="food-page food-page--bottom">
-      <View className="food-hero">
-        <Text className="food-hero__eyebrow">TODAY'S LIGHT MENU</Text>
-        <Text className="food-hero__title">今日轻食厨房</Text>
-        <Text className="food-hero__desc">
-          按需现选，虚拟支付下单，厨房会同步收到你的订单。
-        </Text>
-        <View className="food-hero__chips">
-          <View className="food-chip">
-            <Text>上新</Text>
-            <Text>{dishes.length} 道</Text>
+      {/* Hero */}
+      <View
+        className="mx-4 mt-3 pt-5 px-5 pb-6 rounded-b-[24px] relative z-[1]"
+        style={{
+          background: 'linear-gradient(135deg, #2f5e3f, #538a56)',
+          boxShadow: '0 8px 32px rgba(47, 94, 63, 0.2)',
+        }}
+      >
+        <View className="flex justify-between items-start mb-4">
+          <View>
+            <Text className="text-[22px] font-bold text-white block">🍽️ 今日轻食厨房</Text>
+            <Text className="text-[13px] text-white/75 block mt-1">新鲜现做 · 健康美味</Text>
           </View>
-          <View className="food-chip">
-            <Text>分类</Text>
-            <Text>{categories.length || 1} 个</Text>
+        </View>
+        <View className="flex gap-2 flex-wrap">
+          <View
+            className="px-3 py-1.5 rounded-full"
+            style={{ background: 'rgba(255,255,255,0.15)' }}
+          >
+            <Text className="text-xs text-white">
+              🔥 {dishes.filter((d) => d.categoryId === categories[0]?.id).length} 道热菜
+            </Text>
           </View>
-          <View className="food-chip">
-            <Text>购物车</Text>
-            <Text>{totalCount} 件</Text>
+          <View
+            className="px-3 py-1.5 rounded-full"
+            style={{ background: 'rgba(255,255,255,0.15)' }}
+          >
+            <Text className="text-xs text-white">
+              🥗 {dishes.filter((d) => d.categoryId === categories[1]?.id).length} 道沙拉
+            </Text>
+          </View>
+          <View
+            className="px-3 py-1.5 rounded-full"
+            style={{ background: 'rgba(255,255,255,0.15)' }}
+          >
+            <Text className="text-xs text-white">
+              🥤 {dishes.filter((d) => d.categoryId === categories[2]?.id).length} 款饮品
+            </Text>
           </View>
         </View>
       </View>
@@ -123,23 +164,39 @@ const MenuPage: React.FC = () => {
         <ScrollView scrollX showScrollbar={false} className="px-4">
           <View className="flex gap-2.5">
             <View
-              className={`flex-shrink-0 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`flex-shrink-0 px-[18px] py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeCategory === 'all'
-                  ? 'bg-[#E8833A] text-white shadow-lg shadow-[#E8833A]/25'
-                  : 'bg-white text-[#8B7355] border border-[#E8DDD0]'
+                  ? 'text-white'
+                  : 'bg-white/70 text-[#776c5b] border border-[rgba(232,221,208,0.95)]'
               }`}
+              style={
+                activeCategory === 'all'
+                  ? {
+                      background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+                      borderColor: 'transparent',
+                    }
+                  : {}
+              }
               onClick={() => setActiveCategory('all')}
             >
               <Text>全部</Text>
             </View>
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <View
                 key={cat.id}
-                className={`flex-shrink-0 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                className={`flex-shrink-0 px-[18px] py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                   activeCategory === cat.id
-                    ? 'bg-[#E8833A] text-white shadow-lg shadow-[#E8833A]/25'
-                    : 'bg-white text-[#8B7355] border border-[#E8DDD0]'
+                    ? 'text-white'
+                    : 'bg-white/70 text-[#776c5b] border border-[rgba(232,221,208,0.95)]'
                 }`}
+                style={
+                  activeCategory === cat.id
+                    ? {
+                        background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+                        borderColor: 'transparent',
+                      }
+                    : {}
+                }
                 onClick={() => setActiveCategory(cat.id)}
               >
                 <Text>{cat.name}</Text>
@@ -163,20 +220,22 @@ const MenuPage: React.FC = () => {
       ) : (
         <ScrollView scrollY className="px-4 pt-4" style={{ height: 'calc(100vh - 180px)' }}>
           <View className="grid grid-cols-2 gap-3">
-            {filteredDishes.map(dish => (
-              <View
-                key={dish.id}
-                className={`food-dish-card ${
-                  dish.soldOut ? 'opacity-60' : ''
-                }`}
-              >
+            {filteredDishes.map((dish) => (
+              <View key={dish.id} className={`food-dish-card ${dish.soldOut ? 'opacity-60' : ''}`}>
                 <View className="food-image-frame">
-                  <Image
-                    className="w-full h-40"
-                    src={dish.image || 'https://via.placeholder.com/300x200/F5E6D3/8B7355?text=%F0%9F%8D%B2'}
-                    mode="aspectFill"
-                  />
+                  {dish.image ? (
+                    <Image className="w-full h-40" src={dish.image} mode="aspectFill" />
+                  ) : (
+                    <View className="food-dish-placeholder">
+                      <View className="food-dish-placeholder__plate">
+                        <Text>{getDishIcon(dish)}</Text>
+                      </View>
+                      <View className="food-dish-placeholder__leaf food-dish-placeholder__leaf--left" />
+                      <View className="food-dish-placeholder__leaf food-dish-placeholder__leaf--right" />
+                    </View>
+                  )}
                   <View className="food-image-tag">
+                    <Text className="food-image-tag__dot">●</Text>
                     <Text>今日供应</Text>
                   </View>
                   {dish.soldOut && (
@@ -188,27 +247,27 @@ const MenuPage: React.FC = () => {
                   )}
                 </View>
                 <View className="p-3">
-                  <Text className="text-[15px] font-bold text-[#4A3728] block leading-tight">
+                  <Text className="text-[14px] font-semibold text-[#2f3327] block leading-tight truncate">
                     {dish.name}
                   </Text>
                   {dish.description && (
-                    <Text className="text-xs text-[#A39584] mt-1 block leading-snug truncate">
+                    <Text className="text-xs text-[#8B7355] mt-1 block leading-snug truncate">
                       {dish.description}
                     </Text>
                   )}
                   <View className="flex items-center justify-between mt-3">
                     <View className="flex items-baseline">
-                      <Text className="text-xs text-[#E8833A] font-medium">¥</Text>
+                      <Text className="text-[13px] text-[#E8833A] font-medium">¥</Text>
                       <Text className="text-lg font-bold text-[#E8833A] ml-0.5">
                         {dish.price.toFixed(0)}
-                      </Text>
-                      <Text className="text-xs text-[#E8833A]/70 ml-0.5">
-                        .{dish.price.toFixed(2).split('.')[1]}
                       </Text>
                     </View>
                     {!dish.soldOut && (
                       <View
-                        className="w-8 h-8 food-action rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                        className="w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                        style={{
+                          background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+                        }}
                         onClick={() => handleAddToCart(dish)}
                       >
                         <Text className="text-white text-xl font-light leading-none">+</Text>
@@ -226,12 +285,19 @@ const MenuPage: React.FC = () => {
       {/* Floating cart button */}
       {totalCount > 0 && (
         <View
-          className="fixed right-5 bottom-28 z-20 food-action-green rounded-full px-5 py-3.5 flex items-center gap-3 active:scale-95 transition-transform"
+          className="fixed right-5 bottom-28 z-20 rounded-full px-5 py-3.5 flex items-center gap-3 active:scale-95 transition-transform"
+          style={{
+            background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+            boxShadow: '0 6px 20px rgba(232, 131, 58, 0.4)',
+          }}
           onClick={handleGoToCart}
         >
           <View className="relative">
             <Text className="text-2xl">🛒</Text>
-            <View className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#FF4D4F] rounded-full flex items-center justify-center">
+            <View
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center"
+              style={{ background: '#FF4D4F' }}
+            >
               <Text className="text-white text-xs font-bold">
                 {totalCount > 99 ? '99+' : totalCount}
               </Text>

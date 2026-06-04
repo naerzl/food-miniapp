@@ -34,25 +34,25 @@ export interface IResConfirmUploadResponse {
 }
 
 export const reqPostCheckFile = (md5: string) =>
-  request<{ code: number; message: string; data: IResCheckFileResponse }>({
+  request<IResCheckFileResponse>({
     url: '/api/files/check',
     method: 'POST',
     data: { md5 },
-  }).then(res => res.data)
+  })
 
 export const reqPostPresignedUrl = (data: IReqGetPresignedUrlParams) =>
-  request<{ code: number; message: string; data: IResGetPresignedUrlResponse }>({
+  request<IResGetPresignedUrlResponse>({
     url: '/api/files/presigned-url',
     method: 'POST',
     data,
-  }).then(res => res.data)
+  })
 
 export const reqPostConfirmUpload = (data: IReqConfirmUploadParams) =>
-  request<{ code: number; message: string; data: IResConfirmUploadResponse }>({
+  request<IResConfirmUploadResponse>({
     url: '/api/files/confirm',
     method: 'POST',
     data,
-  }).then(res => res.data)
+  })
 
 export const reqPostReleaseFile = (fileId: string) =>
   request<void>({

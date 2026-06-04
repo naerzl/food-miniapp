@@ -1,35 +1,35 @@
-import { View, Text, ScrollView } from '@tarojs/components';
-import './CategoryTabs.scss';
+import { View, Text, ScrollView } from '@tarojs/components'
+import './CategoryTabs.scss'
 
 interface Category {
-  id: number;
-  name: string;
+  id: number
+  name: string
 }
 
 interface CategoryTabsProps {
-  categories: Category[];
-  selectedId: number;
-  onChange: (id: number) => void;
+  categories: Category[]
+  selectedId: number
+  onChange: (id: number) => void
 }
 
 const CategoryTabs: React.FC<CategoryTabsProps> = ({ categories, selectedId, onChange }) => {
   const handleSelect = (id: number) => {
-    onChange(id);
-  };
+    onChange(id)
+  }
 
   return (
-    <ScrollView className='category-tabs' scrollX enableFlex>
+    <ScrollView className="category-tabs" scrollX enableFlex>
       {categories.map((category) => (
         <View
           key={category.id}
           className={`tab-item ${category.id === selectedId ? 'active' : ''}`}
           onClick={() => handleSelect(category.id)}
         >
-          <Text className='tab-text'>{category.name}</Text>
+          <Text className="tab-text">{category.name}</Text>
         </View>
       ))}
     </ScrollView>
-  );
-};
+  )
+}
 
-export default CategoryTabs;
+export default CategoryTabs

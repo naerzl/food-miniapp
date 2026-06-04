@@ -38,27 +38,26 @@ const OrdersPage: React.FC = () => {
     }
   }, [isLogin])
 
-  const loadOrders = useCallback(async (pageNum = 1, isRefresh = false) => {
-    try {
-      const status = STATUS_TABS[currentTab].status
-      const res = await reqGetOrders(
-        status === 'all' ? undefined : status,
-        pageNum,
-        10
-      )
-      if (isRefresh || pageNum === 1) {
-        setOrders(res.items)
-      } else {
-        setOrders(prev => [...prev, ...res.items])
+  const loadOrders = useCallback(
+    async (pageNum = 1, isRefresh = false) => {
+      try {
+        const status = STATUS_TABS[currentTab].status
+        const res = await reqGetOrders(status === 'all' ? undefined : status, pageNum, 10)
+        if (isRefresh || pageNum === 1) {
+          setOrders(res.items)
+        } else {
+          setOrders((prev) => [...prev, ...res.items])
+        }
+        setHasMore(res.items.length === 10 && pageNum < res.totalPages)
+        setPage(pageNum)
+      } catch (error) {
+        console.error('加载订单失败:', error)
+      } finally {
+        setLoading(false)
       }
-      setHasMore(res.items.length === 10 && pageNum < res.totalPages)
-      setPage(pageNum)
-    } catch (error) {
-      console.error('加载订单失败:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [currentTab])
+    },
+    [currentTab],
+  )
 
   useEffect(() => {
     if (!isLogin) return
@@ -84,7 +83,9 @@ const OrdersPage: React.FC = () => {
     return unsubscribe
   }, [loadOrders])
 
-  useDidShow(() => { if (isLogin) loadOrders(1, true) })
+  useDidShow(() => {
+    if (isLogin) loadOrders(1, true)
+  })
 
   useReachBottom(() => {
     if (hasMore && !loading) loadOrders(page + 1)
@@ -97,20 +98,16 @@ const OrdersPage: React.FC = () => {
 
   return (
     <View className="food-page">
-      <View className="food-hero">
-        <Text className="food-hero__eyebrow">ORDER TRACKING</Text>
-        <Text className="food-hero__title">我的订单</Text>
-        <Text className="food-hero__desc">查看支付、制作和完成状态，订单变更会自动同步。</Text>
-        <View className="food-hero__chips">
-          <View className="food-chip">
-            <Text>当前</Text>
-            <Text>{STATUS_TABS[currentTab].title}</Text>
-          </View>
-          <View className="food-chip">
-            <Text>订单</Text>
-            <Text>{orders.length} 单</Text>
-          </View>
-        </View>
+      {/* Hero */}
+      <View
+        className="mx-4 mt-3 pt-5 px-5 pb-6 rounded-b-[24px] relative z-[1]"
+        style={{
+          background: 'linear-gradient(135deg, #2f5e3f, #538a56)',
+          boxShadow: '0 8px 32px rgba(47, 94, 63, 0.2)',
+        }}
+      >
+        <Text className="text-[22px] font-bold text-white block">📋 我的订单</Text>
+        <Text className="text-[13px] text-white/75 block mt-1">查看您的所有订单状态</Text>
       </View>
 
       {/* Status tabs */}
@@ -122,9 +119,17 @@ const OrdersPage: React.FC = () => {
                 key={tab.status}
                 className={`flex-shrink-0 px-5 py-2 rounded-full text-xs font-semibold transition-all duration-200 ${
                   currentTab === i
-                    ? 'bg-[#E8833A] text-white shadow-md shadow-[#E8833A]/20'
-                    : 'bg-white text-[#8B7355] border border-[#E8DDD0]'
+                    ? 'text-white'
+                    : 'bg-white/70 text-[#8B7355] border border-[#E8DDD0]'
                 }`}
+                style={
+                  currentTab === i
+                    ? {
+                        background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+                        borderColor: 'transparent',
+                      }
+                    : {}
+                }
                 onClick={() => setCurrentTab(i)}
               >
                 <Text>{tab.title}</Text>
@@ -147,7 +152,11 @@ const OrdersPage: React.FC = () => {
           <Text className="text-lg font-bold text-[#4A3728] mb-2">暂无订单</Text>
           <Text className="text-sm text-[#A39584] mb-8">快去下单吧</Text>
           <View
-            className="food-action rounded-full px-8 py-3 active:scale-95"
+            className="rounded-full px-8 py-3 active:scale-95 transition-transform"
+            style={{
+              background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+              boxShadow: '0 12px 26px rgba(224, 102, 51, 0.26)',
+            }}
             onClick={() => Taro.switchTab({ url: '/pages/guest/menu/index' })}
           >
             <Text className="text-white font-semibold text-sm">去点餐</Text>
@@ -155,7 +164,7 @@ const OrdersPage: React.FC = () => {
         </View>
       ) : (
         <View className="px-4 pt-2 space-y-3 pb-8">
-          {orders.map(order => (
+          {orders.map((order) => (
             <View
               key={order.id}
               className="food-card p-4 active:scale-[0.99] transition-transform"
@@ -177,29 +186,27 @@ const OrdersPage: React.FC = () => {
                   </Text>
                 </View>
               </View>
-              <View className="flex items-center justify-between">
-                <Text className="text-sm text-[#8B7355]">
-                  {order.items?.length || 0} 件商品
-                </Text>
+              <View className="flex flex-wrap gap-2 mb-3">
+                {order.items?.map((item, idx) => (
+                  <View
+                    key={idx}
+                    className="px-2.5 py-1 rounded-lg"
+                    style={{ background: 'rgba(47, 51, 39, 0.05)' }}
+                  >
+                    <Text className="text-xs text-[#4A3728]">
+                      {item.dishName} x{item.quantity}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+              <View className="flex items-center justify-between pt-3 border-t border-[#F5E6D3]">
+                <Text className="text-xs text-[#CCC]">{formatDate(order.createdAt)}</Text>
                 <View className="flex items-baseline">
                   <Text className="text-xs text-[#E8833A] font-semibold">¥</Text>
                   <Text className="text-lg font-bold text-[#E8833A]">
                     {order.totalAmount.toFixed(2)}
                   </Text>
                 </View>
-              </View>
-              <View className="flex items-center justify-between mt-3 pt-3 border-t border-[#F5E6D3]">
-                <Text className="text-xs text-[#CCC]">{formatDate(order.createdAt)}</Text>
-                {order.status === 'pending_payment' && (
-                  <View className="bg-[#E8833A] rounded-full px-4 py-1.5">
-                    <Text className="text-white text-xs font-semibold">去支付</Text>
-                  </View>
-                )}
-                {order.status === 'completed' && (
-                  <View className="border border-[#E8833A] rounded-full px-4 py-1.5">
-                    <Text className="text-[#E8833A] text-xs font-semibold">再来一单</Text>
-                  </View>
-                )}
               </View>
             </View>
           ))}

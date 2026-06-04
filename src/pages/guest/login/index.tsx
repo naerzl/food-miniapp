@@ -23,6 +23,8 @@ const LoginPage: React.FC = () => {
         username: username.trim(),
         password,
       })
+
+      console.log(res, '============')
       login(res.accessToken, {
         id: res.user.id,
         username: res.user.username,
@@ -105,7 +107,7 @@ const LoginPage: React.FC = () => {
             placeholder="请输入用户名"
             placeholderStyle="color: #CCC; font-size: 14px;"
             value={username}
-            onInput={e => setUsername(e.detail.value)}
+            onInput={(e) => setUsername(e.detail.value)}
           />
         </View>
 
@@ -117,7 +119,7 @@ const LoginPage: React.FC = () => {
             placeholder="请输入密码"
             placeholderStyle="color: #CCC; font-size: 14px;"
             value={password}
-            onInput={e => setPassword(e.detail.value)}
+            onInput={(e) => setPassword(e.detail.value)}
           />
         </View>
 
@@ -129,7 +131,7 @@ const LoginPage: React.FC = () => {
               placeholder="给自己取个名字吧"
               placeholderStyle="color: #CCC; font-size: 14px;"
               value={nickname}
-              onInput={e => setNickname(e.detail.value)}
+              onInput={(e) => setNickname(e.detail.value)}
             />
           </View>
         )}
@@ -142,8 +144,12 @@ const LoginPage: React.FC = () => {
         >
           <Text className="text-white font-semibold text-base">
             {loading
-              ? mode === 'login' ? '登录中...' : '注册中...'
-              : mode === 'login' ? '登录' : '注册'}
+              ? mode === 'login'
+                ? '登录中...'
+                : '注册中...'
+              : mode === 'login'
+                ? '登录'
+                : '注册'}
           </Text>
         </View>
       </View>
@@ -153,7 +159,12 @@ const LoginPage: React.FC = () => {
         <Text className="text-sm text-[#A39584]">
           {mode === 'login' ? '还没有账号？' : '已有账号？'}
         </Text>
-        <View onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setPassword('') }}>
+        <View
+          onClick={() => {
+            setMode(mode === 'login' ? 'register' : 'login')
+            setPassword('')
+          }}
+        >
           <Text className="text-sm text-[#E8833A] font-semibold">
             {mode === 'login' ? '去注册' : '去登录'}
           </Text>

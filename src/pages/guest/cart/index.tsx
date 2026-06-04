@@ -42,20 +42,18 @@ const CartPage: React.FC = () => {
 
   return (
     <View className="food-page food-page--bottom">
-      <View className="food-hero">
-        <Text className="food-hero__eyebrow">YOUR CART</Text>
-        <Text className="food-hero__title">准备下单</Text>
-        <Text className="food-hero__desc">确认菜品数量，厨房会按这份清单为你备餐。</Text>
-        <View className="food-hero__chips">
-          <View className="food-chip">
-            <Text>商品</Text>
-            <Text>{totalCount} 件</Text>
-          </View>
-          <View className="food-chip">
-            <Text>合计</Text>
-            <Text>¥{totalAmount.toFixed(2)}</Text>
-          </View>
-        </View>
+      {/* Hero */}
+      <View
+        className="mx-4 mt-3 pt-5 px-5 pb-6 rounded-b-[24px] relative z-[1]"
+        style={{
+          background: 'linear-gradient(135deg, #2f5e3f, #538a56)',
+          boxShadow: '0 8px 32px rgba(47, 94, 63, 0.2)',
+        }}
+      >
+        <Text className="text-[22px] font-bold text-white block">🛒 我的购物车</Text>
+        <Text className="text-[13px] text-white/75 block mt-1">
+          共 {totalCount} 件商品，精选健康美味
+        </Text>
       </View>
 
       {/* Header */}
@@ -73,7 +71,7 @@ const CartPage: React.FC = () => {
 
       {/* Item list */}
       <View className="px-4 space-y-3">
-        {items.map(item => (
+        {items.map((item) => (
           <View key={item.dishId} className="food-card p-3 flex gap-3">
             <Image
               className="w-20 h-20 rounded-xl flex-shrink-0"
@@ -82,7 +80,7 @@ const CartPage: React.FC = () => {
             />
             <View className="flex-1 flex flex-col justify-between min-w-0">
               <View>
-                <Text className="text-[15px] font-semibold text-[#4A3728] block truncate">
+                <Text className="text-[15px] font-semibold text-[#2f3327] block truncate">
                   {item.dishName}
                 </Text>
                 <Text className="text-sm text-[#E8833A] font-medium mt-0.5 block">
@@ -104,7 +102,10 @@ const CartPage: React.FC = () => {
                     {item.quantity}
                   </Text>
                   <View
-                    className="w-7 h-7 food-action rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-7 h-7 rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                    style={{
+                      background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+                    }}
                     onClick={() => updateQuantity(item.dishId, item.quantity + 1)}
                   >
                     <Text className="text-white text-base font-medium leading-none">+</Text>
@@ -118,7 +119,9 @@ const CartPage: React.FC = () => {
                 Taro.showModal({
                   title: '提示',
                   content: '确定要删除这个商品吗？',
-                  success: (res) => { if (res.confirm) removeFromCart(item.dishId) },
+                  success: (res) => {
+                    if (res.confirm) removeFromCart(item.dishId)
+                  },
                 })
               }}
             >
@@ -129,23 +132,31 @@ const CartPage: React.FC = () => {
       </View>
 
       {/* Bottom checkout bar */}
-      <View className="food-bottom-bar px-5 py-4 flex items-center justify-between">
+      <View
+        className="fixed bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between z-[100]"
+        style={{
+          background: 'rgba(255, 252, 245, 0.9)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(232, 221, 208, 0.95)',
+        }}
+      >
         <View>
           <Text className="text-xs text-[#A39584]">合计</Text>
           <View className="flex items-baseline">
             <Text className="text-sm text-[#E8833A] font-bold">¥</Text>
-            <Text className="text-2xl font-bold text-[#E8833A]">
-              {totalAmount.toFixed(2)}
-            </Text>
+            <Text className="text-2xl font-bold text-[#E8833A]">{totalAmount.toFixed(2)}</Text>
           </View>
         </View>
         <View
-          className="food-action rounded-full px-10 py-3.5 active:scale-95 transition-transform"
+          className="rounded-full px-10 py-3.5 active:scale-95 transition-transform"
+          style={{
+            background: 'linear-gradient(135deg, #ed8f3d, #e06633)',
+            boxShadow: '0 12px 26px rgba(224, 102, 51, 0.26)',
+          }}
           onClick={handleCheckout}
         >
-          <Text className="text-white font-semibold text-base">
-            去下单 ({totalCount})
-          </Text>
+          <Text className="text-white font-semibold text-base">去结算 ({totalCount})</Text>
         </View>
       </View>
 
@@ -156,9 +167,7 @@ const CartPage: React.FC = () => {
             <Text className="text-lg font-bold text-[#4A3728] block text-center mb-2">
               确认清空购物车？
             </Text>
-            <Text className="text-sm text-[#A39584] block text-center mb-6">
-              清空后无法恢复
-            </Text>
+            <Text className="text-sm text-[#A39584] block text-center mb-6">清空后无法恢复</Text>
             <View className="flex gap-3">
               <View
                 className="flex-1 bg-[#F5F0EB] rounded-full py-3 flex items-center justify-center active:scale-95 transition-transform"

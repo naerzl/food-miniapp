@@ -1,15 +1,10 @@
 import Taro from '@tarojs/taro'
 import { useAuthStore } from '../store/authStore'
 
-declare const process: {
-  env: {
-    TARO_ENV?: string
-    TARO_APP_API_URL?: string
-  }
-}
+declare const __API_BASE_URL__: string
 
-const API_BASE_URL = process.env.TARO_APP_API_URL || 'http://localhost:18321'
-const IS_H5 = process.env.TARO_ENV === 'h5'
+const API_BASE_URL = __API_BASE_URL__
+const IS_H5 = Taro.getEnv() === Taro.ENV_TYPE.WEB
 
 export interface RequestOptions {
   url: string
@@ -78,21 +73,23 @@ export async function request<T>(options: RequestOptions): Promise<T> {
       return Promise.reject(new Error(message))
     }
 
-    const data = response.data as { code?: number; message?: string } | T
+    console.log(data, 'data============')
+    const data = response.data as { code?: number; message?: string; data?: unknown } | T
 
-    if (
-      data &&
-      typeof data === 'object' &&
-      'code' in data &&
-      data.code !== undefined &&
-      data.code !== 0
-    ) {
+    // 检查是否是标准的 ApiResponse 格式 { code, message, data }
+    if (data && typeof data === 'object' && 'code' in data && typeof data.code === 'number') {
+      // code 为 0 表示成功，返回 data 字段
+      if (data.code === 0) {
+        return ('data' in data ? data.data : data) as T
+      }
+      // code 不为 0 表示业务错误
       const message = data.message || '操作失败'
       Taro.showToast({ title: message, icon: 'none' })
       return Promise.reject(new Error(message))
     }
 
-    return response.data as T
+    // 如果不是标准格式，直接返回（兼容旧接口）
+    return data as T
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
 

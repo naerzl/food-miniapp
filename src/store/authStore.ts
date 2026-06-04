@@ -41,7 +41,9 @@ export const useAuthStore = create<AuthStore>()(
         Taro.setStorageSync('token', token)
         Taro.setStorageSync('userInfo', userInfo)
         set({ isLogin: true, token, userInfo })
-        connectWebSocket(userInfo.id).catch(err => { console.error('WebSocket 连接失败:', err) })
+        connectWebSocket(userInfo.id).catch((err) => {
+          console.error('WebSocket 连接失败:', err)
+        })
       },
 
       logout: () => {
@@ -70,8 +72,8 @@ export const useAuthStore = create<AuthStore>()(
       onRehydrateStorage: () => (state) => {
         if (state) state.setHydrated(true)
       },
-    }
-  )
+    },
+  ),
 )
 
 export const useAuth = () => {
